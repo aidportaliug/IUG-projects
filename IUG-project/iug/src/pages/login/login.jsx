@@ -1,7 +1,5 @@
 import React from 'react';
 
-import './login.css';
-
 const Login = () => {
     return (
 <div className='login'>
@@ -9,4 +7,6 @@ const Login = () => {
 </div>
 )};
 console.log("SUIII");
+
+
 export default Login;

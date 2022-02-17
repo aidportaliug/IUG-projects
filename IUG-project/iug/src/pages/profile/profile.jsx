@@ -1,6 +1,5 @@
 import React from 'react';
 
-import './profile.css';
 import Button from '@mui/material/Button';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Avatar } from '@mui/material';
