@@ -1,0 +1,67 @@
+body{
+    background-color:#EDEDED;
+}
+
+.user{
+    background-color: #FCFDFD;
+    margin: 0% 15%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'Archivo', sans-serif;
+    color: black;
+    
+}
+
+h1{
+    font-family: 'Archivo', sans-serif;  
+    color: black;
+    
+}
+
+.top-part{
+    border-radius: 10%;
+    background-color: #FCFDFD;
+}
+
+.username{
+    border-radius: 10%;
+    text-align: center;
+    padding:2% 0% 0% 0%;
+}
+
+.avatar{
+    padding: 0% 0%;
+    display:block;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#btnSend{
+    background-color: #DDEEF5;
+    padding: 1%;
+margin: 3%;
+height: 3%;
+color: black;
+
+}
+#btnLogOut{
+    background-color: #DDEEF5;
+    margin: 3%;
+    color: black;
+}
+
+.profileIcon{
+    margin: auto;
+    display: grid;
+	place-items: center;
+    justify-content: center;
+    align-items: center;
+}
+.buttonsIcon {
+    margin-top: 3%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

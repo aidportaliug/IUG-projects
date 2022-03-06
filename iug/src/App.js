@@ -2,9 +2,10 @@ import React from 'react';
 import { Routes ,Route,  BrowserRouter } from 'react-router-dom';
 
 import Login from './pages/login/login';
-import Profile from './pages/profile/profile';
+import User from './pages/user/User';
 import Home from './pages/homepage/home';
-import Register from './pages/register/register';
+import SignUp from './pages/signup/signup';
+
 
 import './App.css';
 
@@ -15,9 +16,9 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route exact path="/" element={<Login />} />
-            <Route path="/Profile" element={<Profile />} />
+            <Route path="/User" element={<User />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/signUp" element={<SignUp />} />
           </Routes>
         </BrowserRouter>
   );
