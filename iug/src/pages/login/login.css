@@ -1,0 +1,50 @@
+body{
+    margin: 0%;
+}
+
+.wholeLogin{
+
+}
+
+
+.imgLogo{
+position: absolute;
+bottom: 10%;
+margin: auto;
+}
+.imgHands{
+
+}
+
+.loginText{
+color: #3D7844;
+font-size: 4ch;
+font-weight: bolder;
+align-items: center;
+margin-left: 25%;
+margin-top: 20%;
+}
+.loginText>p{
+    margin: 0;
+}
+.imageLogin{
+margin: 0%;
+position: absolute;
+left: 0%;
+right: 61.67%;
+top: 0%;
+bottom: 0%;
+background: #E0EADF;
+box-sizing: border-box;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.loginPart{
+    margin-left: 40%;
+    margin-top: 10%;
+}
+
+
+
+
+
