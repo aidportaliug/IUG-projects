@@ -63,33 +63,46 @@ export default function User() {
 
     const [image, setImage] = useState(null);
     const [url, setUrl] = useState(null);
+    const imageName = "/profile/" + auth.currentUser.email + "ProfileImage";
+
+    useEffect(() => {
+        const getPicture = async () => {
+            const imageRef = ref(storage, imageName);
+            getDownloadURL(imageRef).then((url) => {
+                setUrl(url);
+            });
+        }
+        getPicture();
+    })
 
 
     const handleImageChange = (e) => {
         if (e.target.files[0]) {
-            setImage(e.target.files[0]);
+          setImage(e.target.files[0]);
         }
-    };
-
-    const handleSubmit = () => {
-        const imageRef = ref(storage, "image");
+      };
+    
+      const handleSubmit = () => {
+        const imageRef = ref(storage, imageName);
 
         uploadBytes(imageRef, image)
-            .then(() => {
-                getDownloadURL(imageRef)
-                    .then((url) => {
-                        setUrl(url);
-                    })
-                    .catch((error) => {
-                        console.log(error.message, "error getting the image url");
-                    });
-                setImage(null);
-            })
-            .catch((error) => {
-                console.log(error.message);
-            });
-;
-    };
+          .then(() => {
+            getDownloadURL(imageRef)
+              .then((url) => {
+                setUrl(url);
+              })
+              .catch((error) => {
+                console.log(error.message, "error getting the image url");
+              });
+            setImage(null);
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+          console.log(url);
+console.log(setUrl);
+      };
+
 
 
     return (
@@ -99,12 +112,13 @@ export default function User() {
                     <h1 className="username">{name}</h1>
                 </div>
 
+
+
+
 <div className="profileIcon">
-                <Avatar className="Icon" src={url} sx={{ width: 150, height: 150 }} />
-                <div className="buttonsIcon">
-                <input type="file" onChange={handleImageChange} />
-                <Button onClick={handleSubmit}>Submit</Button>
-                </div>
+<Avatar src={url} sx={{ width: 150, height: 150 }} />
+    <input type="file" onChange={handleImageChange} />
+    <button onClick={handleSubmit}>Submit</button>
                 </div>
 
                 <div className="interests">

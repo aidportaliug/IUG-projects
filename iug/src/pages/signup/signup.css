@@ -3,7 +3,7 @@ body{
 }
 
 .wholesignup{
-
+margin-top: 0%;
 }
 
 
@@ -21,8 +21,8 @@ color: #3D7844;
 font-size: 4ch;
 font-weight: bolder;
 align-items: center;
-margin-left: 25%;
-margin-top: 20%;
+margin-left: 15%;
+margin-top: 10%;
 }
 .signupText>p{
     margin: 0;
@@ -31,7 +31,7 @@ margin-top: 20%;
 margin: 0%;
 position: absolute;
 left: 0%;
-right: 61.67%;
+right: 57%;
 top: 0%;
 bottom: 0%;
 background: #E0EADF;
@@ -41,7 +41,6 @@ box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
 .signupPart{
     margin-left: 40%;
-    margin-top: 10%;
 }
 
 

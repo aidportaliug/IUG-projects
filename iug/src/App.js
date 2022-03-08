@@ -7,7 +7,6 @@ import Home from './pages/homepage/home';
 import SignUp from './pages/signup/signup';
 
 
-import './App.css';
 
 
 
