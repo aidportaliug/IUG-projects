@@ -1,69 +1,61 @@
 import { useState, useEffect } from "react";
-import React from "react";
 import "./user.css";
 import Button from "@mui/material/Button";
-import { auth, db, storage } from "../../firebase-config";
-import { signOut, onAuthStateChanged, deleteUser } from "firebase/auth";
-import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore'
+import { auth, storage } from "../../services/firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import TextField from '@material-ui/core/TextField';
 import Avatar from '@mui/material/Avatar'
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { UserProfile } from "../../models/user";
+import { deleteFromAuth, logOut } from "../../services/auth";
+import getLoggedinUser, { deleteUserFromStore } from "../../services/userData";
 
 
 
 
-export default function User() {
+export default function UserView() {
 
-    const profileCollectionReference = collection(db, "profile");
-    const [profiles, setProfiles] = useState([]);
-    const [user, setUser] = useState({});
-    const [name, setName] = useState("");
+
+    const [user, setUser] = useState<UserProfile>();
+
     const nav = useNavigate();
 
 
-    const getName = async (currentUser) => {
-        const data = await getDocs(profileCollectionReference);
-        data.forEach((t) => {
-            if (t.id == currentUser.email) {
-                setName(t.data().name + " " + t.data().lastname)
-            }
-        })
-    }
 
     useEffect(() => {
-        onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-
+        onAuthStateChanged(auth,  (currentUser) => {
+            getLoggedinUser().then((user:any) => {
+                if(user) setUser(user)
+            })
+           
             if (!currentUser) {
                 console.log(auth.currentUser);
                 nav("/");
             }
-
-            getName(currentUser);
         });
-    }, []);
+    }, [auth.currentUser]);
 
 
     const logout = async () => {
+        logOut();
         console.log("User signed out");
-        await signOut(auth);
         nav("/");
 
     };
 
     const deleteUser = async () => {
-        await deleteDoc(doc(db, "profile", user.email));
-        auth.currentUser.delete().then(() => {
-            logout(); //This is probably not needed
-        }).catch((error) => {
-            console.log("Error in deletion");
-        });
+        if(user) {
+
+            deleteUserFromStore(user.email as string);
+            deleteFromAuth(user.email as string);
+        }
     }
 
-    const [image, setImage] = useState(null);
-    const [url, setUrl] = useState(null);
-    const imageName = "/profile/" + auth.currentUser.email + "ProfileImage";
+
+    //TODO: flytt dette til userData.tsx
+    const [image, setImage] = useState<Blob | Uint8Array | ArrayBuffer | undefined>();
+    const [url, setUrl] = useState<string>("");
+    const imageName = "/profile/" + auth.currentUser?.email + "ProfileImage";
 
     useEffect(() => {
         const getPicture = async () => {
@@ -76,7 +68,7 @@ export default function User() {
     })
 
 
-    const handleImageChange = (e) => {
+    const handleImageChange = (e: any) => {
         if (e.target.files[0]) {
           setImage(e.target.files[0]);
         }
@@ -84,7 +76,7 @@ export default function User() {
     
       const handleSubmit = () => {
         const imageRef = ref(storage, imageName);
-
+if(image) {
         uploadBytes(imageRef, image)
           .then(() => {
             getDownloadURL(imageRef)
@@ -94,7 +86,7 @@ export default function User() {
               .catch((error) => {
                 console.log(error.message, "error getting the image url");
               });
-            setImage(null);
+            setImage(undefined);
           })
           .catch((error) => {
             console.log(error.message);
@@ -102,6 +94,7 @@ export default function User() {
           console.log(url);
 console.log(setUrl);
       };
+    }
 
 
 
@@ -109,7 +102,7 @@ console.log(setUrl);
         <>
             <div className="user">
                 <div className="top-part">
-                    <h1 className="username">{name}</h1>
+                    <h1 className="username">{user? user.email: ""}</h1>
                 </div>
 
 

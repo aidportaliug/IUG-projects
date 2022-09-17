@@ -1,23 +1,21 @@
-import * as React from 'react';
 import { useEffect, useState } from "react";
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { auth } from "../../firebase-config";
+import { auth } from "../../services/firebaseConfig";
 import { createUserWithEmailAndPassword, onAuthStateChanged, updateCurrentUser } from "firebase/auth";
 import { NavLink, useNavigate } from 'react-router-dom';
 import { doc, setDoc } from 'firebase/firestore'
-import { db } from "../../firebase-config";
+import { db } from "../../services/firebaseConfig";
 import { FormLabel, RadioGroup, FormControl, Radio } from '@mui/material';
 import './signup.css'
+import signUp from "../../services/signup";
 export default function SignUp() {
 
   const [date, setDate] = useState();
@@ -40,37 +38,24 @@ export default function SignUp() {
     });
   }, []);
 
-  const handleSubmit = async (event) => {
+  const handleSignUp = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {
     event.preventDefault();
     try {
       const data = new FormData(event.currentTarget);
-      console.log(data.get("firstName"))
-      console.log(data.get("lastName"))
-      console.log(data.get("email"))
-      await createUserWithEmailAndPassword(
-        auth, data.get("email"), data.get("password")
-      );
-      storeUser(
-        data.get("firstName"),
-        data.get("lastName"),
-        data.get("gender"),
-        data.get("age"),
-        data.get("email"),
-      );
+      const firstName = data.get("firstName") as string;
+      const lastName = data.get("lastName") as string;
+      const gender = data.get("gender") as string;
+      const age = data.get("age") as string;
+      const email = data.get("email") as string;
+      const password = data.get("password") as string;
+      
+      if(firstName && lastName && gender && age && email && password) signUp(firstName, lastName, email, password, gender, age, )
+      
     } catch (error) {
-      console.log(error.message);
+      console.log(error as string);
     }
   };
 
-  const storeUser = async (firstName, lastName, gender, age, mail) => {
-    await setDoc(doc(db, "profile", mail), {
-      name: firstName,
-      email: mail,
-      lastname: lastName,
-      gender: gender,
-      age: age,
-    });
-  }
 
 
 
@@ -105,7 +90,7 @@ export default function SignUp() {
               <Typography component="h1" variant="h5">
                 Sign up
               </Typography>
-              <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+              <Box component="form" noValidate onSubmit={handleSignUp} sx={{ mt: 3 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <TextField
@@ -132,7 +117,7 @@ export default function SignUp() {
                   <Grid item xs={12}>
                     <FormControl >
                       <FormLabel >Gender</FormLabel>
-                      <RadioGroup name="gender" required row autoComplete="sex">
+                      <RadioGroup name="gender" row>
                         <FormControlLabel value="Male" control={<Radio />} label="Male" />
                         <FormControlLabel value="Female" control={<Radio />} label="Female" />
                         <FormControlLabel value="Other" control={<Radio />} label="Other" />
@@ -186,7 +171,7 @@ export default function SignUp() {
                 </Button>
                 <Grid container justifyContent="flex-end">
                   <Grid item>
-                    <NavLink to="/" variant="body2">
+                    <NavLink to="/">
                       Already have an account? Sign in
                     </NavLink>
                   </Grid>
