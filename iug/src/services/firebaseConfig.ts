@@ -2,7 +2,7 @@ import { getAuth } from 'firebase/auth';
 import firebase from 'firebase/compat/app';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
-import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+
 
 
 

@@ -1,11 +1,11 @@
-import { getAuth, signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
-import { collection, deleteDoc, doc, getDoc } from 'firebase/firestore';
-import { useState } from 'react';
+import { getAuth } from 'firebase/auth';
+import { deleteDoc, doc, getDoc } from 'firebase/firestore';
+import { getStorage, ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import { UserProfile } from '../models/user';
-import firebase, { db } from './firebaseConfig';
+import { db } from './firebaseConfig';
 
 
-const profileCollectionReference = collection(db, "profile")
+// const profileCollectionReference = collection(db, "profile")
 
 async function getUserInfo(userId: string): Promise<UserProfile> {
     let user: UserProfile;
@@ -54,5 +54,24 @@ export async function deleteUserFromStore(email: string) {
 //     },
 //   );
 //   return (res.json());
+}
+
+
+export async function getPicture(imageName: string) {
+    const storage = getStorage();
+    const imageRef = ref(storage, imageName);
+    const url = await getDownloadURL(imageRef);
+    return url;
+}
+
+
+export async function uploadImage(image: File, imageName: string) {
+  const storage = getStorage();
+  const imageRef = ref(storage, imageName);
+  await uploadBytes(imageRef, image)
+  const url = await getDownloadURL(imageRef);
+  return url;
+
+
 }
 
