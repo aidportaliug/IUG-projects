@@ -7,7 +7,7 @@ import signUp from "../services/signup";
 
 
 
-function SignupComponent( ) {
+function SignUpComponent( ) {
 
     const nav = useNavigate();
 
@@ -156,4 +156,4 @@ function SignupComponent( ) {
     );
 }
 
-export default SignupComponent;
+export default SignUpComponent;

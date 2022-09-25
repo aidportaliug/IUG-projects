@@ -16,6 +16,7 @@ import { db } from "../../services/firebaseConfig";
 import { FormLabel, RadioGroup, FormControl, Radio } from '@mui/material';
 import './signup.css'
 import signUp from "../../services/signup";
+import SignUpComponent from "../../components/Signup";
 export default function SignUp() {
 
 
@@ -48,6 +49,7 @@ export default function SignUp() {
 
       <div className='signupPart'>
         <ThemeProvider theme={theme}>
+          <SignUpComponent/>
           
         </ThemeProvider>
       </div>
