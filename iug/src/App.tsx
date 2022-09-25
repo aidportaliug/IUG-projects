@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/homepage/home';
+import Home from './pages/homepage';
 import Login from './pages/login';
 import SignUp from './pages/signup';
 import UserView from './pages/userprofile';

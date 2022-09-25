@@ -11,7 +11,7 @@ import { deleteFromAuth, logOut } from "../../services/auth";
 import getLoggedinUser, { deleteUserFromStore } from "../../services/userData";
 
 
-
+//TODO: mangler dere
 
 export default function UserView() {
 
