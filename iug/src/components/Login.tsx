@@ -1,8 +1,7 @@
-import { Container, CssBaseline, Box, Typography, TextField, FormControlLabel, Checkbox, Button, Grid, createTheme } from "@mui/material";
+import { Container, CssBaseline, Box, Typography, TextField, FormControlLabel, Checkbox, Button, Grid } from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import login from "../pages/login";
 import logIn from "../services/auth";
 import { auth } from "../services/firebaseConfig";
 import Link from '@mui/material/Link';
@@ -24,7 +23,7 @@ function LoginComponent( ) {
         nav("/user");
       }
     });
-  }, []);
+  }, [nav]);
 
 
     const handleLogin = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {

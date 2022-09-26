@@ -21,7 +21,7 @@ function SignUpComponent( ) {
           }
           console.log("not current user");
         });
-      }, []);
+      }, [nav]);
     
       const handleSignUp = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {
         event.preventDefault();

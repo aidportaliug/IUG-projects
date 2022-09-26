@@ -29,7 +29,8 @@ function UserProfileComponent( ) {
                 nav("/");
             }
         });
-    }, [auth.currentUser]);
+    }, [nav]);
+    // }, [auth.currentUser, nav]);
 
 
     const logout = async () => {
