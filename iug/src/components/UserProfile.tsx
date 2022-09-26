@@ -8,7 +8,7 @@ import { auth } from "../services/firebaseConfig";
 import getLoggedinUser, { deleteUserFromStore, getPicture, uploadImage } from "../services/userData";
 
 
-function UserProfileComponent( ) {
+function UserProfileComponent() {
 
 
 
@@ -19,11 +19,11 @@ function UserProfileComponent( ) {
 
 
     useEffect(() => {
-        onAuthStateChanged(auth,  (currentUser) => {
-            getLoggedinUser().then((user:any) => {
-                if(user) setUser(user)
+        onAuthStateChanged(auth, (currentUser) => {
+            getLoggedinUser().then((user: any) => {
+                if (user) setUser(user)
             })
-           
+
             if (!currentUser) {
                 console.log(auth.currentUser);
                 nav("/");
@@ -41,7 +41,7 @@ function UserProfileComponent( ) {
     };
 
     const deleteUser = async () => {
-        if(user) {
+        if (user) {
 
             deleteUserFromStore(user.email as string);
             deleteFromAuth(user.email as string);
@@ -49,46 +49,46 @@ function UserProfileComponent( ) {
     }
 
 
-    
-    
+
+
     const [image, setImage] = useState<Blob | Uint8Array | ArrayBuffer | undefined>();
     const [url, setUrl] = useState<string>("");
     const imageName = "/profile/" + auth.currentUser?.email + "ProfileImage";
-    
+
     useEffect(() => {
-        
-        getPicture(imageName).then((url) => {setUrl(url)})
+
+        getPicture(imageName).then((url) => { setUrl(url) })
     })
-    
-    
+
+
     const handleImageChange = (e: any) => {
         if (e.target.files[0]) {
             setImage(e.target.files[0]);
         }
     };
-    
+
     const handleSubmit = () => {
-        
-        uploadImage(image as File, imageName).then((url) => {setUrl(url)})
-        
+
+        uploadImage(image as File, imageName).then((url) => { setUrl(url) })
+
     };
-    
+
     return (
         <>
-        
-        
-<div className="user">
+
+
+            <div className="user">
                 <div className="top-part">
-                    <h1 className="username">{user? user.email: ""}</h1>
+                    <h1 className="username">{user ? user.email : ""}</h1>
                 </div>
 
 
 
 
-<div className="profileIcon">
-<Avatar src={url} sx={{ width: 150, height: 150 }} />
-    <input type="file" onChange={handleImageChange} />
-    <button onClick={handleSubmit}>Submit</button>
+                <div className="profileIcon">
+                    <Avatar src={url} sx={{ width: 150, height: 150 }} />
+                    <input type="file" onChange={handleImageChange} />
+                    <button onClick={handleSubmit}>Submit</button>
                 </div>
 
                 <div className="interests">
@@ -107,8 +107,8 @@ function UserProfileComponent( ) {
                 </Button>
 
             </div>
-            </>
-            )
-    }
+        </>
+    )
+}
 
-    export default UserProfileComponent;
+export default UserProfileComponent;
