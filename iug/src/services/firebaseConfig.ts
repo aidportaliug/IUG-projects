@@ -12,8 +12,8 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_APP_ID,
   measurementId: "G-" + process.env.REACT_APP_MEASUREMENT_ID,
 };
-console.log("HELLU:" + firebaseConfig.apiKey);
-console.log("HELLU:" + firebaseConfig.authDomain);
+// console.log("HELLU:" + firebaseConfig.apiKey);
+// console.log("HELLU:" + firebaseConfig.authDomain);
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 export const auth = getAuth(app);

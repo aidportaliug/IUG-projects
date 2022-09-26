@@ -34,27 +34,35 @@ export default async function getLoggedinUser() {
 
 export async function deleteUserFromStore(email: string) {
   await deleteDoc(doc(db, "profile", email));
-  //   const res = await fetch(
-  //     'https://europe-west3-no-dcsandbox-tst-c062.cloudfunctions.net/deleteUser',
-  //     {
-  //       body: JSON.stringify({
-  //         uid: id,
-  //       }),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         // 'Accept': 'application/json',
-  //       },
-  //       mode: 'no-cors',
-  //       method: 'POST',
-  //     },
-  //   );
-  //   return (res.json());
+  const res = await fetch(
+    "https://europe-west3-no-dcsandbox-tst-c062.cloudfunctions.net/deleteUser",
+    {
+      body: JSON.stringify({
+        uid: email,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        // 'Accept': 'application/json',
+      },
+      mode: "no-cors",
+      method: "POST",
+    }
+  );
+  return res.json();
 }
 
 export async function getPicture(imageName: string) {
   const storage = getStorage();
   const imageRef = ref(storage, imageName);
-  const url = await getDownloadURL(imageRef);
+  let url = await getDownloadURL(imageRef)
+    .then((response) => {
+      console.log(response);
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
   return url;
 }
 
