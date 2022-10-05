@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import firebase, { db } from "./firebaseConfig";
 
 const storeUser = async (
@@ -9,7 +9,7 @@ const storeUser = async (
   age: string,
   mail: string
 ) => {
-  await setDoc(doc(db, "profile", mail), {
+  await addDoc(collection(db, "userProfile"), {
     name: firstName,
     email: mail,
     lastname: lastName,
@@ -39,7 +39,7 @@ export default async function signUp(
 
   const auth = getAuth(firebase);
   createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(() => {
       storeUser(firstName, lastName, gender, age, email);
     })
     .catch((error) => {
