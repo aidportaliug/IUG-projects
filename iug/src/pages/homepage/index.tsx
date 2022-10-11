@@ -1,7 +1,10 @@
 import React from "react";
+import ProjectCard from "../../components/ProjectCard/ProjectCard";
 
 function Home() {
   return (
+<>
+    <ProjectCard/>
     <div className="home">
       <div className="container">
         <div className="row align-items-center my-5">
@@ -24,6 +27,7 @@ function Home() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

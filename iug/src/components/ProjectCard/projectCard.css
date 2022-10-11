@@ -1,0 +1,80 @@
+.projectOutline{
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    min-height: 356.53px;
+    width: 100%;
+    overflow: hidden;
+    background-color: white;
+    border: 3px solid #3D7844;
+}
+
+.flexColumn{
+    flex-direction: column;
+}
+.projectPicture{
+    width: 100%;
+    height: 234.37px;
+}
+
+.projectText{
+    color: #3D7844;
+    font-family: 'Droid Sans';
+    font-weight: 700;
+    font-size: 25px;
+    margin: 10px;
+}
+.projectCardContainer{
+    width: 455.8px;
+}
+
+.projectDescription{
+    width: 100%;
+    margin: 10px;
+    font-family: 'Droid Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    color: #727171;
+}
+
+.projectCardBottomRow{
+    flex-direction: row;
+    display: flex;
+}
+
+.topicTag{
+    width: 48.76px;
+    height: 17.52px;
+
+    font-family: 'Droid Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 18px;
+
+    background: #9FC4A3;
+    border-radius: 8px;
+    color: #FFFFFF;
+    margin-left: 10px;
+    margin-top: 10px;
+    padding: 4px;
+
+}
+
+.date{
+    font-family: 'Droid Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 18px;
+    color: #727171;
+    width: 79.23px;
+    height: 17.52px;
+    margin: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.alignRight{
+    margin-left: auto;
+}
