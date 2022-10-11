@@ -2,9 +2,13 @@ import React from "react";
 import ProjectCard from "../../components/ProjectCard/ProjectCard";
 
 function Home() {
+  const description : string  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id dui sit amet diam convallis facilisis ut non magna. Integer a turpis elit. "
+  const date : Date = new Date()
+  const topics : string[] = ["topic 1", "topic 2", "topic 3"]
+  const imagePath : string = "./../../images/Trax_Ghana.png"
   return (
 <>
-    <ProjectCard/>
+    <ProjectCard title = "PROJECT ONE" description = {description} date = {date} topics = {topics} imagePath = {imagePath}/>
     <div className="home">
       <div className="container">
         <div className="row align-items-center my-5">

@@ -3,22 +3,33 @@ import "./projectCard.css"
 import CalandarDate from "../CalanderDate";
 import TopicTag from "./TopicTag";
 
-const ProjectCard : React.FC = () => {
+interface projectProps {
+    title: string;
+    description: string;
+    date: Date;
+    topics: string[]
+    imagePath: string
+}
+
+const ProjectCard : React.FC <projectProps> = ({title, description, date, topics, imagePath}) => {
     const imageProjectCard = require("./../../images/Trax_Ghana.png");
+    var topicsDivs = topics.map(function(topic){
+        return <TopicTag topic={topic}/>;
+      })
+
     return(
         <div className="projectCardContainer">
             <div className="flexColumn">
                 <div className = "projectOutline">
                     <img className = "projectPicture" src = {imageProjectCard} alt="Project card"/>
-                    <div className = "projectText"> Project One </div>
-                    <div className = "projectDescription"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id dui sit amet diam convallis facilisis ut non magna. Integer a turpis elit.</div>
+                    <div className = "projectText"> {title} </div>
+                    <div className = "projectDescription"> {description} </div>
                 </div>
             </div>
             <div className = "projectCardBottomRow">
-                <TopicTag topic="Topic 1"/>
-                <TopicTag topic="Topic 2"/>
+                {topicsDivs}
                 <div className="alignRight">
-                <CalandarDate/>
+                    <CalandarDate date={date}/>
                 </div>
             </div>
         </div>

@@ -1,12 +1,15 @@
 import "./ProjectCard/projectCard.css"
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
+interface calanderDateProps{
+    date : Date;
+}
 
-const CalandarDate : React.FC = () => {
+const CalandarDate : React.FC <calanderDateProps> = ({date}) => {
     return(
         <div className="date">    
             <CalendarTodayIcon></CalendarTodayIcon> 
-            <div>22/10/2022 </div>
+            <div style={{margin: "10px"}}>{date.getDate()}/{date.getMonth()}/{date.getFullYear()} </div>
       </div>
     )
 };
