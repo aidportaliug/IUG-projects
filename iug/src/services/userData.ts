@@ -1,18 +1,23 @@
 import { getAuth } from "firebase/auth";
-import { deleteDoc, doc, getDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, DocumentData, getDocs, Query, query, QuerySnapshot, where } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { UserProfile } from "../models/user";
 import { db } from "./firebaseConfig";
 
 // const profileCollectionReference = collection(db, "profile")
 
-async function getUserInfo(userId: string): Promise<UserProfile> {
-  let user: UserProfile;
-  const docRef = doc(db, "profile", userId);
-  const docSnap = await getDoc(docRef);
-  user = docSnap.data() as UserProfile;
-  user.userId = userId;
-  if (!user) throw Error("No user with given userid exists!");
+
+async function getUserInfoByEmail(userEmail: string): Promise<UserProfile | null> {
+  const queryGetUser : Query<DocumentData> = query(collection(db, "userProfile"), where("email", "==", userEmail));
+  const docSnapShotUser : QuerySnapshot<DocumentData>  = await getDocs(queryGetUser);
+  let user: UserProfile | null = null;
+  docSnapShotUser.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    user = doc.data() as UserProfile
+
+    if (!user) throw Error("No user with given userid exists!");
+  });
+
   return user;
 }
 
@@ -21,7 +26,7 @@ export default async function getLoggedinUser() {
   const user = auth.currentUser;
 
   if (user?.email) {
-    return await getUserInfo(user.email);
+    return await getUserInfoByEmail(user.email);
 
     // User is signed in, see docs for a list of available properties
     // https://firebase.google.com/docs/reference/js/firebase.User
