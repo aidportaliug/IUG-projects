@@ -1,5 +1,5 @@
 import React from 'react';
-import "./projectCard.css"
+import "../../styles/projectCard.css"
 import CalandarDate from "../CalanderDate";
 import TopicTag from "./TopicTag";
 
@@ -19,13 +19,11 @@ const ProjectCard : React.FC <projectProps> = ({title, description, date, topics
 
     return(
         <div className="projectCardContainer">
-            <div className="flexColumn">
                 <div className = "projectOutline">
                     <img className = "projectPicture" src = {imageProjectCard} alt="Project card"/>
                     <div className = "projectText"> {title} </div>
                     <div className = "projectDescription"> {description} </div>
                 </div>
-            </div>
             <div className = "projectCardBottomRow">
                 {topicsDivs}
                 <div className="alignRight">

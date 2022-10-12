@@ -4,7 +4,7 @@ import ProjectCard from "../../components/ProjectCard/ProjectCard";
 function Home() {
   const description : string  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id dui sit amet diam convallis facilisis ut non magna. Integer a turpis elit. "
   const date : Date = new Date()
-  const topics : string[] = ["topic 1", "topic 2", "topic 3"]
+  const topics : string[] = ["topic 1", "topic 2", "topic 3", "fisk"]
   const imagePath : string = "./../../images/Trax_Ghana.png"
   return (
 <>

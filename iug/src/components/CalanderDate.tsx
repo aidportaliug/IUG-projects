@@ -1,4 +1,4 @@
-import "./ProjectCard/projectCard.css"
+import "../styles/projectCard.css"
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 interface calanderDateProps{

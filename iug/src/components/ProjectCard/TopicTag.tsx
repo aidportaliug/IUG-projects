@@ -1,5 +1,5 @@
 import React from 'react';
-import "./projectCard.css"
+import "../../styles/projectCard.css"
 
 interface topicTagInterface{
     topic: string
