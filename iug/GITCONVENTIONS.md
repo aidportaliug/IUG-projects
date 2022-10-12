@@ -14,7 +14,7 @@ Here are the convention for GitLab and Git that we will follow in this project.
     - eg. "(#3) add styling for card"
 - If you want to commit unfinished work, user "(WIP)" in the commit message
 
-##Pull Requests(PR)
+## Pull Requests(PR)
 - Create PR for each issues.
 -Each PR shall pass the Pipeline before being approved
 - Each PR shall be reviews and approved by another developer in the group.
