@@ -1036,7 +1036,7 @@
     "core-js-pure" "^3.25.1"
     "regenerator-runtime" "^0.13.4"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.18.9", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.18.9", "@babel/runtime@^7.19.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   "integrity" "sha512-eR8Lo9hnDS7tqkO7NsV+mKvCmv5boaXFSZ70DnfhcgiEne8hv9oCEd36Klw74EtizEqLsy4YnW8UWwpBVolHZA=="
   "resolved" "https://registry.npmjs.org/@babel/runtime/-/runtime-7.19.0.tgz"
   "version" "7.19.0"
@@ -2051,7 +2051,14 @@
   "resolved" "https://registry.npmjs.org/@mui/core-downloads-tracker/-/core-downloads-tracker-5.10.5.tgz"
   "version" "5.10.5"
 
-"@mui/material@^5.10.5":
+"@mui/icons-material@^5.10.9":
+  "integrity" "sha512-sqClXdEM39WKQJOQ0ZCPTptaZgqwibhj2EFV9N0v7BU1PO8y4OcX/a2wIQHn4fNuDjIZktJIBrmU23h7aqlGgg=="
+  "resolved" "https://registry.npmjs.org/@mui/icons-material/-/icons-material-5.10.9.tgz"
+  "version" "5.10.9"
+  dependencies:
+    "@babel/runtime" "^7.19.0"
+
+"@mui/material@^5.0.0", "@mui/material@^5.10.5":
   "integrity" "sha512-VFMadvfA6jqx5DCk2xoBl4bAGyzgmmubJIuB7fUWUZBwYIYL5Ea9SsoFpt5kawA6O2feuj69alDN2fhxPw1MeQ=="
   "resolved" "https://registry.npmjs.org/@mui/material/-/material-5.10.5.tgz"
   "version" "5.10.5"
@@ -4399,9 +4406,9 @@
     "execa" "^5.0.0"
 
 "defaults@^1.0.3":
-  "integrity" "sha512-s82itHOnYrN0Ib8r+z7laQz3sdE+4FP3d9Q7VLO7U+KRT+CR0GsWuyHxzdAY82I7cXv0G/twrqomTJLOssO5HA=="
-  "resolved" "https://registry.npmjs.org/defaults/-/defaults-1.0.3.tgz"
-  "version" "1.0.3"
+  "integrity" "sha512-eFuaLoy/Rxalv2kr+lqMlUnrDWV+3j4pljOIJgLIhI058IQfWJ7vXhyEIHu+HtC738klGALYxOKDO0bQP3tg8A=="
+  "resolved" "https://registry.npmjs.org/defaults/-/defaults-1.0.4.tgz"
+  "version" "1.0.4"
   dependencies:
     "clone" "^1.0.2"
 
