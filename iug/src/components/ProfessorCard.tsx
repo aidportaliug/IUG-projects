@@ -2,23 +2,32 @@ import React from "react"
 import "../styles/professorCard.css"
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
-const ProfessorCard : React.FC = () =>{
+
+interface professorCardProp{
+    name: string;
+    professioanlTitle: string;
+    institute: string;
+    email: string
+    phoneNumber:string
+    //add photo
+}
+const ProfessorCard : React.FC<professorCardProp> = ({name, professioanlTitle, institute, email, phoneNumber}) =>{
     const imageProfessorCard = require("../images/trond_profil_bilde.png");
     return(
         <div className="professorCardOutline"> 
         <div className="professorCardFrame">
             <img className= "professorCardImage" src={imageProfessorCard} alt="Professor"></img>
-            <div className= "professorCardName"> Trond Are Ørisland </div>
-            <div className= "professorCardProffesionalTitle"> Førsteamanuensis </div>
-            <div className= "professorCardInstitute"> Institutt for design</div>
+            <div className= "professorCardName"> {name} </div>
+            <div className= "professorCardProffesionalTitle"> {professioanlTitle} </div>
+            <div className= "professorCardInstitute"> {institute} </div>
             <div className= "professorCardEmailPhone">
                 <div className="rowFlex" >   
                     <MailOutlineIcon className="professorCardIcons"/> 
-                    <div className="marginLeft"> trond.are.oristland@ntnu.no </div>
+                    <div className="marginLeft"> {email} </div>
                 </div>
                 <div className="rowFlex" > 
                     <LocalPhoneOutlinedIcon className="professorCardIcons"/> 
-                    <div className="marginLeft"> +47 90783975 </div>
+                    <div className="marginLeft"> {phoneNumber} </div>
                 </div>
             </div>
             </div>
