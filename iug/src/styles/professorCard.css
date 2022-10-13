@@ -1,0 +1,52 @@
+
+.professorCardOutline{
+    background: #9FC4A3;
+    border-radius: 25px;
+    width: 434px;
+    height: 509px;
+    text-align: center;
+}
+
+.professorCardImage{
+    margin: 8%;
+    width: 55%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.professorCardName{
+    font-weight: 700;
+    font-size: 25px;
+    margin: 10px;
+}
+
+.professorCardProffesionalTitle{
+    font-size: 15px;
+}
+
+.professorCardInstitute{
+    font-size: 18px;
+    margin-bottom: 5%;
+}
+
+.professorCardEmailPhone{
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    display: inline-block;
+}
+
+
+.rowFlex{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.marginLeft{
+    margin-left: 10px;
+}
+
+.professorCardIcons{
+    color: #3D7844;
+}
