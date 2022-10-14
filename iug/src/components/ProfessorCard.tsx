@@ -13,10 +13,11 @@ interface professorCardProp{
 }
 const ProfessorCard : React.FC<professorCardProp> = ({name, professioanlTitle, institute, email, phoneNumber}) =>{
     const imageProfessorCard = require("../images/trond_profil_bilde.png");
+    const altText :string = "picture of" + name
     return(
         <div className="professorCardOutline"> 
         <div className="professorCardFrame">
-            <img className= "professorCardImage" src={imageProfessorCard} alt="Professor"></img>
+            <img className= "professorCardImage" src={imageProfessorCard} alt= {altText}></img>
             <div className= "professorCardName"> {name} </div>
             <div className= "professorCardProffesionalTitle"> {professioanlTitle} </div>
             <div className= "professorCardInstitute"> {institute} </div>
