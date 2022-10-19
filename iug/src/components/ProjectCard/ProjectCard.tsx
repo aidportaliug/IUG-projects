@@ -14,7 +14,7 @@ interface projectProps {
 const ProjectCard : React.FC <projectProps> = ({title, description, date, topics, imagePath}) => {
     const imageProjectCard = require("./../../images/Trax_Ghana.png");
     var topicsDivs = topics.map(function(topic){
-        return <TopicTag topic={topic}/>;
+        return <TopicTag key={topic} topic={topic}/>;
       })
 
     return(
