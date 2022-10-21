@@ -3,8 +3,6 @@
 .projectOutline{
     border-top-left-radius: 25px;
     border-top-right-radius: 25px;
-    min-height: 355px;
-    width: 100%;
     overflow: hidden;
     background-color: var(--mainBackground);
     border: 3px solid var(--mainGreen);
@@ -12,7 +10,7 @@
 
 .projectPicture{
     width: 100%;
-    height: 235px;
+    height: 65%;
 }
 
 .projectText{
@@ -22,9 +20,7 @@
     font-size: 25px;
     margin: 10px;
 }
-.projectCardContainer{
-    width: 455px;
-}
+
 
 .projectDescription{
     width: 95%;
@@ -39,11 +35,11 @@
 .projectCardBottomRow{
     flex-direction: row;
     display: flex;
+    width: 100%;
 }
 
 .topicTag{
     width: 50px;
-    height: 17px;
     font-family: var(--mainFontFamily);
     font-style: normal;
     font-weight: 400;
@@ -63,7 +59,6 @@
     font-weight: var(--mainFontWeight);
     font-size: 15px;
     color: var(--UiGray);
-    width: 80px;
     height: 18px;
     margin: 10px;
     display: flex;

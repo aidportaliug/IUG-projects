@@ -11,7 +11,7 @@ interface professorCardProp{
     phoneNumber:string
     //add photo
 }
-const ProfessorCard : React.FC<professorCardProp> = ({name, professioanlTitle, institute, email, phoneNumber}) =>{
+const ProfessorCard = ({name, professioanlTitle, institute, email, phoneNumber}: professorCardProp)  =>{
     const imageProfessorCard = require("../images/trond_profil_bilde.png");
     const altText :string = "picture of" + name
     return(
