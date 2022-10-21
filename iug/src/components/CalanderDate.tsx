@@ -5,7 +5,7 @@ interface calanderDateProps{
     date : Date;
 }
 
-const CalandarDate : React.FC <calanderDateProps> = ({date}) => {
+const CalandarDate = ({date} : calanderDateProps ) => {
     return(
         <div className="date">    
             <CalendarTodayIcon></CalendarTodayIcon> 

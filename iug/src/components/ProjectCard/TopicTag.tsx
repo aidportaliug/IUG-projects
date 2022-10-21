@@ -5,7 +5,7 @@ interface topicTagInterface{
     topic: string
 }
 
-const ProjectCard : React.FC <topicTagInterface> = ( { topic } ) => {
+const ProjectCard = ( {topic}:  topicTagInterface ) => {
     return(
 
         <div className = "topicTag"> {topic}</div>
