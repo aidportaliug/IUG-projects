@@ -1,0 +1,39 @@
+
+.homeOutline{
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 5%;
+}
+
+.row{
+    display: grid;
+    gap: 2em;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+
+@media screen and (min-width: 700px) and (max-width: 1000px) {
+    .row{
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* For Tablets */
+@media screen and (max-width: 700px) {
+    .row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.homeBackground{
+    background-color: #fff;
+}
+
+.homeTitle{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 4em; 
+    text-align: center;
+    color: #3D7844;
+    margin-bottom: 5%;
+}
