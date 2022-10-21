@@ -9,6 +9,8 @@ stages:
 Build project:
   # Define stage
   stage: build
+  before_script:
+    - cd iug
   # What to run on the job.
   script:
     - npm install
@@ -18,6 +20,8 @@ Build project:
 
 Run project:
   stage: run
+    before_script:
+    - cd iug
   script:
     - npm run start
     - node test.js
@@ -27,6 +31,8 @@ Run project:
 
 #Test project:
  # stage: test
+   #before_script:
+    #- cd iug
   #script:
    # - npm test
     #- node test.js
