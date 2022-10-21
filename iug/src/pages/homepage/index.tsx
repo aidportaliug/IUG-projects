@@ -1,5 +1,7 @@
 import React from "react";
 import ProjectCard from "../../components/ProjectCard/ProjectCard";
+import Header from "../../components/header";
+
 
 function Home() {
   const description : string  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id dui sit amet diam convallis facilisis ut non magna. Integer a turpis elit. "
@@ -8,6 +10,7 @@ function Home() {
   const imagePath : string = "./../../images/Trax_Ghana.png"
   return (
 <>
+  <Header/>
     <ProjectCard title = "PROJECT ONE" description = {description} date = {date} topics = {topics} imagePath = {imagePath}/>
     <div className="home">
       <div className="container">

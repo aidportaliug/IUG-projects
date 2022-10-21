@@ -1,4 +1,4 @@
-import "./user.css";
+import "../../styles/user.css";
 import UserProfileComponent from "../../components/UserProfile";
 
 export default function UserView() {

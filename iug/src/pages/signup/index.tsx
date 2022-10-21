@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import "./signup.css";
+import "../../styles/login.css";
 import SignUpComponent from "../../components/Signup";
 export default function SignUp() {
   const theme = createTheme();

@@ -1,11 +1,13 @@
+ @import "main.css";
+
 .projectOutline{
     border-top-left-radius: 25px;
     border-top-right-radius: 25px;
     min-height: 355px;
     width: 100%;
     overflow: hidden;
-    background-color: white;
-    border: 3px solid #3D7844;
+    background-color: var(--mainBackground);
+    border: 3px solid var(--mainGreen);
 }
 
 .projectPicture{
@@ -14,8 +16,8 @@
 }
 
 .projectText{
-    color: #3D7844;
-    font-family: 'Droid Sans';
+    color: var(--mainGreen);
+    font-family: var(--mainFontFamily);
     font-weight: 700;
     font-size: 25px;
     margin: 10px;
@@ -27,11 +29,11 @@
 .projectDescription{
     width: 100%;
     margin: 10px;
-    font-family: 'Droid Sans';
+    font-family: var(--mainFontFamily);
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
-    color: #727171;
+    color: var(--UiGray);
 }
 
 .projectCardBottomRow{
@@ -41,29 +43,26 @@
 
 .topicTag{
     width: 50px;
-    height: 17.52px;
-
-    font-family: 'Droid Sans';
+    height: 17px;
+    font-family: var(--mainFontFamily);
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
-
-    background: #9FC4A3;
+    background: var(--secondaryGreen);
     border-radius: 8px;
-    color: #FFFFFF;
+    color: var(--mainBackground);
     margin-left: 10px;
     margin-top: 10px;
     padding: 4px;
-
     text-align: center;
 }
 
-.date{
-    font-family: 'Droid Sans';
+.date {
+    font-family: var(--mainFontFamily);
     font-style: normal;
-    font-weight: 400;
+    font-weight: var(--mainFontWeight);
     font-size: 15px;
-    color: #727171;
+    color: var(--UiGray);
     width: 80px;
     height: 18px;
     margin: 10px;

@@ -1,6 +1,6 @@
 
 .professorCardOutline{
-    background: #9FC4A3;
+    background: var(--secondaryGreen);
     border-radius: 25px;
     width: 434px;
     height: 509px;
@@ -31,9 +31,8 @@
 
 .professorCardEmailPhone{
     font-size: 20px;
-    display: flex;
+    display: inline-block ; /* flex*/
     flex-direction: column;
-    display: inline-block;
 }
 
 
@@ -48,5 +47,5 @@
 }
 
 .professorCardIcons{
-    color: #3D7844;
+    color: var(--mainGreen);
 }
