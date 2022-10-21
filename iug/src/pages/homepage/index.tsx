@@ -10,7 +10,6 @@ function Home() {
   const imagePath : string = "./../../images/Trax_Ghana.png"
   return (
 <>
-  <Header/>
     <ProjectCard title = "PROJECT ONE" description = {description} date = {date} topics = {topics} imagePath = {imagePath}/>
     <div className="home">
       <div className="container">
