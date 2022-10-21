@@ -20,7 +20,7 @@ Build project:
 
 Run project:
   stage: run
-    before_script:
+  before_script:
     - cd iug
   script:
     - npm run start
@@ -31,7 +31,7 @@ Run project:
 
 #Test project:
  # stage: test
-   #before_script:
+  #before_script:
     #- cd iug
   #script:
    # - npm test
