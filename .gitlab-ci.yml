@@ -3,9 +3,10 @@ image: node:latest
 stages:
   - build
   - run
+  #- test
 
 # Job's name
-first-job:
+Build project:
   # Define stage
   stage: build
   # What to run on the job.
@@ -15,7 +16,7 @@ first-job:
     paths:
       - node_modules
 
-second-job:
+Run project:
   stage: run
   script:
     - npm run start
@@ -24,7 +25,11 @@ second-job:
     paths:
       - node_modules/
 
-second-job-parallel:
-  stage: run
-  script:
-    - echo "I'm running at the same time as second-job!!!"
+#Test project:
+ # stage: test
+  #script:
+   # - npm test
+    #- node test.js
+  #artifacts:
+   # paths:
+    #  - node_modules/
