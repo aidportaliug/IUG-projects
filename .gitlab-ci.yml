@@ -22,6 +22,7 @@ Run project:
   stage: run
   before_script:
     - cd iug
+    - npm install
   script:
     - npm run start
     - node test.js
