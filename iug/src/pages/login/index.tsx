@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import "./login.css";
+import "../../styles/login.css";
 import LoginComponent from "../../components/Login";
 const theme = createTheme();
 

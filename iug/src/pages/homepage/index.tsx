@@ -2,6 +2,8 @@ import React from "react";
 import ProjectCard from "../../components/ProjectCard/ProjectCard";
 import "../../styles/homepage.css"
 
+
+
 function Home() {
   const description : string  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id dui sit amet diam convallis facilisis ut non magna. Integer a turpis elit. "
   const date : Date = new Date()
