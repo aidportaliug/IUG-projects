@@ -18,14 +18,14 @@ Build project:
     paths:
       - node_modules
 
-Run project:
+Lint:
   stage: run
   before_script:
     - cd iug
     - npm install
   script:
-    - npm run start
-    - node test.js
+    - npm run lint:fix
+    #- node test.js
   artifacts:
     paths:
       - node_modules/
@@ -34,6 +34,7 @@ Run project:
  # stage: test
   #before_script:
     #- cd iug
+    #- npm install
   #script:
    # - npm test
     #- node test.js
