@@ -2,7 +2,7 @@ import { Avatar, Button } from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserProfile } from "../models/user";
+import { User } from "../models/user";
 import { logOut, deleteFromAuth } from "../services/auth";
 import { auth } from "../services/firebaseConfig";
 import getLoggedinUser, {
@@ -12,7 +12,7 @@ import getLoggedinUser, {
 } from "../services/userData";
 
 function UserProfileComponent() {
-  const [user, setUser] = useState<UserProfile>();
+  const [user, setUser] = useState<User>();
 
   const [image, setImage] = useState<Blob | Uint8Array | ArrayBuffer | undefined>();
   const [url, setUrl] = useState<string>("");

@@ -1,19 +1,19 @@
 import { getAuth } from "firebase/auth";
 import { collection, deleteDoc, doc, DocumentData, getDocs, Query, query, QuerySnapshot, where } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
-import { UserProfile } from "../models/user";
+import { User } from "../models/user";
 import { db } from "./firebaseConfig";
 
 // const profileCollectionReference = collection(db, "profile")
 
 
-async function getUserInfoByEmail(userEmail: string): Promise<UserProfile | null> {
+async function getUserInfoByEmail(userEmail: string): Promise<User | null> {
   const queryGetUser : Query<DocumentData> = query(collection(db, "userProfile"), where("email", "==", userEmail));
   const docSnapShotUser : QuerySnapshot<DocumentData>  = await getDocs(queryGetUser);
-  let user: UserProfile | null = null;
+  let user: User | null = null;
   docSnapShotUser.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
-    user = doc.data() as UserProfile
+    user = doc.data() as User
 
     if (!user) throw Error("No user with given userid exists!");
   });
