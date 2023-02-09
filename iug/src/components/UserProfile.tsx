@@ -11,6 +11,8 @@ import getLoggedinUser, {
   uploadImage,
 } from "../services/userData";
 
+import FileUpload from "./DragDrop";
+
 function UserProfileComponent() {
   const [user, setUser] = useState<User>();
 
@@ -53,13 +55,6 @@ function UserProfileComponent() {
     });
   }, [imageName]);
 
-
-  const handleImageChange = (e: any) => {
-    if (e.target.files[0]) {
-      setImage(e.target.files[0]);
-    }
-  };
-
   const handleSubmit = () => {
     uploadImage(image as File, imageName).then((url) => {
       setUrl(url);
@@ -75,8 +70,7 @@ function UserProfileComponent() {
 
         <div className="profileIcon">
           <Avatar src={url} sx={{ width: 150, height: 150 }} />
-          <input type="file" onChange={handleImageChange} />
-          <button onClick={handleSubmit}>Submit</button>
+          <FileUpload handleSubmit={handleSubmit} setImage={setImage}/>
         </div>
 
         <div className="interests">
