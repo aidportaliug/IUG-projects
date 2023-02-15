@@ -1,92 +1,128 @@
 import "../styles/uploadProject.css"
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TextField, TextFieldProps } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { Box, Button, TextField, TextFieldProps } from "@mui/material";
+import { DatePicker} from "@mui/x-date-pickers";
 import { useState } from "react";
-import { styled } from '@mui/material/styles';
-import { Height } from "@mui/icons-material";
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-      color: '#727171',
-      background: "#E3E3E3",
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#727171',
-    },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        border: "none",
-        borderRadius: "15px",
-        background: "#E3E3E3",
-        zIndex: "-1",
-        height: "3em",
-        width: "100%",
-      },
-      '&:hover fieldset': {
-        borderColor: '#727171',
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: '#727171',
-      },
-    },
-  });
+import createProject from "../services/createProject";
+
+// const CssTextField = styled(TextField)({
+//     '& label.Mui-focused': {
+//       color: '#727171',
+//       background: "#E3E3E3",
+//     },
+//     '& .MuiInput-underline:after': {
+//       borderBottomColor: '#727171',
+//     },
+//     '& .MuiOutlinedInput-root': {
+//       '& fieldset': {
+//         border: "none",
+//         borderRadius: "15px",
+//         background: "#E3E3E3",
+//         zIndex: "-1",
+//         height: "3em",
+//         width: "100%",
+//       },
+//       '&:hover fieldset': {
+//         borderColor: '#727171',
+//       },
+//       '&.Mui-focused fieldset': {
+//         borderColor: '#727171',
+//       },
+//     },
+//   });
 
 
 const UploadProject = () => {
-    // let geoPoint : GeoPoint = new GeoPoint ( -34.85553195363169, -56.207280375137955 );
-    // let newDate = new Date();
-    // // await addDoc(collection(db, "project2"), {
-    //     title: "hello",
-    //     location: geoPoint,
-    //     durationDays: 9,
-    //     deadline: newDate,
-    //     field: "field",
-    //     status: "done",
-    //     professorId: "professor",
-    //     description: "blablalba"
-    //   });
     const [value, setValue]= useState(Date())
+    const handleUpload = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {
+      event.preventDefault();
+      try {
+        const data = new FormData(event.currentTarget);
+        const shortTitle = data.get("shortTitle") as string;
+        const studyField= data.get("studyField") as string;
+        const projectTitle = data.get("projectTitle") as string;
+        const location = data.get("location") as string;
+        const dateStr = data.get("date") as string;
+        const dateParts = dateStr.split("/");
+        const year = parseInt(dateParts[2], 10);
+        const month = parseInt(dateParts[1], 10) - 1; // January is 0, so subtract 1
+        const day = parseInt(dateParts[0], 10);
+        const deadline = new Date(year, month, day);
+        const description = data.get("description") as string;
+        const summaryDescription = data.get("summaryDescription") as string;
+        const duration = parseInt(data.get("duartion") as string);
 
+        createProject(projectTitle,shortTitle, studyField, location, deadline, description,duration, summaryDescription)
+      } catch (error) {
+        console.log(error as string);
+      }
+    };
     return(
         <div className="outline">
             <div className="title"> Upload Project </div>
-            <form className="uploadProjectform">
-                <div className="group">
-                    <label> Title </label> <br />
-                    <input type="text" name="title" className="inputField" />
-                </div>
-                <div className="group">
-                    <label> Field of study </label> <br />
-                    <input type="text" name="name" className="inputField" />
-                </div>
-                <div className="group">
-                    <label> Duration </label> <br />
-                    <input type="text" name="name" className="inputField" />
-                </div>
-                <div className="group">
-                    <label> Deadline </label> <br />
-                    <DatePicker
+            <Box component="form" noValidate onSubmit={handleUpload} sx={{ mt: 3 }}>
+              <TextField
+                required
+                fullWidth
+                id="shortTitle"
+                label="Project short title"
+                name="shortTitle"/>
+              <TextField
+                required
+                fullWidth
+                id="studyField"
+                label="Study field"
+                name="studyField"/>
+              <TextField
+                required
+                fullWidth
+                id="projectTitle"
+                label="Project Title"
+                name="projectTitle"/>
+              <TextField
+                required
+                fullWidth
+                id="location"
+                label="Location"
+                name="location"/>
+              <DatePicker
                     disablePast
                     value={value}
                     onChange={(newValue: any) => {
                         setValue(newValue);
                     }}
-                    renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => <CssTextField InputLabelProps={{shrink: false}} {...params} />}
-                    inputFormat="DD/MM/YYYY"
-                    />
-                </div>
-                <div className="group">
-                    <label> Country </label> <br />
-                    <input type="text" name="name" className="inputField" />
-                </div>
-            </form>
+                    renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => <TextField id="date" name="date" InputLabelProps={{shrink: false}} {...params} />}
+                    inputFormat="DD/MM/YYYY"></DatePicker>
+               <TextField
+                required
+                fullWidth
+                id="description"
+                label="Description"
+                name="description"/>
+              <TextField
+                required
+                fullWidth
+                id="summaryDescription"
+                label="Summary description"
+                name="summaryDescription"/>
+               <TextField
+                required
+                fullWidth
+                id="duartion"
+                label="Duration"
+                name="duartion"/>
 
-            <form action="/action_page.php">
-                <label htmlFor="img">Select image:</label>
-                <input type="file" id="img" name="img" accept="image/*"/>
-                <input type="submit"></input>
-            </form>
-          
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              style={{ backgroundColor: '#3D7844', color: '#FFFFFF' }}
+
+            >
+              Sign Up
+            </Button>
+            </Box>
+
           
         </div>
 

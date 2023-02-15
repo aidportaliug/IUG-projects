@@ -1,49 +1,61 @@
 
-import { addDoc, collection, GeoPoint } from "firebase/firestore";
+import { addDoc, collection} from "firebase/firestore";
 import firebase, { db } from "./firebaseConfig";
 import { getAuth } from "firebase/auth";
 
+const allowedLocations=["europe", "asia", "africa", "southAmerica", "northAmerica"]
+const allowedStudyFields=["IT","Construction and infrastructure","Geotechnics","Machine and process engineering","Clean energy","Water and sanitation"]
+
 const storeProject = async (
     title: string,
-    location: GeoPoint,
-    durationDays: number, //TODO: Days or credits?
+    shortTitle: string,
+    studyField: string,
+    location: string,
     deadline: Date,
-    field: string,
-    status: string,
+    description: string,
+    summaryDescription: string,
+    duration: number,
     professorId: string,
-    description?: string,
   ) => {
-    await addDoc(collection(db, "project2"), {
+    console.log("Hallo");
+    await addDoc(collection(db, "project3"), {
       title: title,
+      shortTitle: shortTitle,
+      studyField: studyField,
       location: location,
-      durationDays: durationDays,
       deadline: deadline,
-      field: field,
-      status: status,
-      professorId: professorId,
-      description: description
+      description: description,
+      summaryDescription: summaryDescription,
+      duration: duration,
+      professorId:professorId
     });
   };
 
   export default async function createProject( 
     title: string,
-    location: GeoPoint,
-    durationDays: number,
+    shortTitle: string,
+    studyField: string,
+    location: string,
     deadline: Date,
-    field: string,
-    status: string,
-    description?: string,
+    description: string,
+    duration: number,
+    summaryDescription: string,
   ){
     const auth = getAuth(firebase);
-    let newDate = new Date()
-    let geoPoint : GeoPoint = new GeoPoint ( -34.85553195363169, -56.207280375137955 )
+    console.log("Hallo");
 
     if(auth.currentUser?.getIdToken()){
-        storeProject("Test", geoPoint, 10 , newDate , "data", "open",  await auth.currentUser?.getIdToken(), "noe kult")
+      console.log("Hallo");
+      if(allowedLocations.includes(location) && allowedStudyFields.includes(studyField)){
+        storeProject(title ,shortTitle, studyField , location , deadline, description, summaryDescription, duration, await auth.currentUser?.getIdToken())
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           throw alert(errorCode + " " + errorMessage);
         });
+      }
+      else{
+        console.log("not valid location or studyfield")
+      }
     }
 }
