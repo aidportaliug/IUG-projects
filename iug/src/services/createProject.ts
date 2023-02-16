@@ -2,9 +2,8 @@
 import { addDoc, collection} from "firebase/firestore";
 import firebase, { db } from "./firebaseConfig";
 import { getAuth } from "firebase/auth";
+import { allowedLocations, allowedStudyFields } from "../models/allowedValues";
 
-const allowedLocations=["europe", "asia", "africa", "southAmerica", "northAmerica"]
-const allowedStudyFields=["IT","Construction and infrastructure","Geotechnics","Machine and process engineering","Clean energy","Water and sanitation"]
 
 const storeProject = async (
     title: string,
@@ -17,8 +16,7 @@ const storeProject = async (
     duration: number,
     professorId: string,
   ) => {
-    console.log("Hallo");
-    await addDoc(collection(db, "project3"), {
+    await addDoc(collection(db, "project"), {
       title: title,
       shortTitle: shortTitle,
       studyField: studyField,
@@ -42,10 +40,7 @@ const storeProject = async (
     summaryDescription: string,
   ){
     const auth = getAuth(firebase);
-    console.log("Hallo");
-
     if(auth.currentUser?.getIdToken()){
-      console.log("Hallo");
       if(allowedLocations.includes(location) && allowedStudyFields.includes(studyField)){
         storeProject(title ,shortTitle, studyField , location , deadline, description, summaryDescription, duration, await auth.currentUser?.getIdToken())
         .catch((error) => {
