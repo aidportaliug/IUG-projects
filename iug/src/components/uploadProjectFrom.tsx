@@ -4,11 +4,14 @@ import { DatePicker} from "@mui/x-date-pickers";
 import { SetStateAction, useState } from "react";
 import createProject from "../services/createProject";
 import { allowedLocations, allowedStudyFields } from "../models/allowedValues";
+import { useNavigate } from "react-router-dom";
+
 
 const UploadProjectForm = () => {
     const [value, setValue]= useState(Date())
     const [studyField, setStudyField] = useState('study_field');
     const [location, setLocation] = useState('location');
+    const navigate = useNavigate();
  
   
     const handleStudyFieldChange = (event: { target: { value: SetStateAction<string>; }; }) => {
@@ -29,7 +32,7 @@ const UploadProjectForm = () => {
         return;
       }
       const data = new FormData(event.currentTarget);
-      const duration = parseInt(data.get("duartion") as string);
+      const duration = parseInt(data.get("duration") as string);
       if(Number.isNaN(duration)){
         alert(`Duration must be a number`);
         return;
@@ -63,7 +66,9 @@ const UploadProjectForm = () => {
         console.log("Successfull upload")
       } catch (error) {
         console.log(error as string);
+        return;
       } 
+      navigate("/home");
     }
     return(
         <Box component="form" noValidate onSubmit={handleUpload} sx={{ margin: '0 auto', maxWidth:"60%" }}
@@ -110,7 +115,7 @@ const UploadProjectForm = () => {
                   sx={{width:"100%", marginRight:"1em"}}
                 >
                   <MenuItem value="location">Location</MenuItem>
-                  <MenuItem value="euprope">Europe</MenuItem>
+                  <MenuItem value="europe">Europe</MenuItem>
                   <MenuItem value="asia">Asia</MenuItem>
                   <MenuItem value="africa">Africa</MenuItem>
                   <MenuItem value="south_america">South America</MenuItem>
@@ -119,9 +124,9 @@ const UploadProjectForm = () => {
                 <TextField
                 required
                 fullWidth
-                id="duartion"
+                id="duration"
                 label="Duration"
-                name="duartion"
+                name="duration"
                 sx={{marginLeft:"1em"}}/>
               </Box>
                <TextField

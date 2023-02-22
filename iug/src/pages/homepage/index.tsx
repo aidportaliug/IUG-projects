@@ -1,29 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ProjectCard from "../../components/ProjectCard/ProjectCard";
 import "../../styles/homepage.css"
-import { upload } from "@testing-library/user-event/dist/upload";
-
+import { getProjects } from "../../services/getProjects";
+import { Project } from "../../models/project";
+import { studyFields, locations } from "../../models/allowedValues";
 
 
 function Home() {
-  const description : string  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id dui sit amet diam convallis facilisis ut non magna. Integer a turpis elit. "
-  const date : Date = new Date()
-  const topics : string[] = ["MTDT", "Spain"]
   const imagePath : string = "./../../images/Trax_Ghana.png"
+  const [projects, setProjects] = useState<Project[]>([]);
+  useEffect(() => {
+    async function fetchData() {
+      const projects = await getProjects();
+      setProjects(projects);
+    }
+
+    fetchData();
+  },[]);
+
+
   return (
     <div className="homeBackground">
       <div className="homeOutline">
         <div className="homeTitle"> Projects </div>
         <div className="row">
-          <ProjectCard title = "PROJECT ONE" description = {description} date = {date} topics = {topics} imagePath = {imagePath}/>
-          <ProjectCard title = "PROJECT ONE" description = {description} date = {date} topics = {topics} imagePath = {imagePath}/>
-          <ProjectCard title = "PROJECT ONE" description = {description} date = {date} topics = {topics} imagePath = {imagePath}/>
-          <ProjectCard title = "PROJECT ONE" description = {description} date = {date} topics = {topics} imagePath = {imagePath}/>
-          <ProjectCard title = "PROJECT ONE" description = {description} date = {date} topics = {topics} imagePath = {imagePath}/>
-          <ProjectCard title = "PROJECT ONE" description = {description} date = {date} topics = {topics} imagePath = {imagePath}/>
-          <ProjectCard title = "PROJECT ONE" description = {description} date = {date} topics = {topics} imagePath = {imagePath}/>
-          <ProjectCard title = "PROJECT ONE" description = {description} date = {date} topics = {topics} imagePath = {imagePath}/>
-          <ProjectCard title = "PROJECT ONE" description = {description} date = {date} topics = {topics} imagePath = {imagePath}/>
+          {projects.map((project)=>(
+            <ProjectCard key={project.id} title={project.shortTitle ?? project.title} description={project.summaryDescription ?? project.description} date={project.deadline.toDate()} topics={[studyFields[project.studyField as keyof typeof studyFields],locations[project.location as keyof typeof locations]]} imagePath = {imagePath}/>
+          ))}
         </div>
       </div>
     </div>
