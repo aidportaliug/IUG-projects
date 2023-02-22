@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Key } from 'react';
 import "../../styles/projectCard.css"
 import CalandarDate from "../CalanderDate";
 import TopicTag from "./TopicTag";
@@ -7,8 +7,8 @@ interface projectProps {
     title: string;
     description: string;
     date: Date;
-    topics: string[]
-    imagePath: string
+    topics: string[];
+    imagePath: string;
 }
 
 const ProjectCard = ({title, description, date, topics, imagePath} : projectProps) => {
@@ -18,7 +18,7 @@ const ProjectCard = ({title, description, date, topics, imagePath} : projectProp
       })
 
     return(
-        <div className="projectCardContainer">
+        <div className="projectCardContainer" >
                 <div className = "projectOutline">
                     <img className = "projectPicture" src = {imageProjectCard} alt="Project card"/>
                     <div className = "projectText"> {title} </div>

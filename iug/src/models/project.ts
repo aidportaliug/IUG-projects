@@ -1,14 +1,16 @@
-import { GeoPoint } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 
 export interface Project{
     id: string;
+    deadline: Timestamp;
     title: string;
-    location: GeoPoint;
-    durationDays: number; //TODO: Days or credits?
-    deadline: Date;
-    field: string;
-    description?: string;
+    shortTitle?: string;
+    location: string;
+    duration: number; //TODO: Days or credits?
+    studyField: string;
+    description: string;
+    summaryDescription?: string
     picture?: string;
-    status: string;
+    status?: string;
     professorId: string;
 }

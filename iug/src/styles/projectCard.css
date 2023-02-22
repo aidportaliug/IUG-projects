@@ -6,11 +6,13 @@
     overflow: hidden;
     background-color: var(--mainBackground);
     border: 3px solid var(--mainGreen);
+    height: 300px;
 }
 
 .projectPicture{
     width: 100%;
-    height: 65%;
+    object-fit: cover;
+    height: 175px;
 }
 
 .projectText{
@@ -39,7 +41,8 @@
 }
 
 .topicTag{
-    width: 50px;
+    width: 80px;
+    height: 17px;
     font-family: var(--mainFontFamily);
     font-style: normal;
     font-weight: 400;
