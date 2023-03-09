@@ -23,9 +23,9 @@ function Home() {
     <div className="homeBackground">
       <div className="homeOutline">
         <div className="homeTitle"> Projects </div>
-        <div className="row">
+        <div className="rowHome">
           {projects.map((project)=>(
-            <ProjectCard key={project.id} title={project.shortTitle ?? project.title} description={project.summaryDescription ?? project.description} date={project.deadline.toDate()} topics={[studyFields[project.studyField as keyof typeof studyFields],locations[project.location as keyof typeof locations]]} imagePath = {imagePath}/>
+            <ProjectCard key={project.id} id={project.id} title={project.shortTitle ?? project.title} description={project.summaryDescription ?? project.description} date={project.deadline.toDate()} topics={[studyFields[project.studyField as keyof typeof studyFields],locations[project.location as keyof typeof locations]]} imagePath = {imagePath}/>
           ))}
         </div>
       </div>

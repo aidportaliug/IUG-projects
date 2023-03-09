@@ -71,3 +71,7 @@
 .alignRight{
     margin-left: auto;
 }
+
+.projectCardContainer:hover{
+    cursor: pointer;
+  }
