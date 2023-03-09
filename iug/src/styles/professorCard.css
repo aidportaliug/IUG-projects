@@ -2,22 +2,21 @@
 .professorCardOutline{
     background: var(--secondaryGreen);
     border-radius: 25px;
-    width: 434px;
-    height: 509px;
+    width: 100%;
+    height: 100%;
     text-align: center;
 }
 
 .professorCardImage{
     margin: 8%;
-    width: 55%;
+    width: 50%;
     border-radius: 10px;
     overflow: hidden;
 }
 
 .professorCardName{
     font-weight: 700;
-    font-size: 25px;
-    margin: 10px;
+    font-size: 20px;
 }
 
 .professorCardProffesionalTitle{
@@ -30,7 +29,7 @@
 }
 
 .professorCardEmailPhone{
-    font-size: 20px;
+    font-size: 15px;
     display: inline-block ; /* flex*/
     flex-direction: column;
 }

@@ -1,7 +1,8 @@
-import React, { Key } from 'react';
+import React from 'react';
 import "../../styles/projectCard.css"
 import CalandarDate from "../CalanderDate";
 import TopicTag from "./TopicTag";
+import {useNavigate} from "react-router-dom";
 
 interface projectProps {
     title: string;
@@ -9,16 +10,22 @@ interface projectProps {
     date: Date;
     topics: string[];
     imagePath: string;
+    id: string;
 }
 
-const ProjectCard = ({title, description, date, topics, imagePath} : projectProps) => {
+const ProjectCard = ({title, description, date, topics, imagePath, id} : projectProps) => {
     const imageProjectCard = require("./../../images/Trax_Ghana.png");
+    const navigate = useNavigate();
     var topicsDivs = topics.map(function(topic){
         return <TopicTag key={topic} topic={topic}/>;
       })
 
+    function sendToProjectPage(){
+        navigate(`/project/${id}`)
+    }
+
     return(
-        <div className="projectCardContainer" >
+        <div className="projectCardContainer" onClick={sendToProjectPage} >
                 <div className = "projectOutline">
                     <img className = "projectPicture" src = {imageProjectCard} alt="Project card"/>
                     <div className = "projectText"> {title} </div>

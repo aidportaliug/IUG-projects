@@ -5,7 +5,7 @@
     margin-top: 5%;
 }
 
-.row{
+.rowHome{
     display: grid;
     gap: 2em;
     grid-template-columns: repeat(3, 1fr);
@@ -13,7 +13,7 @@
 
 
 @media screen and (min-width: 750px) and (max-width: 1200px) {
-    .row{
+    .rowHome{
         grid-template-columns: 1fr 1fr;
     }
 }
@@ -63,7 +63,7 @@
 
 /* For Tablets */
 @media screen and (max-width: 750px) {
-    .row {
+    .rowHome {
         grid-template-columns: 1fr;
     }
 }

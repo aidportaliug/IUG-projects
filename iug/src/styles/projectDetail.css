@@ -1,0 +1,37 @@
+.Title{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 4em; 
+    color: #3D7844;
+    margin-bottom: 5%;
+}
+
+.projectDetailoutline{
+    margin-right: 10%;
+    margin-left: 10%
+}
+.row {
+    display: flex;
+  }
+
+  .columLeft{
+    flex: 70%;
+  }
+  .columRight{
+    flex: 30%;
+  }
+
+  .projectDetailImage{
+    border-radius: 20px;
+    width: 100%;
+  }
+
+  .projectDetailDate{
+    font-family: var(--mainFontFamily);
+    font-style: normal;
+    font-weight: var(--mainFontWeight);
+    height: 18px;
+    display: flex;
+    align-items: center;
+  }
+

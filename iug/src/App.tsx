@@ -24,11 +24,11 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/User" element={<UserView />} />
-          <Route path="/home" element={<Home />} />
           <Route path="/signUp" element={<SignUp />} />
-          <Route path="/project" element={<ProjectDetailsPage/>}/>
+          <Route path="/project/:id" element={<ProjectDetailsPage/>}/>
           <Route path="/uploadProject" element={<UploadProject/>}/>
         </Routes>
       </BrowserRouter>
