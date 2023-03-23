@@ -5,6 +5,9 @@ import { getProjects } from "../../services/getProjects";
 import { Project } from "../../models/project";
 import { studyFields, locations } from "../../models/allowedValues";
 import FilterDropdown from "../../components/FilterDropdown";
+import { DocumentData } from "firebase/firestore";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 
 function Home() {
   const imagePath : string = "./../../images/Trax_Ghana.png"
@@ -12,14 +15,36 @@ function Home() {
   const [orderBy, setOrderBy] = useState<string>("deadline")
   const [filterLocation, setFilterLocation] = useState<string>("location")
   const [filterStudyField, setFilterStudyField] = useState<string>("study_field")
+  const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
+  const [, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [noProject, setNoProject] = useState(false);
+  const limit = 6
+
+  async function fetchMoreData(){
+    setLoading(true);
+    const newProjects = await getProjects(orderBy, filterLocation,filterStudyField, setLastVisible, lastVisible, limit);
+    if (newProjects.length === 0) {
+      setHasMore(false);
+      setLoading(false)
+    } else {
+      setProjects([...projects, ...newProjects]);
+    }
+    setLoading(false);
+  }
 
   useEffect(() => {
     async function fetchData() {
-      const projects = await getProjects(orderBy, filterLocation,filterStudyField);
+      const projects = await getProjects(orderBy, filterLocation,filterStudyField, setLastVisible, null, limit);
+      if(projects.length === 0){
+        setHasMore(false);
+        setLoading(false);
+        setNoProject(true);
+      }
       setProjects(projects);
     }
-
     fetchData();
+
   },[filterLocation, filterStudyField, orderBy]);
 
   return (
@@ -29,13 +54,38 @@ function Home() {
           <FilterDropdown value={orderBy} setValue={setOrderBy} sortBy={true} />
           <FilterDropdown value={filterLocation} setValue={setFilterLocation} location={true} />
           <FilterDropdown value={filterStudyField} setValue={setFilterStudyField} studyField={true} />
-        <div className="rowHome">
-          {projects.map((project)=>(
-            <ProjectCard key={project.id} id={project.id} title={project.shortTitle ?? project.title} description={project.summaryDescription ?? project.description} date={project.deadline.toDate()} topics={[studyFields[project.studyField as keyof typeof studyFields],locations[project.location as keyof typeof locations]]} imagePath = {imagePath}/>
-          ))}
-        </div>
+            <InfiniteScroll
+              dataLength={projects.length}
+              next={fetchMoreData}
+              hasMore={hasMore}
+              loader={
+                <p style={{ textAlign: "center" }}>
+                  <h4>Loading ..</h4>
+                </p>
+              }
+              scrollableTarget="scrollableDiv"
+              endMessage={
+                <p style={{ textAlign: "center" }}>
+
+                  <h4> No {noProject ? 'project for given search': 'more projects to show'}</h4>
+                </p>
+              }
+            >
+              <div className="rowHome">
+                {projects.map((project)=>(
+                  <ProjectCard 
+                    key={project.id} 
+                    id={project.id} 
+                    title={project.shortTitle ?? project.title} 
+                    description={project.summaryDescription ?? project.description} 
+                    date={project.deadline.toDate()} 
+                    topics={[studyFields[project.studyField as keyof typeof studyFields],locations[project.location as keyof typeof locations]]} 
+                    imagePath = {imagePath}/>
+                ))}
+              </div>
+            </InfiniteScroll>
+          </div>
       </div>
-    </div>
   );
 }
 
