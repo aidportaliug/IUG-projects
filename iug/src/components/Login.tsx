@@ -1,30 +1,11 @@
 import { Container, CssBaseline, Box, Typography, TextField, FormControlLabel, Checkbox, Button, Grid } from "@mui/material";
-import { onAuthStateChanged } from "firebase/auth";
-import { useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink} from "react-router-dom";
 import logIn from "../services/auth";
-import { auth } from "../services/firebaseConfig";
 import Link from '@mui/material/Link';
 
 
 
 function LoginComponent() {
-
-
-
-  const nav = useNavigate();
-
-
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        console.log(auth.currentUser);
-        nav("/user");
-      }
-    });
-  }, [nav]);
-
 
   const handleLogin = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {
     try {
@@ -38,8 +19,6 @@ function LoginComponent() {
       console.log(error as string);
     }
   };
-
-
   return (
     <>
       <Container component="main" maxWidth="xs">
@@ -52,7 +31,6 @@ function LoginComponent() {
             alignItems: 'center',
           }}
         >
-
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
@@ -92,7 +70,6 @@ function LoginComponent() {
 
             >
               Sign In
-
             </Button>
             <Grid container>
               <Grid item xs>
@@ -109,7 +86,6 @@ function LoginComponent() {
           </Box>
         </Box>
       </Container>
-
     </>
   );
 }

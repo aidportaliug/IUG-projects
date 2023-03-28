@@ -1,11 +1,12 @@
 import { Avatar, Button } from "@mui/material";
-import { onAuthStateChanged } from "firebase/auth";
 import { useState, useEffect } from "react";
+import { Navigate } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
-import { User } from "../models/user";
+import { CustomUser } from "../models/user";
 import { logOut, deleteFromAuth } from "../services/auth";
-import { auth } from "../services/firebaseConfig";
-import getLoggedinUser, {
+import { useFirebaseAuth } from "../services/AuthContext";
+import { useGetUser } from "../services/useGetUser";
+import {
   deleteUserFromStore,
   getPicture,
   uploadImage,
@@ -14,27 +15,13 @@ import getLoggedinUser, {
 import FileUpload from "./DragDrop";
 
 function UserProfileComponent() {
-  const [user, setUser] = useState<User>();
-
+  const {user} = useFirebaseAuth();
+  const [customUser, setCustomUser] = useState<CustomUser|null>(null)
   const [image, setImage] = useState<Blob | Uint8Array | ArrayBuffer | undefined>();
   const [url, setUrl] = useState<string>("");
-  const imageName = "/profile/" + auth.currentUser?.email + "ProfileImage";
-
+  const [userUpdatet, setUserUpdatet] = useState<boolean>(false);
+  const imageName = "/profile/" + user?.email + "ProfileImage";
   const nav = useNavigate();
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
-      getLoggedinUser().then((user: any) => {
-        if (user) setUser(user);
-      });
-
-      if (!currentUser) {
-        console.log(auth.currentUser);
-        nav("/");
-      }
-    });
-  }, [nav]);
-  // }, [auth.currentUser, nav]);
 
   const logout = async () => {
     logOut();
@@ -49,47 +36,61 @@ function UserProfileComponent() {
     }
   };
 
+  async function CallGetUser (userId: string){
+    return await useGetUser(userId);
+  }
+
   useEffect(() => {
-    getPicture(imageName).then((url) => {
-      url && setUrl(url);
-    });
-  }, [imageName]);
+    if(imageName !== ""){
+      getPicture(imageName).then((url) => {
+        url && setUrl(url);
+      });
+    }
+    if(user !== null && !userUpdatet){
+      CallGetUser(user.uid).then(response =>setCustomUser(response));
+      setUserUpdatet(true);
+    }
+  }, [customUser, imageName, user, userUpdatet]);
 
   const handleSubmit = () => {
     uploadImage(image as File, imageName).then((url) => {
       setUrl(url);
     });
   };
-
-  return (
-    <>
-      <div className="user">
-        <div className="top-part">
-          <h1 className="username">{user ? user.email : ""}</h1>
-        </div>
-
-        <div className="profileIcon">
-          <Avatar src={url} sx={{ width: 150, height: 150 }} />
-          <FileUpload handleSubmit={handleSubmit} setImage={setImage}/>
-        </div>
-
-        <div className="interests">
-          <h3>My information:</h3>
-          <div className="myInterests">
-            <p>mail:</p>
-            <p>year of study:</p>
-            <p>Study: </p>
+  if(user != null){
+    return (
+      <>
+        <div className="user">
+          <div className="top-part">
+            <h1 className="username">{user ? user.email : ""}</h1>
           </div>
+          <div className="profileIcon">
+            <Avatar src={url} sx={{ width: 150, height: 150 }} />
+            <FileUpload handleSubmit={handleSubmit} setImage={setImage}/>
+          </div>
+          <div className="interests">
+            <h3>My information:</h3>
+            <div className="myInterests">
+              <p>Mail: {customUser?.email}</p>
+              <p>First name: {customUser?.firstName}</p>
+              <p>Last name: {customUser?.lastName}</p>
+              <p>Phone number: {customUser?.phoneNumber}</p>
+              <p>University: {customUser?.university}</p>
+              <p>Institute: {customUser?.institute} </p>
+            </div>
+          </div>
+          <Button variant="contained" id="btnLogOut" onClick={logout}>
+            Log out
+          </Button>
+          <Button variant="contained" id="btnLogOut" onClick={deleteUser}>
+            Delete User
+          </Button>
         </div>
-        <Button variant="contained" id="btnLogOut" onClick={logout}>
-          Log out
-        </Button>
-        <Button variant="contained" id="btnLogOut" onClick={deleteUser}>
-          Delete User
-        </Button>
-      </div>
-    </>
-  );
+      </>
+    );
+  }
+  else{
+    return <Navigate to="/" />
+  }
 }
-
 export default UserProfileComponent;
