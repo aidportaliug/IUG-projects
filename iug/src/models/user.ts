@@ -1,16 +1,14 @@
 /*
 Type used for an standard and admin user
 */
-export interface User {
-  id: string;
+export interface CustomUser {
+  userID: string;
   email: string;
   firstName: string;
   lastName: string;
-  academicRole?: string;
-  institute?: string;
-  university: string;
-  picture?: string;
-  contributionIds?: Map<string,string>;
-  role: string;
   phoneNumber?: string;
+  institute?: string;
+  university?: string;
+  contributionIds?: Map<string,string>;
+  professor: string;
 }

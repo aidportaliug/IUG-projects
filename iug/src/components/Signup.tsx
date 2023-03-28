@@ -1,21 +1,17 @@
-import { Container, CssBaseline, Box, Typography, Grid, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Button } from "@mui/material";
+import { Container, CssBaseline, Box, Typography, Grid, TextField, FormControl, RadioGroup, FormControlLabel, Radio, Button } from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { auth } from "../services/firebaseConfig";
 import signUp from "../services/signup";
 
-
-
 function SignUpComponent() {
-
   const nav = useNavigate();
-
+  const [isProfesor, setIsProfesor] = useState<boolean>(false)
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        console.log(auth.currentUser);
         console.log("success!!!");
         nav("/User");
       }
@@ -29,26 +25,19 @@ function SignUpComponent() {
       const data = new FormData(event.currentTarget);
       const firstName = data.get("firstName") as string;
       const lastName = data.get("lastName") as string;
-      const gender = data.get("gender") as string;
-      const age = data.get("age") as string;
       const email = data.get("email") as string;
+      const phoneNumer = data.get("phoneNumber") as string;
+      const institute = data.get("institute") as string;
+      const university = data.get("university") as string
       const password = data.get("password") as string;
-
-      if (firstName && lastName && gender && age && email && password) signUp(firstName, lastName, email, password, gender, age,)
-
+      if (firstName && lastName && email && password) signUp(firstName, lastName, email, Number(phoneNumer), institute, university, isProfesor, password)
     } catch (error) {
       console.log(error as string);
     }
   };
 
-
-
-
-
   return (
     <>
-
-
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -64,6 +53,25 @@ function SignUpComponent() {
           </Typography>
           <Box component="form" noValidate onSubmit={handleSignUp} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue="student"
+                name="radio-buttons-group"
+                onChange={(e, value) => {
+                  if(value === "student"){
+                    setIsProfesor(false)
+                  }
+                  else{
+                    setIsProfesor(true)
+                  }
+                }}
+                row
+              >
+                <FormControlLabel value="student" id="student" control={<Radio />} label="Student" />
+                <FormControlLabel value="profesor" id="professor" control={<Radio />} label="Profesor" />
+              </RadioGroup>
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
@@ -85,29 +93,6 @@ function SignUpComponent() {
                   autoComplete="family-name"
                 />
               </Grid>
-
-              <Grid item xs={12}>
-                <FormControl >
-                  <FormLabel >Gender</FormLabel>
-                  <RadioGroup name="gender" row>
-                    <FormControlLabel value="Male" control={<Radio />} label="Male" />
-                    <FormControlLabel value="Female" control={<Radio />} label="Female" />
-                    <FormControlLabel value="Other" control={<Radio />} label="Other" />
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="age"
-                  label="Age"
-                  id="age"
-                  autoComplete='age'
-                />
-              </Grid>
-
               <Grid item xs={12}>
                 <TextField
                   required
@@ -116,6 +101,37 @@ function SignUpComponent() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl >
+                  <TextField
+                    fullWidth
+                    id="phoneNumber"
+                    label="Phone number"
+                    name="phoneNumber"
+                    autoComplete="Phone number"
+                  />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  name="institute"
+                  label="Institute"
+                  id="institute"
+                  autoComplete='Institute'
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="university"
+                  label="University"
+                  id="university"
+                  autoComplete='University'
                 />
               </Grid>
               <Grid item xs={12}>
@@ -151,7 +167,6 @@ function SignUpComponent() {
           </Box>
         </Box>
       </Container>
-
     </>
   );
 }

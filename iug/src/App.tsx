@@ -9,6 +9,7 @@ import UploadProject from "./pages/UploadProject";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { FirebaseAuthProvider } from "./services/AuthContext";
 
 function App() {
   //set default colors for all mui components
@@ -22,19 +23,23 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/User" element={<UserView />} />
-          <Route path="/signUp" element={<SignUp />} />
-          <Route path="/project/:id" element={<ProjectDetailsPage/>}/>
-          <Route path="/uploadProject" element={<UploadProject/>}/>
-        </Routes>
-      </BrowserRouter>
+        <FirebaseAuthProvider>
+            <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/User" element={<UserView/>} />
+              <Route path="/signUp" element={<SignUp />} />
+              <Route path="/project/:id" element={<ProjectDetailsPage/>}/>
+              <Route path="/uploadProject" element={<UploadProject/>}/>
+            </Routes>
+          </BrowserRouter>
+        </FirebaseAuthProvider>
       </LocalizationProvider>
     </ThemeProvider>
   );
 }
+
+
 
 export default App;

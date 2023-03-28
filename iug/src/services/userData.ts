@@ -1,7 +1,6 @@
-import { getAuth } from "firebase/auth";
+import { getAuth, User } from "firebase/auth";
 import { collection, deleteDoc, doc, DocumentData, getDocs, Query, query, QuerySnapshot, where } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
-import { User } from "../models/user";
 import { db } from "./firebaseConfig";
 
 // const profileCollectionReference = collection(db, "profile")
@@ -65,7 +64,7 @@ export async function getPicture(imageName: string) {
       return response;
     })
     .catch((error) => {
-      console.log(error);
+      //console.log(error);
     });
 
   return url;

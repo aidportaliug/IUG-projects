@@ -1,20 +1,15 @@
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth";
 import firebase from "./firebaseConfig";
 
+const auth = getAuth(firebase);
 export default async function logIn(email: string, password: string) {
   if (email === "" || password === "") {
     return false;
   }
 
-  const auth = getAuth(firebase);
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Signed in
-      // const  user  = userCredential.user;
-
-      //   if (user.emailVerified) {
-      //     return true;
-      //   }
+      console.log(userCredential.user);
       console.log("logged inn succesfully");
       return true;
     })
@@ -29,7 +24,6 @@ export default async function logIn(email: string, password: string) {
 }
 
 export async function logOut() {
-  const auth = getAuth();
   signOut(auth)
     .then(() => {
       // Sign-out successful.
@@ -39,6 +33,9 @@ export async function logOut() {
       throw error(error.errorMessage);
     });
 }
+
+
+
 
 export async function deleteFromAuth(id: string) {
   const res = await fetch(
