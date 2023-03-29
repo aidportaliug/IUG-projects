@@ -13,7 +13,7 @@ Build project:
     - cd iug
   # What to run on the job.
   script:
-    - npm install
+    - yarn install
   artifacts:
     paths:
       - node_modules
@@ -22,9 +22,9 @@ Lint:
   stage: run
   before_script:
     - cd iug
-    - npm install
+    - yarn install
   script:
-    - npm run lint:fix
+    - yarn run lint:fix
     #- node test.js
   artifacts:
     paths:
