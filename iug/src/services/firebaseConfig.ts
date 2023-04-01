@@ -5,12 +5,12 @@ import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
-  authDomain: process.env.REACT_APP_PROJECT_ID + ".firebaseapp.com",
+  authDomain: (process.env.REACT_APP_PROJECT_ID as string) + ".firebaseapp.com",
   projectId: process.env.REACT_APP_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_PROJECT_ID + ".appspot.com",
+  storageBucket: (process.env.REACT_APP_PROJECT_ID as string) + ".appspot.com",
   messagingSenderId: process.env.REACT_APP_SENDER_ID,
   appId: process.env.REACT_APP_APP_ID,
-  measurementId: "G-" + process.env.REACT_APP_MEASUREMENT_ID,
+  measurementId: `G-${process.env.REACT_APP_MEASUREMENT_ID}`,
 };
 // console.log("HELLU:" + firebaseConfig.apiKey);
 // console.log("HELLU:" + firebaseConfig.authDomain);

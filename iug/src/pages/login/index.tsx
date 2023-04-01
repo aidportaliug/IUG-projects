@@ -3,13 +3,14 @@ import "../../styles/login.css";
 import LoginComponent from "../../components/Login";
 import { useFirebaseAuth } from "../../services/AuthContext";
 import { Navigate } from "react-router-dom";
-const theme = createTheme();
+import imageLogo from "./../../images/logo.png";
+import imageIcon from "./../../images/loginBilde.png";
+import React from "react";
 
+const theme = createTheme();
 export default function Login() {
-  const imageLogo = require("./../../images/logo.png");
-  const imageIcon = require("./../../images/loginBilde.png");
-  const {user} = useFirebaseAuth();
- if(user === null){
+  const { user } = useFirebaseAuth();
+  if (user === null) {
     return (
       <div className="wholeLogin">
         <div className="imageLogin">
@@ -29,10 +30,8 @@ export default function Login() {
           </ThemeProvider>
         </div>
       </div>
-  );
-  }
-  else{
-    return <Navigate to="/user" />
-    
+    );
+  } else {
+    return <Navigate to="/user" />;
   }
 }

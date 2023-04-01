@@ -1,4 +1,3 @@
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/homepage";
 import Login from "./pages/login";
@@ -6,17 +5,18 @@ import SignUp from "./pages/signup";
 import UserView from "./pages/userprofile";
 import ProjectDetailsPage from "./pages/ProjectDetailsPage";
 import UploadProject from "./pages/UploadProject";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { FirebaseAuthProvider } from "./services/AuthContext";
+import React from "react";
 
 function App() {
   //set default colors for all mui components
   const theme = createTheme({
     palette: {
       primary: {
-        main: '#3D7844', // green color
+        main: "#3D7844", // green color
       },
     },
   });
@@ -24,14 +24,14 @@ function App() {
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <FirebaseAuthProvider>
-            <BrowserRouter>
+          <BrowserRouter>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/User" element={<UserView/>} />
+              <Route path="/User" element={<UserView />} />
               <Route path="/signUp" element={<SignUp />} />
-              <Route path="/project/:id" element={<ProjectDetailsPage/>}/>
-              <Route path="/uploadProject" element={<UploadProject/>}/>
+              <Route path="/project/:id" element={<ProjectDetailsPage />} />
+              <Route path="/uploadProject" element={<UploadProject />} />
             </Routes>
           </BrowserRouter>
         </FirebaseAuthProvider>
@@ -39,7 +39,5 @@ function App() {
     </ThemeProvider>
   );
 }
-
-
 
 export default App;

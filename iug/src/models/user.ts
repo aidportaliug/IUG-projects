@@ -9,6 +9,6 @@ export interface CustomUser {
   phoneNumber?: string;
   institute?: string;
   university?: string;
-  contributionIds?: Map<string,string>;
+  contributionIds?: Map<string, string>;
   professor: string;
 }

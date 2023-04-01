@@ -1,20 +1,28 @@
-import { Container, CssBaseline, Box, Typography, TextField, FormControlLabel, Checkbox, Button, Grid } from "@mui/material";
-import { NavLink} from "react-router-dom";
+import {
+  Container,
+  CssBaseline,
+  Box,
+  Typography,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Button,
+  Grid,
+} from "@mui/material";
+import { NavLink } from "react-router-dom";
 import logIn from "../services/auth";
-import Link from '@mui/material/Link';
-
-
+import Link from "@mui/material/Link";
+import React from "react";
 
 function LoginComponent() {
-
-  const handleLogin = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {
+  const handleLogin = async (event: {
+    preventDefault: () => void;
+    currentTarget: HTMLFormElement | undefined;
+  }) => {
     try {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      await logIn(
-        data.get("email") as string, data.get("password") as string
-      );
-
+      await logIn(data.get("email") as string, data.get("password") as string);
     } catch (error) {
       console.log(error as string);
     }
@@ -26,9 +34,9 @@ function LoginComponent() {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
           <Typography component="h1" variant="h5">
@@ -49,7 +57,6 @@ function LoginComponent() {
               margin="normal"
               required
               fullWidth
-
               name="password"
               label="Password"
               type="password"
@@ -65,9 +72,7 @@ function LoginComponent() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              style={{ backgroundColor: '#3D7844', color: '#FFFFFF' }}
-
-
+              style={{ backgroundColor: "#3D7844", color: "#FFFFFF" }}
             >
               Sign In
             </Button>
@@ -91,5 +96,3 @@ function LoginComponent() {
 }
 
 export default LoginComponent;
-
-

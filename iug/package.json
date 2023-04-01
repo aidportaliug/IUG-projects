@@ -27,7 +27,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^6.4.0",
     "react-scripts": "5.0.1",
-    "typescript": "^4.8.3",
+    "typescript": "^5.0.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -55,5 +55,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "@typescript-eslint/parser": "^5.57.0",
+    "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^2.8.7"
   }
 }

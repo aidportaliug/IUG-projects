@@ -1,18 +1,32 @@
 import { getAuth, User } from "firebase/auth";
-import { collection, deleteDoc, doc, DocumentData, getDocs, Query, query, QuerySnapshot, where } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  DocumentData,
+  getDocs,
+  Query,
+  query,
+  QuerySnapshot,
+  where,
+} from "firebase/firestore";
 import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { db } from "./firebaseConfig";
 
 // const profileCollectionReference = collection(db, "profile")
 
-
 async function getUserInfoByEmail(userEmail: string): Promise<User | null> {
-  const queryGetUser : Query<DocumentData> = query(collection(db, "userProfile"), where("email", "==", userEmail));
-  const docSnapShotUser : QuerySnapshot<DocumentData>  = await getDocs(queryGetUser);
+  const queryGetUser: Query<DocumentData> = query(
+    collection(db, "userProfile"),
+    where("email", "==", userEmail)
+  );
+  const docSnapShotUser: QuerySnapshot<DocumentData> = await getDocs(
+    queryGetUser
+  );
   let user: User | null = null;
   docSnapShotUser.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
-    user = doc.data() as User
+    user = doc.data() as User;
 
     if (!user) throw Error("No user with given userid exists!");
   });
@@ -58,7 +72,7 @@ export async function deleteUserFromStore(email: string) {
 export async function getPicture(imageName: string) {
   const storage = getStorage();
   const imageRef = ref(storage, imageName);
-  let url = await getDownloadURL(imageRef)
+  const url = await getDownloadURL(imageRef)
     .then((response) => {
       console.log(response);
       return response;
