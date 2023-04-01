@@ -1,11 +1,15 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "../../styles/login.css";
 import SignUpComponent from "../../components/Signup";
+import Logo from "./../../images/logo.png";
+import ImageIcon from "./../../images/loginBilde.png";
+import React from "react";
+
 export default function SignUp() {
   const theme = createTheme();
 
-  const imageLogo = require("./../../images/logo.png");
-  const imageIcon = require("./../../images/loginBilde.png");
+  const imageLogo = Logo;
+  const imageIcon = ImageIcon;
 
   return (
     <div className="wholeLogin">

@@ -1,4 +1,4 @@
-import { getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import firebase from "./firebaseConfig";
 
 const auth = getAuth(firebase);
@@ -33,9 +33,6 @@ export async function logOut() {
       throw error(error.errorMessage);
     });
 }
-
-
-
 
 export async function deleteFromAuth(id: string) {
   const res = await fetch(

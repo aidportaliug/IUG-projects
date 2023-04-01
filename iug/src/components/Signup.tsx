@@ -1,13 +1,26 @@
-import { Container, CssBaseline, Box, Typography, Grid, TextField, FormControl, RadioGroup, FormControlLabel, Radio, Button } from "@mui/material";
+import {
+  Container,
+  CssBaseline,
+  Box,
+  Typography,
+  Grid,
+  TextField,
+  FormControl,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Button,
+} from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { auth } from "../services/firebaseConfig";
 import signUp from "../services/signup";
+import React from "react";
 
 function SignUpComponent() {
   const nav = useNavigate();
-  const [isProfesor, setIsProfesor] = useState<boolean>(false)
+  const [isProfesor, setIsProfesor] = useState<boolean>(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
@@ -19,7 +32,10 @@ function SignUpComponent() {
     });
   }, [nav]);
 
-  const handleSignUp = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {
+  const handleSignUp = async (event: {
+    preventDefault: () => void;
+    currentTarget: HTMLFormElement | undefined;
+  }) => {
     event.preventDefault();
     try {
       const data = new FormData(event.currentTarget);
@@ -28,9 +44,19 @@ function SignUpComponent() {
       const email = data.get("email") as string;
       const phoneNumer = data.get("phoneNumber") as string;
       const institute = data.get("institute") as string;
-      const university = data.get("university") as string
+      const university = data.get("university") as string;
       const password = data.get("password") as string;
-      if (firstName && lastName && email && password) signUp(firstName, lastName, email, Number(phoneNumer), institute, university, isProfesor, password)
+      if (firstName && lastName && email && password)
+        signUp(
+          firstName,
+          lastName,
+          email,
+          Number(phoneNumer),
+          institute,
+          university,
+          isProfesor,
+          password
+        );
     } catch (error) {
       console.log(error as string);
     }
@@ -43,34 +69,48 @@ function SignUpComponent() {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSignUp} sx={{ mt: 3 }}>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSignUp}
+            sx={{ mt: 3 }}
+          >
             <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="student"
-                name="radio-buttons-group"
-                onChange={(e, value) => {
-                  if(value === "student"){
-                    setIsProfesor(false)
-                  }
-                  else{
-                    setIsProfesor(true)
-                  }
-                }}
-                row
-              >
-                <FormControlLabel value="student" id="student" control={<Radio />} label="Student" />
-                <FormControlLabel value="profesor" id="professor" control={<Radio />} label="Profesor" />
-              </RadioGroup>
+              <Grid item xs={12}>
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  defaultValue="student"
+                  name="radio-buttons-group"
+                  onChange={(e, value) => {
+                    if (value === "student") {
+                      setIsProfesor(false);
+                    } else {
+                      setIsProfesor(true);
+                    }
+                  }}
+                  row
+                >
+                  <FormControlLabel
+                    value="student"
+                    id="student"
+                    control={<Radio />}
+                    label="Student"
+                  />
+                  <FormControlLabel
+                    value="profesor"
+                    id="professor"
+                    control={<Radio />}
+                    label="Profesor"
+                  />
+                </RadioGroup>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -104,7 +144,7 @@ function SignUpComponent() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControl >
+                <FormControl>
                   <TextField
                     fullWidth
                     id="phoneNumber"
@@ -121,7 +161,7 @@ function SignUpComponent() {
                   name="institute"
                   label="Institute"
                   id="institute"
-                  autoComplete='Institute'
+                  autoComplete="Institute"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -131,7 +171,7 @@ function SignUpComponent() {
                   name="university"
                   label="University"
                   id="university"
-                  autoComplete='University'
+                  autoComplete="University"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -152,16 +192,13 @@ function SignUpComponent() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              style={{ backgroundColor: '#3D7844', color: '#FFFFFF' }}
-
+              style={{ backgroundColor: "#3D7844", color: "#FFFFFF" }}
             >
               Sign Up
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <NavLink to="/">
-                  Already have an account? Sign in
-                </NavLink>
+                <NavLink to="/">Already have an account? Sign in</NavLink>
               </Grid>
             </Grid>
           </Box>
