@@ -1,0 +1,24 @@
+@import "main.css";
+
+.css-1t6c9ts{
+    background-color: var(--navbarColor);
+}
+.css-19r6kue-MuiContainer-root{
+    background-color: var(--navbarColor);
+}
+
+.css-ts8wrq-MuiPaper-root-MuiAppBar-root{
+    box-shadow: none !important;
+}
+
+.bold{
+    font-weight : 700 !important;
+    font-family: var(--mainFontFamily) !important; 
+    text-transform: none !important;
+}
+
+.notBold{
+    font-weight: 400 !important;
+    font-family: var(--mainFontFamily) !important; 
+    text-transform: none !important;
+}
