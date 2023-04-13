@@ -1,0 +1,22 @@
+@import "main.css";
+
+.css-1t6c9ts{
+    background-color: #E0EADF;
+    box-shadow: none;
+}
+.css-19r6kue-MuiContainer-root{
+    background-color: #E0EADF;
+    box-shadow: none;
+}
+
+.bold{
+    font-weight : 700 !important;
+    font-family: var(--mainFontFamily) !important; 
+    text-transform: none !important;
+}
+
+.notBold{
+    font-weight: 400 !important;
+    font-family: var(--mainFontFamily) !important; 
+    text-transform: none !important;
+}
