@@ -27,8 +27,8 @@ const MenuItemIUG = ({ setting }: MenuProps) => {
       navigate("/login");
     }
     if (setting === "Sign Up") {
-        navigate("/signup");
-      }
+      navigate("/signup");
+    }
   };
   return (
     <MenuItem onClick={handleOpenUserProfile}>
