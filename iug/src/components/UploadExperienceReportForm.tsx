@@ -1,20 +1,11 @@
 import React from "react";
 import "../styles/uploadProject.css";
-import {
-  Box,
-  Button,
-  MenuItem,
-  Select,
-  TextField,
-  TextFieldProps,
-} from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
+import { Box, Button, MenuItem, Select, TextField } from "@mui/material";
 import { SetStateAction, useState } from "react";
-import createProject from "../services/createProject";
+import createExperienceReport from "../services/createExperienceReport";
 import { allowedLocations, allowedStudyFields } from "../models/allowedValues";
 import { useNavigate } from "react-router-dom";
 const UploadExperienceReport = () => {
-  const [value, setValue] = useState<string | null>(Date());
   const [studyField, setStudyField] = useState("study_field");
   const [location, setLocation] = useState("location");
   const navigate = useNavigate();
@@ -53,8 +44,8 @@ const UploadExperienceReport = () => {
       return;
     }
     const data = new FormData(event.currentTarget);
-    const duration = parseInt(data.get("duration") as string);
-    if (Number.isNaN(duration)) {
+    const year = parseInt(data.get("year") as string);
+    if (Number.isNaN(year)) {
       alert(`Duration must be a number`);
       return;
     }
@@ -71,27 +62,19 @@ const UploadExperienceReport = () => {
 
     try {
       const shortTitle = data.get("shortTitle") as string;
-      const projectTitle = data.get("projectTitle") as string;
+      const experienceReportTitle = data.get("experienceReportTitle") as string;
 
-      const dateStr = data.get("date") as string;
-      const dateParts = dateStr.split("/");
-      const year = parseInt(dateParts[2], 10);
-      const month = parseInt(dateParts[1], 10) - 1; // January is 0, so subtract 1
-      const day = parseInt(dateParts[0], 10);
-
-      const deadline = new Date(year, month, day);
       const description = data.get("description") as string;
       const summaryDescription = data.get("summaryDescription") as string;
-
-      createProject(
-        projectTitle,
+      createExperienceReport(
+        experienceReportTitle,
         shortTitle,
         studyField,
         location,
-        deadline,
+        year,
         description,
-        duration,
-        summaryDescription
+        summaryDescription,
+        "hall"
       );
       console.log("Successfull upload");
     } catch (error) {
@@ -111,7 +94,7 @@ const UploadExperienceReport = () => {
         <TextField
           fullWidth
           id="shortTitle"
-          label="Project short title"
+          label="Experience report short title"
           name="shortTitle"
           sx={{ marginRight: "1em" }}
         />
@@ -165,9 +148,9 @@ const UploadExperienceReport = () => {
       <TextField
         required
         fullWidth
-        id="projectTitle"
-        label="Project Title"
-        name="projectTitle"
+        id="experienceReportTitle"
+        label="Experience report title"
+        name="experienceReportTitle"
         sx={{ marginBottom: "1em" }}
       />
       <TextField

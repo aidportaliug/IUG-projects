@@ -10,5 +10,5 @@ export interface CustomUser {
   institute?: string;
   university?: string;
   contributionIds?: Map<string, string>;
-  professor: string;
+  professor: boolean;
 }

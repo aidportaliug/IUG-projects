@@ -11,10 +11,10 @@ const storeExperienceReport = async (
   year: number,
   description: string,
   summaryDescription: string,
-  studentId: string,
-  projectId: string | null
+  projectId: string | undefined,
+  studentId: string
 ) => {
-  await addDoc(collection(db, "project"), {
+  await addDoc(collection(db, "experienceReport"), {
     title: title,
     shortTitle: shortTitle,
     studyField: studyField,
@@ -27,7 +27,7 @@ const storeExperienceReport = async (
   });
 };
 
-export default async function createProject(
+export default async function createExperienceReport(
   title: string,
   shortTitle: string,
   studyField: string,
@@ -51,7 +51,7 @@ export default async function createProject(
         year,
         description,
         summaryDescription,
-        projectId ?? null,
+        projectId ?? "",
         await auth.currentUser?.getIdToken()
       ).catch((error) => {
         const errorCode = error.code;

@@ -1,11 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/uploadProject.css";
 import UploadExperienceReportForm from "../components/UploadExperienceReportForm";
 import { useFirebaseAuth } from "../services/AuthContext";
+import { CustomUser } from "../models/user";
+import { useGetUser } from "../services/useGetUser";
 const UploadExperienceReport = () => {
   //const [user, setUser] = useState<User | null>(null)
   const { user } = useFirebaseAuth();
-  if (user) {
+  const [userUpdatet, setUserUpdatet] = useState<boolean>(false);
+  const [customUser, setCustomUser] = useState<CustomUser | null>(null);
+  async function CallGetUser(userId: string) {
+    return await useGetUser(userId);
+  }
+  useEffect(() => {
+    if (user !== null && !userUpdatet) {
+      CallGetUser(user.uid).then((response) => setCustomUser(response));
+      setUserUpdatet(true);
+    }
+  }, [customUser, user, userUpdatet]);
+
+  if (customUser !== null && customUser?.professor === false) {
     return (
       <div className="outline">
         <div className="title"> Upload Experience Report </div>
@@ -13,7 +27,7 @@ const UploadExperienceReport = () => {
       </div>
     );
   }
-  return <div>You must be logged in</div>;
+  return <div>You must be logged in and be a professsor</div>;
 };
 
 export default UploadExperienceReport;
