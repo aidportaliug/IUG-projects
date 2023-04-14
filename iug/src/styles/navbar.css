@@ -1,12 +1,14 @@
 @import "main.css";
 
 .css-1t6c9ts{
-    background-color: #E0EADF;
-    box-shadow: none;
+    background-color: var(--navbarColor);
 }
 .css-19r6kue-MuiContainer-root{
-    background-color: #E0EADF;
-    box-shadow: none;
+    background-color: var(--navbarColor);
+}
+
+.css-ts8wrq-MuiPaper-root-MuiAppBar-root{
+    box-shadow: none !important;
 }
 
 .bold{
