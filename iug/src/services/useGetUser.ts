@@ -26,6 +26,5 @@ export const useGetUser = async (
   userProfileSnapshot.forEach((doc) => {
     userData = doc.data() as CustomUser;
   });
-  console.log(userData);
   return userData;
 };

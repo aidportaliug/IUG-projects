@@ -1,4 +1,16 @@
-import { addDoc, collection } from "firebase/firestore";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  CollectionReference,
+  doc,
+  DocumentData,
+  getDocs,
+  query,
+  QuerySnapshot,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import firebase, { db } from "./firebaseConfig";
 import { getAuth } from "firebase/auth";
 import { allowedLocations, allowedStudyFields } from "../models/allowedValues";
@@ -14,7 +26,7 @@ const storeExperienceReport = async (
   projectId: string | undefined,
   studentId: string
 ) => {
-  await addDoc(collection(db, "experienceReport"), {
+  const docRef = await addDoc(collection(db, "experienceReport"), {
     title: title,
     shortTitle: shortTitle,
     studyField: studyField,
@@ -25,6 +37,20 @@ const storeExperienceReport = async (
     studentId: studentId,
     projectId: projectId,
   });
+  const queryGetUser: CollectionReference<DocumentData> = collection(
+    db,
+    "userProfile"
+  );
+  const q = query(queryGetUser, where("userID", "==", studentId));
+  const userProfileSnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+
+  if (!userProfileSnapshot.empty) {
+    const userRef = doc(db, "userProfile", userProfileSnapshot.docs[0].id);
+    await updateDoc(userRef, {
+      "contributionIds.experienceID": arrayUnion(docRef.id),
+    });
+    console.log(userProfileSnapshot);
+  }
 };
 
 export default async function createExperienceReport(
@@ -52,7 +78,7 @@ export default async function createExperienceReport(
         description,
         summaryDescription,
         projectId ?? "",
-        await auth.currentUser?.getIdToken()
+        await auth.currentUser.uid
       ).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;

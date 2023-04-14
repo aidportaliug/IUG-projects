@@ -1,4 +1,16 @@
-import { addDoc, collection } from "firebase/firestore";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  CollectionReference,
+  doc,
+  DocumentData,
+  getDocs,
+  query,
+  QuerySnapshot,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import firebase, { db } from "./firebaseConfig";
 import { getAuth } from "firebase/auth";
 import { allowedLocations, allowedStudyFields } from "../models/allowedValues";
@@ -14,7 +26,7 @@ const storeProject = async (
   duration: number,
   professorId: string
 ) => {
-  await addDoc(collection(db, "project"), {
+  const docRef = await addDoc(collection(db, "project"), {
     title: title,
     shortTitle: shortTitle,
     studyField: studyField,
@@ -25,6 +37,23 @@ const storeProject = async (
     duration: duration,
     professorId: professorId,
   });
+
+  const queryGetUser: CollectionReference<DocumentData> = collection(
+    db,
+    "userProfile"
+  );
+  const q = query(queryGetUser, where("userID", "==", professorId));
+  const userProfileSnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+  console.log(professorId);
+  console.log(userProfileSnapshot.empty);
+
+  if (!userProfileSnapshot.empty) {
+    const userRef = doc(db, "userProfile", userProfileSnapshot.docs[0].id);
+    await updateDoc(userRef, {
+      "contributionIds.projectID": arrayUnion(docRef.id),
+    });
+    console.log(userProfileSnapshot);
+  }
 };
 
 export default async function createProject(
@@ -52,7 +81,7 @@ export default async function createProject(
         description,
         summaryDescription,
         duration,
-        await auth.currentUser?.getIdToken()
+        await auth.currentUser.uid
       ).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
