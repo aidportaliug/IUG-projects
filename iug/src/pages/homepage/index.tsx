@@ -7,6 +7,8 @@ import { studyFields, locations } from "../../models/allowedValues";
 import FilterDropdown from "../../components/FilterDropdown";
 import { DocumentData } from "firebase/firestore";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Navbar from "../../components/Navbar/Navbar";
+import "../../styles/navbar.css";
 
 function Home() {
   const imagePath = "./../../images/Trax_Ghana.png";
@@ -62,6 +64,7 @@ function Home() {
 
   return (
     <div className="homeBackground">
+      <Navbar />
       <div className="homeOutline">
         <div className="homeTitle"> Projects </div>
         <FilterDropdown value={orderBy} setValue={setOrderBy} sortBy={true} />
