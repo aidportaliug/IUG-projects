@@ -14,6 +14,11 @@ import {
 import firebase, { db } from "./firebaseConfig";
 import { getAuth } from "firebase/auth";
 import { allowedLocations, allowedStudyFields } from "../models/allowedValues";
+import { useGetUser } from "./useGetUser";
+
+async function CallGetUser(userId: string) {
+  return await useGetUser(userId);
+}
 
 const storeExperienceReport = async (
   title: string,
@@ -26,30 +31,34 @@ const storeExperienceReport = async (
   projectId: string | undefined,
   studentId: string
 ) => {
-  const docRef = await addDoc(collection(db, "experienceReport"), {
-    title: title,
-    shortTitle: shortTitle,
-    studyField: studyField,
-    location: location,
-    year: year,
-    description: description,
-    summaryDescription: summaryDescription,
-    studentId: studentId,
-    projectId: projectId,
-  });
-  const queryGetUser: CollectionReference<DocumentData> = collection(
-    db,
-    "userProfile"
-  );
-  const q = query(queryGetUser, where("userID", "==", studentId));
-  const userProfileSnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
-
-  if (!userProfileSnapshot.empty) {
-    const userRef = doc(db, "userProfile", userProfileSnapshot.docs[0].id);
-    await updateDoc(userRef, {
-      "contributionIds.experienceID": arrayUnion(docRef.id),
+  const customUser = await CallGetUser(studentId);
+  if (customUser !== null && customUser.professor === false) {
+    const docRef = await addDoc(collection(db, "experienceReport"), {
+      title: title,
+      shortTitle: shortTitle,
+      studyField: studyField,
+      location: location,
+      year: year,
+      description: description,
+      summaryDescription: summaryDescription,
+      studentId: studentId,
+      projectId: projectId,
     });
-    console.log(userProfileSnapshot);
+
+    const queryGetUser: CollectionReference<DocumentData> = collection(
+      db,
+      "userProfile"
+    );
+    const q = query(queryGetUser, where("userID", "==", studentId));
+    const userProfileSnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+
+    if (!userProfileSnapshot.empty) {
+      const userRef = doc(db, "userProfile", userProfileSnapshot.docs[0].id);
+      await updateDoc(userRef, {
+        "contributionIds.experienceID": arrayUnion(docRef.id),
+      });
+      console.log(userProfileSnapshot);
+    }
   }
 };
 

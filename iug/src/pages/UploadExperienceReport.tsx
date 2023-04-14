@@ -5,7 +5,6 @@ import { useFirebaseAuth } from "../services/AuthContext";
 import { CustomUser } from "../models/user";
 import { useGetUser } from "../services/useGetUser";
 const UploadExperienceReport = () => {
-  //const [user, setUser] = useState<User | null>(null)
   const { user } = useFirebaseAuth();
   const [userUpdatet, setUserUpdatet] = useState<boolean>(false);
   const [customUser, setCustomUser] = useState<CustomUser | null>(null);

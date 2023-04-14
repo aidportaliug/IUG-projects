@@ -14,7 +14,11 @@ import {
 import firebase, { db } from "./firebaseConfig";
 import { getAuth } from "firebase/auth";
 import { allowedLocations, allowedStudyFields } from "../models/allowedValues";
+import { useGetUser } from "./useGetUser";
 
+async function CallGetUser(userId: string) {
+  return await useGetUser(userId);
+}
 const storeProject = async (
   title: string,
   shortTitle: string,
@@ -26,33 +30,33 @@ const storeProject = async (
   duration: number,
   professorId: string
 ) => {
-  const docRef = await addDoc(collection(db, "project"), {
-    title: title,
-    shortTitle: shortTitle,
-    studyField: studyField,
-    location: location,
-    deadline: deadline,
-    description: description,
-    summaryDescription: summaryDescription,
-    duration: duration,
-    professorId: professorId,
-  });
-
-  const queryGetUser: CollectionReference<DocumentData> = collection(
-    db,
-    "userProfile"
-  );
-  const q = query(queryGetUser, where("userID", "==", professorId));
-  const userProfileSnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
-  console.log(professorId);
-  console.log(userProfileSnapshot.empty);
-
-  if (!userProfileSnapshot.empty) {
-    const userRef = doc(db, "userProfile", userProfileSnapshot.docs[0].id);
-    await updateDoc(userRef, {
-      "contributionIds.projectID": arrayUnion(docRef.id),
+  const customUser = await CallGetUser(professorId);
+  if (customUser !== null && customUser.professor === false) {
+    const docRef = await addDoc(collection(db, "project"), {
+      title: title,
+      shortTitle: shortTitle,
+      studyField: studyField,
+      location: location,
+      deadline: deadline,
+      description: description,
+      summaryDescription: summaryDescription,
+      duration: duration,
+      professorId: professorId,
     });
-    console.log(userProfileSnapshot);
+
+    const queryGetUser: CollectionReference<DocumentData> = collection(
+      db,
+      "userProfile"
+    );
+    const q = query(queryGetUser, where("userID", "==", professorId));
+    const userProfileSnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
+
+    if (!userProfileSnapshot.empty) {
+      const userRef = doc(db, "userProfile", userProfileSnapshot.docs[0].id);
+      await updateDoc(userRef, {
+        "contributionIds.projectID": arrayUnion(docRef.id),
+      });
+    }
   }
 };
 
