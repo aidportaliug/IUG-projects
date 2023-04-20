@@ -42,3 +42,9 @@ If you want to see [more](https://www.figma.com/proto/uFICVR8Im1VRFMlS8J0YuH/IUG
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Emulator
+
+This is a tool that makes the app run on loal database instead of live datebase (good for testing).
+
+To start the emulator run firebase emulators:start --project=iug-aidportal
