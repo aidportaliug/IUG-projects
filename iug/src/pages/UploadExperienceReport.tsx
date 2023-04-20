@@ -26,7 +26,7 @@ const UploadExperienceReport = () => {
       </div>
     );
   }
-  return <div>You must be logged in and be a professsor</div>;
+  return <div>You must be logged in and be a student</div>;
 };
 
 export default UploadExperienceReport;
