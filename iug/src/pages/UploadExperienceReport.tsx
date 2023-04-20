@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "../styles/uploadProject.css";
-import UploadProjectForm from "../components/uploadProjectFrom";
+import UploadExperienceReportForm from "../components/UploadExperienceReportForm";
 import { useFirebaseAuth } from "../services/AuthContext";
-import { useGetUser } from "../services/useGetUser";
 import { CustomUser } from "../models/user";
-const UploadProject = () => {
-  //const [user, setUser] = useState<User | null>(null)
+import { useGetUser } from "../services/useGetUser";
+const UploadExperienceReport = () => {
   const { user } = useFirebaseAuth();
   const [userUpdatet, setUserUpdatet] = useState<boolean>(false);
   const [customUser, setCustomUser] = useState<CustomUser | null>(null);
@@ -19,15 +18,15 @@ const UploadProject = () => {
     }
   }, [customUser, user, userUpdatet]);
 
-  if (customUser !== null && customUser?.professor === true) {
+  if (customUser !== null && customUser?.professor === false) {
     return (
       <div className="outline">
-        <div className="title"> Upload Project </div>
-        <UploadProjectForm />
+        <div className="title"> Upload Experience Report </div>
+        <UploadExperienceReportForm />
       </div>
     );
   }
-  return <div>You must be logged in, and be a professor</div>;
+  return <div>You must be logged in and be a student</div>;
 };
 
-export default UploadProject;
+export default UploadExperienceReport;

@@ -83,13 +83,13 @@ function Home() {
           next={fetchMoreData}
           hasMore={hasMore}
           loader={
-            <p style={{ textAlign: "center" }}>
+            <div style={{ textAlign: "center" }}>
               <h4>Loading ..</h4>
-            </p>
+            </div>
           }
           scrollableTarget="scrollableDiv"
           endMessage={
-            <p style={{ textAlign: "center" }}>
+            <div style={{ textAlign: "center" }}>
               <h4>
                 {" "}
                 No{" "}
@@ -97,7 +97,7 @@ function Home() {
                   ? "project for given search"
                   : "more projects to show"}
               </h4>
-            </p>
+            </div>
           }
         >
           <div className="rowHome">

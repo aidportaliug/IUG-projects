@@ -19,56 +19,58 @@ import { useGetUser } from "./useGetUser";
 async function CallGetUser(userId: string) {
   return await useGetUser(userId);
 }
-const storeProject = async (
+
+const storeExperienceReport = async (
   title: string,
   shortTitle: string,
   studyField: string,
   location: string,
-  deadline: Date,
+  year: number,
   description: string,
   summaryDescription: string,
-  duration: number,
-  professorId: string
+  projectId: string | undefined,
+  studentId: string
 ) => {
-  const customUser = await CallGetUser(professorId);
+  const customUser = await CallGetUser(studentId);
   if (customUser !== null && customUser.professor === false) {
-    const docRef = await addDoc(collection(db, "project"), {
+    const docRef = await addDoc(collection(db, "experienceReport"), {
       title: title,
       shortTitle: shortTitle,
       studyField: studyField,
       location: location,
-      deadline: deadline,
+      year: year,
       description: description,
       summaryDescription: summaryDescription,
-      duration: duration,
-      professorId: professorId,
+      studentId: studentId,
+      projectId: projectId,
     });
 
     const queryGetUser: CollectionReference<DocumentData> = collection(
       db,
       "userProfile"
     );
-    const q = query(queryGetUser, where("userID", "==", professorId));
+    const q = query(queryGetUser, where("userID", "==", studentId));
     const userProfileSnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
 
     if (!userProfileSnapshot.empty) {
       const userRef = doc(db, "userProfile", userProfileSnapshot.docs[0].id);
       await updateDoc(userRef, {
-        "contributionIds.projectID": arrayUnion(docRef.id),
+        "contributionIds.experienceID": arrayUnion(docRef.id),
       });
+      console.log(userProfileSnapshot);
     }
   }
 };
 
-export default async function createProject(
+export default async function createExperienceReport(
   title: string,
   shortTitle: string,
   studyField: string,
   location: string,
-  deadline: Date,
+  year: number,
   description: string,
-  duration: number,
-  summaryDescription: string
+  summaryDescription: string,
+  projectId?: string
 ) {
   const auth = getAuth(firebase);
   if (auth.currentUser?.getIdToken()) {
@@ -76,15 +78,15 @@ export default async function createProject(
       allowedLocations.includes(location) &&
       allowedStudyFields.includes(studyField)
     ) {
-      storeProject(
+      storeExperienceReport(
         title,
         shortTitle,
         studyField,
         location,
-        deadline,
+        year,
         description,
         summaryDescription,
-        duration,
+        projectId ?? "",
         await auth.currentUser.uid
       ).catch((error) => {
         const errorCode = error.code;
