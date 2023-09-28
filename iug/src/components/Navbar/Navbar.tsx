@@ -43,7 +43,7 @@ function Navbar() {
 
   const location = window.location.pathname;
   return (
-    <AppBar position="static">
+    <AppBar position="sticky" elevation={0}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <NavLogo /> {/* This is the EWB logo */}
