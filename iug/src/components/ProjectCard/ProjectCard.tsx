@@ -42,9 +42,7 @@ const ProjectCard = ({
         />
         <div className="projectText"> {title} </div>
         <div className="projectDescription"> {description} </div>
-        <div className="alignRight">
-        <CalandarDate date={date} />
-        </div>
+        <div className="alignRight"> <CalandarDate date={date}/> </div>
       </div>
       <div className="projectCardBottomRow">
         {topicsDivs}
