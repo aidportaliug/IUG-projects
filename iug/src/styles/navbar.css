@@ -1,4 +1,8 @@
 @import "main.css";
+body .app-bar {
+    width: 100%;
+    background-color: var(--navbarColor);
+  }
 
 .css-1t6c9ts{
     background-color: var(--navbarColor);
@@ -10,7 +14,9 @@
 .css-ts8wrq-MuiPaper-root-MuiAppBar-root{
     box-shadow: none !important;
 }
-
+.css-1oo93zi-MuiPaper-root-MuiAppBar-root{
+    background-color: var(--navbarColor);
+}
 .bold{
     font-weight : 700 !important;
     font-family: var(--mainFontFamily) !important; 

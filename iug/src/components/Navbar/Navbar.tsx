@@ -12,6 +12,7 @@ import MenuItemIUG from "./MenuItemIUG";
 import ButtonForNavbar from "./ButtonForNavbar";
 import NavLogo from "./Navlogo";
 import { useFirebaseAuth } from "../../services/AuthContext";
+import "../../styles/navbar.css";
 
 const pages = ["Masterprojects", "Experience Reports"];
 const settings = ["Profile", "Logout"];
@@ -42,10 +43,11 @@ function Navbar() {
   };
 
   const location = window.location.pathname;
+
   return (
-    <AppBar position="static">
+    <AppBar position="fixed" elevation={0} className="app-bar">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar disableGutters style={{ width: "100%" }}>
           <NavLogo /> {/* This is the EWB logo */}
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton

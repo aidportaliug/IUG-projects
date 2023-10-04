@@ -1,13 +1,14 @@
 import "../../styles/user.css";
 import UserProfileComponent from "../../components/UserProfile";
 import React from "react";
-import Navbar from "../../components/Navbar/Navbar";
+import Layout from "../../components/Navbar/Layout";
 
 export default function UserView() {
   return (
     <>
-      <Navbar />
-      <UserProfileComponent />
+      <Layout>
+        <UserProfileComponent />
+      </Layout>
     </>
   );
 }
