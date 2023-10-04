@@ -7,8 +7,7 @@ import { studyFields, locations } from "../../models/allowedValues";
 import FilterDropdown from "../../components/FilterDropdown";
 import { DocumentData } from "firebase/firestore";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Navbar from "../../components/Navbar/Navbar";
-import "../../styles/navbar.css";
+import Layout from "../../components/Navbar/Layout";
 
 function Home() {
   const imagePath = "./../../images/Trax_Ghana.png";
@@ -64,60 +63,63 @@ function Home() {
 
   return (
     <div className="homeBackground">
-      <Navbar />
-      <div className="homeOutline">
-        <div className="homeTitle"> Projects </div>
-        <FilterDropdown value={orderBy} setValue={setOrderBy} sortBy={true} />
-        <FilterDropdown
-          value={filterLocation}
-          setValue={setFilterLocation}
-          location={true}
-        />
-        <FilterDropdown
-          value={filterStudyField}
-          setValue={setFilterStudyField}
-          studyField={true}
-        />
-        <InfiniteScroll
-          dataLength={projects.length}
-          next={fetchMoreData}
-          hasMore={hasMore}
-          loader={
-            <div style={{ textAlign: "center" }}>
-              <h4>Loading ..</h4>
+      <Layout>
+        <div className="homeOutline">
+          <div className="homeTitle"> Projects </div>
+          <FilterDropdown value={orderBy} setValue={setOrderBy} sortBy={true} />
+          <FilterDropdown
+            value={filterLocation}
+            setValue={setFilterLocation}
+            location={true}
+          />
+          <FilterDropdown
+            value={filterStudyField}
+            setValue={setFilterStudyField}
+            studyField={true}
+          />
+          <InfiniteScroll
+            dataLength={projects.length}
+            next={fetchMoreData}
+            hasMore={hasMore}
+            loader={
+              <div style={{ textAlign: "center" }}>
+                <h4>Loading ..</h4>
+              </div>
+            }
+            scrollableTarget="scrollableDiv"
+            endMessage={
+              <div style={{ textAlign: "center" }}>
+                <h4>
+                  {" "}
+                  No{" "}
+                  {noProject
+                    ? "project for given search"
+                    : "more projects to show"}
+                </h4>
+              </div>
+            }
+          >
+            <div className="rowHome">
+              {projects.map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  id={project.id}
+                  title={project.shortTitle ?? project.title}
+                  description={
+                    project.summaryDescription ?? project.description
+                  }
+                  date={project.deadline.toDate()}
+                  topics={[
+                    studyFields[project.studyField as keyof typeof studyFields],
+                    locations[project.location as keyof typeof locations],
+                  ]}
+                  imagePath={imagePath}
+                />
+              ))}
             </div>
-          }
-          scrollableTarget="scrollableDiv"
-          endMessage={
-            <div style={{ textAlign: "center" }}>
-              <h4>
-                {" "}
-                No{" "}
-                {noProject
-                  ? "project for given search"
-                  : "more projects to show"}
-              </h4>
-            </div>
-          }
-        >
-          <div className="rowHome">
-            {projects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                id={project.id}
-                title={project.shortTitle ?? project.title}
-                description={project.summaryDescription ?? project.description}
-                date={project.deadline.toDate()}
-                topics={[
-                  studyFields[project.studyField as keyof typeof studyFields],
-                  locations[project.location as keyof typeof locations],
-                ]}
-                imagePath={imagePath}
-              />
-            ))}
-          </div>
-        </InfiniteScroll>
-      </div>
+          </InfiniteScroll>
+        </div>
+      </Layout>
     </div>
   );
 }
