@@ -1,12 +1,11 @@
  @import "main.css";
 
 .projectOutline{
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
+    border-radius: 4px;
     overflow: hidden;
     background-color: var(--mainBackground);
     border: 3px solid var(--mainGreen);
-    height: 300px;
+    height: auto;
 }
 
 .projectPicture{
@@ -75,3 +74,18 @@
 .projectCardContainer:hover{
     cursor: pointer;
   }
+
+.wrapperTopicTagDate{
+    display: flex; 
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.topicDivs{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
