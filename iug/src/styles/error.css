@@ -1,0 +1,11 @@
+@import "main.css";
+html{
+    background-color: #DFE9DE4F;
+}
+#error{
+    background-color: rgba(159, 196, 163,0);
+    top: 25%;
+    left: 10%;
+    right: 10%;
+    position: absolute;
+}

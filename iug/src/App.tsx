@@ -6,6 +6,7 @@ import UserView from "./pages/userprofile";
 import ProjectDetailsPage from "./pages/ProjectDetailsPage";
 import UploadProject from "./pages/UploadProject";
 import UploadExperienceReport from "./pages/UploadExperienceReport";
+import Error from "./pages/404";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -37,6 +38,7 @@ function App() {
                 path="/uploadexperienceReport"
                 element={<UploadExperienceReport />}
               />
+              <Route path="/404" element={<Error />} />
             </Routes>
           </BrowserRouter>
         </FirebaseAuthProvider>
