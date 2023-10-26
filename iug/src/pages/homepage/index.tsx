@@ -8,6 +8,7 @@ import FilterDropdown from "../../components/FilterDropdown";
 import { DocumentData } from "firebase/firestore";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Layout from "../../components/Navbar/Layout";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Home() {
   const imagePath = "./../../images/Trax_Ghana.png";
@@ -83,21 +84,13 @@ function Home() {
             hasMore={hasMore}
             loader={
               <div style={{ textAlign: "center" }}>
-                <h4>Loading ..</h4>
-              </div>
-            }
-            scrollableTarget="scrollableDiv"
-            endMessage={
-              <div style={{ textAlign: "center" }}>
                 <h4>
-                  {" "}
-                  No{" "}
-                  {noProject
-                    ? "project for given search"
-                    : "more projects to show"}
+                  <CircularProgress />
                 </h4>
               </div>
             }
+            scrollableTarget="scrollableDiv"
+            endMessage={<h4></h4>}
           >
             <div className="rowHome">
               {projects.map((project) => (

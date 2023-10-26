@@ -21,13 +21,11 @@ const ProjectCard = ({
   topics,
   imagePath,
   id,
-
 }: projectProps) => {
   const navigate = useNavigate();
   const topicsDivs = topics.map(function (topic) {
     return <TopicTag key={topic} topic={topic} />;
-  }); 
-  
+  });
   function sendToProjectPage() {
     navigate(`/project/${id}`);
   }
@@ -42,9 +40,10 @@ const ProjectCard = ({
         />
         <div className="projectText"> {title} </div>
         <div className="projectDescription"> {description} </div>
-        <div className="wrapperTopicTagDate"> 
+        <div className="wrapperTopicTagDate">
           <div className="topicDivs"> {topicsDivs} </div>
-          <CalandarDate date={date}/> </div>
+          <CalandarDate date={date} />
+        </div>
       </div>
       <div className="projectCardBottomRow"> </div>
     </div>

@@ -2,7 +2,7 @@
     /** Color for the Project */
     --mainGreen: #3D7844;           /* iug green*/
     --secondaryGreen: #9fc4a3;
-    --tertiaryGreen: #dfe9de;
+    --tertiaryGreen: rgba(223, 233, 222, 0.31);
     --mainBackground: #ffffff;          /*EDEDED,  #E0EADF, #FCFDFD, #DDEEF5  user.css... */
     --link: #61dafb;                /*?*/
     --UiGray: #727171;
@@ -24,4 +24,7 @@
     --fontSizeBig: x-large;
     --fontSizeSmall: x-small;
 
+}
+html{
+    background-color: #DFE9DE4F;
 }
