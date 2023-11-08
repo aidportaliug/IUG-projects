@@ -8,6 +8,7 @@ import FilterDropdown from "../../components/FilterDropdown";
 import { DocumentData } from "firebase/firestore";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Layout from "../../components/Navbar/Layout";
+import Footer from "../../components/Footer";
 
 function Home() {
   const imagePath = "./../../images/Trax_Ghana.png";
@@ -119,6 +120,7 @@ function Home() {
             </div>
           </InfiniteScroll>
         </div>
+        <Footer />
       </Layout>
     </div>
   );
