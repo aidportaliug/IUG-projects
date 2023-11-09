@@ -1,0 +1,22 @@
+@import "main.css";
+
+.Footer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    background-color: var(--mainGreen);
+}
+
+.Footer div h4{
+    color: var(--mainGreen);
+    margin: auto;
+
+}
+
+.Footer div div a, .Footer div div a :visited {
+    color: var(--secondaryGreen);
+    
+
+ }
