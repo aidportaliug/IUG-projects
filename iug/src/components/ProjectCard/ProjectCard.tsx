@@ -26,7 +26,6 @@ const ProjectCard = ({
   const topicsDivs = topics.map(function (topic) {
     return <TopicTag key={topic} topic={topic} />;
   });
-
   function sendToProjectPage() {
     navigate(`/project/${id}`);
   }
@@ -41,13 +40,12 @@ const ProjectCard = ({
         />
         <div className="projectText"> {title} </div>
         <div className="projectDescription"> {description} </div>
-      </div>
-      <div className="projectCardBottomRow">
-        {topicsDivs}
-        <div className="alignRight">
+        <div className="wrapperTopicTagDate">
+          <div className="topicDivs"> {topicsDivs} </div>
           <CalandarDate date={date} />
         </div>
       </div>
+      <div className="projectCardBottomRow"> </div>
     </div>
   );
 };

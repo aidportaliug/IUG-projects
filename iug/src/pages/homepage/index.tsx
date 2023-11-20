@@ -84,21 +84,13 @@ function Home() {
             hasMore={hasMore}
             loader={
               <div style={{ textAlign: "center" }}>
-                <h4>Loading ..</h4>
-              </div>
-            }
-            scrollableTarget="scrollableDiv"
-            endMessage={
-              <div style={{ textAlign: "center" }}>
                 <h4>
-                  {" "}
-                  No{" "}
-                  {noProject
-                    ? "project for given search"
-                    : "more projects to show"}
+                  <CircularProgress />
                 </h4>
               </div>
             }
+            scrollableTarget="scrollableDiv"
+            endMessage={<h4></h4>}
           >
             <div className="rowHome">
               {projects.map((project) => (
