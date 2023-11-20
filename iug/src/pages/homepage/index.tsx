@@ -84,9 +84,7 @@ function Home() {
             hasMore={hasMore}
             loader={
               <div style={{ textAlign: "center" }}>
-                <h4>
-                  <CircularProgress />
-                </h4>
+                <h4>Loading</h4>
               </div>
             }
             scrollableTarget="scrollableDiv"
