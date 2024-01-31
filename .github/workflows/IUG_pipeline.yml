@@ -65,8 +65,3 @@ jobs:
 
         - name: build react app
           run: yarn build
-
-
-
-    
-
