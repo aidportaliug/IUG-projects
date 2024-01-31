@@ -4,6 +4,8 @@ import UploadProjectForm from "../components/uploadProjectFrom";
 import { useFirebaseAuth } from "../services/AuthContext";
 import { useGetUser } from "../services/useGetUser";
 import { CustomUser } from "../models/user";
+import Meta from "../components/Meta";
+
 const UploadProject = () => {
   //const [user, setUser] = useState<User | null>(null)
   const { user } = useFirebaseAuth();
@@ -21,10 +23,13 @@ const UploadProject = () => {
 
   if (customUser !== null && customUser?.professor === true) {
     return (
-      <div className="outline">
-        <div className="title"> Upload Project </div>
-        <UploadProjectForm />
-      </div>
+      <>
+        <Meta title={"Upload your project"}></Meta>
+        <div className="outline">
+          <div className="title"> Upload Project </div>
+          <UploadProjectForm />
+        </div>
+      </>
     );
   }
   return <div>You must be logged in, and be a professor</div>;
