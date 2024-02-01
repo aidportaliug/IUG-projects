@@ -90,7 +90,7 @@ function Home() {
               </div>
             }
             scrollableTarget="scrollableDiv"
-            endMessage={<h4></h4>}
+            endMessage={<h4>{noProject}</h4>}
           >
             <div className="rowHome">
               {projects.map((project) => (
