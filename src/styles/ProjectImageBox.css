@@ -1,0 +1,8 @@
+.projectImageBox {
+    display: flex;
+    justify-content: center;
+}
+.projectImageBox img {
+    border-radius: 4px;
+    width: 50%;
+}
