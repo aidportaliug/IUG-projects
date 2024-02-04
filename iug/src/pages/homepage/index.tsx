@@ -88,7 +88,7 @@ function Home() {
               </div>
             }
             scrollableTarget="scrollableDiv"
-            endMessage={<h4></h4>}
+            endMessage={<h4> </h4>}
           >
             <div className="rowHome">
               {projects.map((project) => (
@@ -110,7 +110,18 @@ function Home() {
             </div>
           </InfiniteScroll>
         </div>
-        <Footer />
+        <Footer
+          nameLink1="Demo_1"
+          nameLink1URL="demo.com"
+          nameLink2="Demo_1"
+          nameLink2URL="demo.com"
+          nameLink3="Demo_1"
+          nameLink3URL="demo.com"
+          nameLink4="Demo_1"
+          nameLink4URL="demo.com"
+          category1="category1"
+          category2="category2"
+        />
       </Layout>
     </div>
   );
