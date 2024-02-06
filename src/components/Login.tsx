@@ -9,7 +9,6 @@ import {
   Button,
   Grid,
 } from "@mui/material";
-import { NavLink } from "react-router-dom";
 import logIn from "../services/auth";
 import Link from "@mui/material/Link";
 import React from "react";
@@ -81,11 +80,6 @@ function LoginComponent() {
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
-              </Grid>
-              <Grid item>
-                <NavLink to="/signup">
-                  {"Don't have an account? Sign Up"}
-                </NavLink>
               </Grid>
             </Grid>
           </Box>

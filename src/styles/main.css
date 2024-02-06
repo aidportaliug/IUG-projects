@@ -25,6 +25,8 @@
     --fontSizeSmall: x-small;
 
 }
+
 html{
+    font-family: var(--mainFontFamily);
     background-color: #DFE9DE4F;
 }

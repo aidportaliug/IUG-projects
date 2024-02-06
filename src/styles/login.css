@@ -1,55 +1,73 @@
 @import "main.css";
 
-body{
-    margin: 0; /*why?*/
+.wholeLogin {
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
 }
 
-.wholesignup{
-    margin-top: 0;
+.loginBanner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  flex-basis: 40%;
+  height: 100vh;
+  background: var(--tertiaryGreen);
+  box-sizing: border-box;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-
-.imgLogo{
-position: relative;
-bottom: 10%;
-margin: auto;
-width: 50%;
+.loginBannerImage {
+  position: relative;
+  width: 100%;
+  max-height: 120px;
+  object-fit: cover;
+  object-position: center;
 }
 
-.imgHands{
-    position: relative;
-    width: 100%;
-    margin: auto;
-
+.loginText,
+.signupText {
+  color: var(--mainGreen);
+  font-size: min(3vw, 1.7rem);
+  font-weight: bolder;
+  align-items: center;
+  margin-inline: 30px;
 }
 
-.loginText, .signupText{
-color: var(--mainGreen);
-font-size: 4ch;
-font-weight: bolder;
-align-items: center;
-margin-left: 15%;
-margin-top: 10%;
-}
-.loginText>p, .signupText>p{
-    margin: 0;
-
-}
-.imageLogin, .imagesignup{
-margin: 0;
-position: absolute;
-left: 0;
-right: 57%;
-top: 0;
-bottom: 0;
-background: var(--tertiaryGreen);
-box-sizing: border-box;
-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+.loginText p {
+  margin: 0;
 }
 
-.loginPart, .signupPart{
-    margin-left: 40%;
+.imgLogo {
+  position: relative;
+  width: 25vw;
+  max-width: 240px;
+  padding-bottom: 100px;
 }
+
 .loginPart {
-    margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  flex-basis: 60%;
+}
+
+.signupRedirect {
+  width: 90%;
+  text-align: end;
+}
+
+.signupLink {
+  text-decoration: none;
+  color: var(--mainGreen);
+}
+
+.signupLink:hover {
+  text-decoration: underline;
+}
+
+main {
+  margin: auto;
 }

@@ -13,18 +13,24 @@ export default function Login() {
   if (user === null) {
     return (
       <div className="wholeLogin">
-        <div className="imageLogin">
-          <img className="imgHands" src={imageIcon} alt="" />
+        <div className="loginBanner">
+          <img className="loginBannerImage" src={imageIcon} alt="" />
           <div className="loginText">
             <p>Share your projects.</p>
             <p>connect with students.</p>
             <p>Make a difference.</p>
             <p>together.</p>
-            <img className="imgLogo" src={imageLogo} alt="" />
           </div>
+          <img className="imgLogo" src={imageLogo} alt="" />
         </div>
 
         <div className="loginPart">
+          <p className="signupRedirect">
+            Not registered yet?{" "}
+            <a className="signupLink" href="/signup">
+              Sign Up.
+            </a>
+          </p>
           <ThemeProvider theme={theme}>
             <LoginComponent />
           </ThemeProvider>
