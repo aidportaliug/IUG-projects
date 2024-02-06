@@ -8,6 +8,7 @@ import {
   Checkbox,
   Button,
   Grid,
+  Divider,
 } from "@mui/material";
 import logIn from "../services/auth";
 import Link from "@mui/material/Link";
@@ -32,15 +33,23 @@ function LoginComponent() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
           <Typography component="h1" variant="h5">
-            Sign in
+            Log in to Projects Without Borders
           </Typography>
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            style={{ backgroundColor: "#3D7844", color: "#FFFFFF" }}
+          >
+            Feide Login
+          </Button>
+          <Divider sx={{ width: 400 }}>or</Divider>
           <Box component="form" onSubmit={handleLogin} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
