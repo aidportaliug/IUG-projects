@@ -1,6 +1,5 @@
 import {
   Container,
-  CssBaseline,
   Box,
   Typography,
   TextField,
@@ -30,7 +29,6 @@ function LoginComponent() {
   return (
     <>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box
           sx={{
             display: "flex",
@@ -38,7 +36,7 @@ function LoginComponent() {
             alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h5">
+          <Typography className="loginHeader" component="h1" variant="h5">
             Log in to Projects Without Borders
           </Typography>
           <Button

@@ -26,7 +26,7 @@ export default function Login() {
 
         <div className="loginPart">
           <p className="signupRedirect">
-            Not registered yet?{" "}
+            Not registered yet?&nbsp;
             <a className="signupLink" href="/signup">
               Sign Up.
             </a>

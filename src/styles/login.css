@@ -1,5 +1,9 @@
 @import "main.css";
 
+main {
+  margin: auto;
+}
+
 .wholeLogin {
   display: flex;
   align-items: center;
@@ -29,7 +33,7 @@
 .signupText {
   color: var(--mainGreen);
   font-size: min(3vw, 1.7rem);
-  font-weight: bolder;
+  font-weight: var(--headerFontWeight);
   align-items: center;
   margin-inline: 30px;
 }
@@ -59,6 +63,7 @@
 }
 
 .signupLink {
+  font-weight: var(--headerFontWeight);
   text-decoration: none;
   color: var(--mainGreen);
 }
@@ -67,6 +72,7 @@
   text-decoration: underline;
 }
 
-main {
-  margin: auto;
+.loginHeader {
+  font-family: var(--mainFontFamily) !important;
+  font-weight: var(--headerFontWeight) !important;
 }
