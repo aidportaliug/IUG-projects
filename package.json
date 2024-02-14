@@ -25,6 +25,7 @@
     "react-dom": "^18.2.0",
     "react-drag-drop-files": "^2.3.9",
     "react-infinite-scroll-component": "^6.1.0",
+    "react-quill": "^2.0.0",
     "react-router-dom": "^6.4.0",
     "react-scripts": "5.0.1",
     "typescript": "^5.0.2",
