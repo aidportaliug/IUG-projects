@@ -1,17 +1,14 @@
 import {
   Container,
-  CssBaseline,
   Box,
   Typography,
   TextField,
   FormControlLabel,
   Checkbox,
   Button,
-  Grid,
+  Divider,
 } from "@mui/material";
-import { NavLink } from "react-router-dom";
 import logIn from "../services/auth";
-import Link from "@mui/material/Link";
 import React from "react";
 
 function LoginComponent() {
@@ -30,18 +27,25 @@ function LoginComponent() {
   return (
     <>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h5">
-            Sign in
+          <Typography className="loginHeader" component="h1" variant="h5">
+            Log in to Projects Without Borders
           </Typography>
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            style={{ backgroundColor: "#3D7844", color: "#FFFFFF" }}
+          >
+            Feide Login
+          </Button>
+          <Divider sx={{ width: 400 }}>or</Divider>
           <Box component="form" onSubmit={handleLogin} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
@@ -76,20 +80,11 @@ function LoginComponent() {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <NavLink to="/signup">
-                  {"Don't have an account? Sign Up"}
-                </NavLink>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
+        <a className={"signupLink"} href="/signup">
+          Forgot password?
+        </a>
       </Container>
     </>
   );

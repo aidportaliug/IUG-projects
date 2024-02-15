@@ -13,18 +13,18 @@ export default function SignUp() {
 
   return (
     <div className="wholeLogin">
-      <div className="imagesignup">
-        <img className="imgHands" src={imageIcon} alt="" />
-        <div className="signupText">
+      <div className="loginBanner">
+        <img className="loginBannerImage" src={imageIcon} alt="" />
+        <div className="loginText">
           <p>Share your projects.</p>
           <p>connect with students.</p>
           <p>Make a difference.</p>
           <p>together.</p>
-          <img className="imgLogo" src={imageLogo} alt="" />
         </div>
+        <img className="imgLogo" src={imageLogo} alt="" />
       </div>
 
-      <div className="signupPart">
+      <div className="loginPart">
         <ThemeProvider theme={theme}>
           <SignUpComponent />
         </ThemeProvider>
