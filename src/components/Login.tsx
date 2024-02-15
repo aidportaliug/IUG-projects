@@ -6,11 +6,9 @@ import {
   FormControlLabel,
   Checkbox,
   Button,
-  Grid,
   Divider,
 } from "@mui/material";
 import logIn from "../services/auth";
-import Link from "@mui/material/Link";
 import React from "react";
 
 function LoginComponent() {
@@ -82,15 +80,11 @@ function LoginComponent() {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
+        <a className={"signupLink"} href="/signup">
+          Forgot password?
+        </a>
       </Container>
     </>
   );
