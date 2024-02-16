@@ -2,6 +2,7 @@ import React from "react";
 import "../../styles/error.css";
 import Layout from "../../components/Navbar/Layout";
 import { Button } from "@mui/material";
+import Footer from "../../components/Footer";
 
 const errorMessages: string[] = [
   "Oops! Looks like this page is as broken as a shattered light bulb.",
@@ -48,22 +49,36 @@ const errorMessages: string[] = [
 
 function error() {
   return (
-    <div className="homeBackground" id="error">
-      <Layout>
-        <div className="homeOutline">
-          <div className="homeTitle"> 404 </div>
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <h4>{errorMessages[Math.floor(Math.random() * 40)]}</h4>
-          <Button
-            href="./"
-            style={{ backgroundColor: "#3d7844", color: "#FFFFFF" }}
-          >
-            Homepage
-          </Button>
-        </div>
-      </Layout>
-    </div>
+    <>
+      <div className="homeBackground" id="error">
+        <Layout>
+          <div className="homeOutline">
+            <div className="homeTitle"> 404</div>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <h4>{errorMessages[Math.floor(Math.random() * 40)]}</h4>
+            <Button
+              href="./"
+              style={{ backgroundColor: "#3d7844", color: "#FFFFFF" }}
+            >
+              Homepage
+            </Button>
+          </div>
+        </Layout>
+      </div>
+      <Footer
+        nameLink1="Demo_1"
+        nameLink1URL="demo.com"
+        nameLink2="Demo_1"
+        nameLink2URL="demo.com"
+        nameLink3="Demo_1"
+        nameLink3URL="demo.com"
+        nameLink4="Demo_1"
+        nameLink4URL="demo.com"
+        category1="category1"
+        category2="category2"
+      />
+    </>
   );
 }
 
