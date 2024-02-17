@@ -2,6 +2,7 @@ import React from "react";
 import "../../styles/error.css";
 import Layout from "../../components/Navbar/Layout";
 import { Button } from "@mui/material";
+import Meta from "../../components/Meta";
 
 const errorMessages: string[] = [
   "Oops! Looks like this page is as broken as a shattered light bulb.",
@@ -48,22 +49,25 @@ const errorMessages: string[] = [
 
 function error() {
   return (
-    <div className="homeBackground" id="error">
-      <Layout>
-        <div className="homeOutline">
-          <div className="homeTitle"> 404 </div>
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <h4>{errorMessages[Math.floor(Math.random() * 40)]}</h4>
-          <Button
-            href="./"
-            style={{ backgroundColor: "#3d7844", color: "#FFFFFF" }}
-          >
-            Homepage
-          </Button>
-        </div>
-      </Layout>
-    </div>
+    <>
+      <Meta title="404" />
+      <div className="homeBackground" id="error">
+        <Layout>
+          <div className="homeOutline">
+            <div className="homeTitle"> 404</div>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <h4>{errorMessages[Math.floor(Math.random() * 40)]}</h4>
+            <Button
+              href="./"
+              style={{ backgroundColor: "#3d7844", color: "#FFFFFF" }}
+            >
+              Homepage
+            </Button>
+          </div>
+        </Layout>
+      </div>
+    </>
   );
 }
 

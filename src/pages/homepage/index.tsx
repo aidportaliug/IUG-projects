@@ -10,6 +10,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Layout from "../../components/Navbar/Layout";
 import CircularProgress from "@mui/material/CircularProgress";
 import Footer from "../../components/Footer";
+import Meta from "../../components/Meta";
 
 function Home() {
   const imagePath = "./../../images/Trax_Ghana.png";
@@ -64,69 +65,78 @@ function Home() {
   }, [filterLocation, filterStudyField, orderBy]);
 
   return (
-    <div className="homeBackground">
-      <Layout>
-        <div className="homeOutline">
-          <div className="homeTitle"> Projects </div>
-          <FilterDropdown value={orderBy} setValue={setOrderBy} sortBy={true} />
-          <FilterDropdown
-            value={filterLocation}
-            setValue={setFilterLocation}
-            location={true}
-          />
-          <FilterDropdown
-            value={filterStudyField}
-            setValue={setFilterStudyField}
-            studyField={true}
-          />
-          <InfiniteScroll
-            dataLength={projects.length}
-            next={fetchMoreData}
-            hasMore={hasMore}
-            loader={
-              <div style={{ textAlign: "center" }}>
-                <h4>
-                  <CircularProgress />
-                </h4>
+    <>
+      <Meta title="Home"></Meta>
+      <div className="homeBackground">
+        <Layout>
+          <div className="homeOutline">
+            <div className="homeTitle"> Projects</div>
+            <FilterDropdown
+              value={orderBy}
+              setValue={setOrderBy}
+              sortBy={true}
+            />
+            <FilterDropdown
+              value={filterLocation}
+              setValue={setFilterLocation}
+              location={true}
+            />
+            <FilterDropdown
+              value={filterStudyField}
+              setValue={setFilterStudyField}
+              studyField={true}
+            />
+            <InfiniteScroll
+              dataLength={projects.length}
+              next={fetchMoreData}
+              hasMore={hasMore}
+              loader={
+                <div style={{ textAlign: "center" }}>
+                  <h4>
+                    <CircularProgress />
+                  </h4>
+                </div>
+              }
+              scrollableTarget="scrollableDiv"
+              endMessage={<h4>{noProject}</h4>}
+            >
+              <div className="rowHome">
+                {projects.map((project) => (
+                  <ProjectCard
+                    key={project.id}
+                    id={project.id}
+                    title={project.shortTitle ?? project.title}
+                    description={
+                      project.summaryDescription ?? project.description
+                    }
+                    date={project.deadline.toDate()}
+                    topics={[
+                      studyFields[
+                        project.studyField as keyof typeof studyFields
+                      ],
+                      locations[project.location as keyof typeof locations],
+                    ]}
+                    imagePath={imagePath}
+                  />
+                ))}
               </div>
-            }
-            scrollableTarget="scrollableDiv"
-            endMessage={<h4>{noProject}</h4>}
-          >
-            <div className="rowHome">
-              {projects.map((project) => (
-                <ProjectCard
-                  key={project.id}
-                  id={project.id}
-                  title={project.shortTitle ?? project.title}
-                  description={
-                    project.summaryDescription ?? project.description
-                  }
-                  date={project.deadline.toDate()}
-                  topics={[
-                    studyFields[project.studyField as keyof typeof studyFields],
-                    locations[project.location as keyof typeof locations],
-                  ]}
-                  imagePath={imagePath}
-                />
-              ))}
-            </div>
-          </InfiniteScroll>
-        </div>
-        <Footer
-          nameLink1="Demo_1"
-          nameLink1URL="demo.com"
-          nameLink2="Demo_1"
-          nameLink2URL="demo.com"
-          nameLink3="Demo_1"
-          nameLink3URL="demo.com"
-          nameLink4="Demo_1"
-          nameLink4URL="demo.com"
-          category1="category1"
-          category2="category2"
-        />
-      </Layout>
-    </div>
+            </InfiniteScroll>
+          </div>
+          <Footer
+            nameLink1="Demo_1"
+            nameLink1URL="demo.com"
+            nameLink2="Demo_1"
+            nameLink2URL="demo.com"
+            nameLink3="Demo_1"
+            nameLink3URL="demo.com"
+            nameLink4="Demo_1"
+            nameLink4URL="demo.com"
+            category1="category1"
+            category2="category2"
+          />
+        </Layout>
+      </div>
+    </>
   );
 }
 
