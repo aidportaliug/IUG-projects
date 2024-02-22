@@ -1,14 +1,17 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import "../styles/richTextEditor.css";
+import "../../styles/richTextEditor.css";
 import CustomToolbar from "./CustomToolbar";
 
-const RichTextEditor = () => {
-  const [value, setValue] = useState("");
+interface Textprops {
+  html: string;
+}
 
-  const handleChange = (html) => {
-    setValue(html);
+const RichTextEditor = ({ html }: Textprops) => {
+  const [value, setValue] = useState<string>(html);
+  const handleChange = (newhtml: string) => {
+    setValue(newhtml);
   };
 
   const modules = {
@@ -17,23 +20,31 @@ const RichTextEditor = () => {
     },
   };
   const formats = [
-    "header",
+    "font",
+    "size",
     "bold",
     "italic",
     "underline",
     "strike",
+    "color",
+    "background",
+    "script",
+    "header",
     "blockquote",
-    "list",
-    "bullet",
+    "code-block",
     "indent",
+    "list",
+    "direction",
+    "align",
     "link",
     "image",
-    "font",
-    "size",
+    "video",
+    "formula",
   ];
 
   return (
     <div className="wrapper">
+      <CustomToolbar />
       <ReactQuill
         value={value}
         onChange={handleChange}
