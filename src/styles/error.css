@@ -6,3 +6,20 @@
     right: 10%;
     position: absolute;
 }
+
+html {
+    background-image: url("../../public/light.png") ;
+    height: 10vh;
+    width: 1vh;
+    background-position:  right  65%;
+    background-repeat: no-repeat;
+    background-size: 30%;
+    background-attachment: fixed;
+}
+.Footer{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+}
+
+

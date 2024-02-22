@@ -32,3 +32,7 @@
 .Footer div div a, .Footer div div a :visited {
     color: var(--secondaryGreen);
 }
+
+a:visited {
+    color: var(--secondaryGreen)
+}
