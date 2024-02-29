@@ -2,7 +2,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "../../styles/login.css";
 import LoginComponent from "../../components/Login";
 import { useFirebaseAuth } from "../../services/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import imageLogo from "./../../images/logo.png";
 import imageIcon from "./../../images/loginBilde.png";
 import React from "react";
@@ -30,9 +30,9 @@ export default function Login() {
           <div className="loginPart">
             <p className="signupRedirect">
               Not registered yet?&nbsp;
-              <a className="signupLink" href="/signup">
+              <Link to="/signup" className="signupLink">
                 Sign Up.
-              </a>
+              </Link>
             </p>
             <ThemeProvider theme={theme}>
               <LoginComponent />
