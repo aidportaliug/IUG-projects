@@ -2,7 +2,7 @@
     /** Color for the Project */
     --mainGreen: #3D7844;           /* iug green*/
     --secondaryGreen: #9fc4a3;
-    --tertiaryGreen: rgba(223, 233, 222, 0.31);
+    --tertiaryGreen: rgba(224, 234, 223, 1);
     --mainBackground: #ffffff;          /*EDEDED,  #E0EADF, #FCFDFD, #DDEEF5  user.css... */
     --link: #61dafb;                /*?*/
     --UiGray: #727171;
@@ -17,14 +17,17 @@
     'Ubuntu', 'Cantarell', 'Fira Sans','Helvetica Neue', 'Archivo',sans-serif;
     --mainFontStyle:normal;
     --mainFontWeight: 400;
+    --headerFontWeight: 700;
     --TypoGary: #727171;
-    ––TypoGreen: #3d7844;
+    --TypoGreen: #3d7844;
     --TypoBlack: #000000;
     --fontSizeNormal:medium;
     --fontSizeBig: x-large;
     --fontSizeSmall: x-small;
 
 }
+
 html{
+    font-family: var(--mainFontFamily);
     background-color: #DFE9DE4F;
 }

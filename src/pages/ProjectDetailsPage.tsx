@@ -8,6 +8,8 @@ import InformationBox from "../components/ProjectDetail/InformationBox";
 import "../styles/projectDetail.css";
 import Trax_Ghana from "./../images/Trax_Ghana.png";
 import ProjectImageBox from "../components/ProjectImageBox";
+import Meta from "../components/Meta";
+
 
 const ProjectDetailsPage: React.FC = () => {
   const name = "Trond Are Øritsland";
@@ -30,6 +32,7 @@ const ProjectDetailsPage: React.FC = () => {
   }, [id]);
   if (project != null) {
     return (
+      <Meta title={"Your profile"}></Meta>
       <div className="projectDetailoutline">
         <div className="Title">{project?.title}</div>
         <ProjectImageBox source={imageIcon} altText={"String"} />
@@ -56,7 +59,7 @@ const ProjectDetailsPage: React.FC = () => {
         <div style={{ width: "70%", fontSize: "15px" }}>
           {project.description}
         </div>
-      </div>
+      </>
     );
   }
   return <div>404: page not found</div>;
