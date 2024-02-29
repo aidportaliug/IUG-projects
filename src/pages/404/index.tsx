@@ -3,6 +3,8 @@ import "../../styles/error.css";
 import Layout from "../../components/Navbar/Layout";
 import { Button } from "@mui/material";
 import Footer from "../../components/Footer";
+import Background from "../../components/Background";
+import background from "../../images/light.png";
 
 const errorMessages: string[] = [
   "Oops! Looks like this page is as broken as a shattered light bulb.",
@@ -50,7 +52,8 @@ const errorMessages: string[] = [
 function error() {
   return (
     <>
-      <div className="homeBackground" id="error">
+      <Background image={background}></Background>
+      <div className="homeBackground ErrorWrapper" id="error">
         <Layout>
           <div className="homeOutline">
             <div className="homeTitle"> 404</div>
