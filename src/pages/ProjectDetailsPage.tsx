@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import ProffesorCard from "../components/ProfessorCard";
+import ProfessorCard from "../components/ProfessorCard";
 import { Project } from "../models/project";
 import { getProject } from "../services/getProject";
 import InformationBox from "../components/ProjectDetail/InformationBox";
@@ -32,6 +32,7 @@ const ProjectDetailsPage: React.FC = () => {
   }, [id]);
   if (project != null) {
     return (
+        <>
       <Meta title={"Your profile"}></Meta>
       <div className="projectDetailoutline">
         <div className="Title">{project?.title}</div>
@@ -41,7 +42,7 @@ const ProjectDetailsPage: React.FC = () => {
             <img className="projectDetailImage" src={imageIcon} alt="" />
           </Grid>
           <Grid item xs={4}>
-            <ProffesorCard
+            <ProfessorCard
               name={name}
               professionalTitle={professionalTitle}
               institute={institute}
@@ -59,6 +60,7 @@ const ProjectDetailsPage: React.FC = () => {
         <div style={{ width: "70%", fontSize: "15px" }}>
           {project.description}
         </div>
+      </div>
       </>
     );
   }
