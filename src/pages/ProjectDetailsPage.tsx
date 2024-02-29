@@ -7,10 +7,11 @@ import { getProject } from "../services/getProject";
 import InformationBox from "../components/ProjectDetail/InformationBox";
 import "../styles/projectDetail.css";
 import Trax_Ghana from "./../images/Trax_Ghana.png";
+import ProjectImageBox from "../components/ProjectImageBox";
 
 const ProjectDetailsPage: React.FC = () => {
   const name = "Trond Are Øritsland";
-  const professioanlTitle = "Førsteamanuensis";
+  const professionalTitle = "Førsteamanuensis";
   const institute = "Institutt for design";
   const email = "trond.are.oritsland@ntnu.no";
   const phoneNumber = "+47 90783975";
@@ -31,6 +32,7 @@ const ProjectDetailsPage: React.FC = () => {
     return (
       <div className="projectDetailoutline">
         <div className="Title">{project?.title}</div>
+        <ProjectImageBox source={imageIcon} altText={"String"} />
         <Grid container spacing={10}>
           <Grid item xs={8}>
             <img className="projectDetailImage" src={imageIcon} alt="" />
@@ -38,7 +40,7 @@ const ProjectDetailsPage: React.FC = () => {
           <Grid item xs={4}>
             <ProffesorCard
               name={name}
-              professioanlTitle={professioanlTitle}
+              professionalTitle={professionalTitle}
               institute={institute}
               email={email}
               phoneNumber={phoneNumber}
