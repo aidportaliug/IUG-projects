@@ -3,6 +3,7 @@ import "../../styles/error.css";
 import Layout from "../../components/Navbar/Layout";
 import { Button } from "@mui/material";
 import Footer from "../../components/Footer";
+import Meta from "../../components/Meta";
 import Background from "../../components/Background";
 import background from "../../images/light.png";
 
@@ -52,8 +53,7 @@ const errorMessages: string[] = [
 function error() {
   return (
     <>
-      <Background image={background}></Background>
-      <div className="homeBackground ErrorWrapper" id="error">
+      <div className="homeBackground" id="error">
         <Layout>
           <div className="homeOutline">
             <div className="homeTitle"> 404</div>
