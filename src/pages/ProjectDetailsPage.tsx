@@ -1,3 +1,4 @@
+import { Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Project } from "../models/project";
@@ -29,6 +30,7 @@ const ProjectDetailsPage: React.FC = () => {
         <div className="projectDetailoutline">
           <div className="Title">{project?.title}</div>
           <ProjectImageBox source={imageIcon} altText={"String"} />
+          <Grid container spacing={10}></Grid>
           <InformationBox
             deadline={project.deadline.toDate()}
             location={project.location}
