@@ -6,7 +6,7 @@ import trond_profil_bilde from "../images/trond_profil_bilde.png";
 
 interface professorCardProp {
   name: string;
-  professioanlTitle: string;
+  professionalTitle: string;
   institute: string;
   email: string;
   phoneNumber: string;
@@ -14,7 +14,7 @@ interface professorCardProp {
 }
 const ProfessorCard = ({
   name,
-  professioanlTitle,
+  professionalTitle,
   institute,
   email,
   phoneNumber,
@@ -30,9 +30,9 @@ const ProfessorCard = ({
           alt={altText}
         ></img>
         <div className="professorCardName"> {name} </div>
-        <div className="professorCardProffesionalTitle">
+        <div className="professorCardProfessionalTitle">
           {" "}
-          {professioanlTitle}{" "}
+          {professionalTitle}{" "}
         </div>
         <div className="professorCardInstitute"> {institute} </div>
         <div className="professorCardEmailPhone">
