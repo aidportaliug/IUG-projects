@@ -1,6 +1,5 @@
 import {
   Container,
-  CssBaseline,
   Box,
   Typography,
   Grid,
@@ -60,7 +59,6 @@ function SignUpComponent() {
   return (
     <>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box
           sx={{
             display: "flex",
