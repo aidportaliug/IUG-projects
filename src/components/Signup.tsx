@@ -1,26 +1,21 @@
 import {
   Container,
-  CssBaseline,
   Box,
   Typography,
   Grid,
   TextField,
   FormControl,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
   Button,
 } from "@mui/material";
 import { onAuthStateChanged } from "firebase/auth";
-import { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../services/firebaseConfig";
 import signUp from "../services/signup";
 import React from "react";
 
 function SignUpComponent() {
   const nav = useNavigate();
-  const [isProfesor, setIsProfesor] = useState<boolean>(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
@@ -54,7 +49,6 @@ function SignUpComponent() {
           Number(phoneNumer),
           institute,
           university,
-          isProfesor,
           password
         );
     } catch (error) {
@@ -65,16 +59,14 @@ function SignUpComponent() {
   return (
     <>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h5">
+          <Typography className="loginHeader" component="h1" variant="h5">
             Sign up
           </Typography>
           <Box
@@ -84,34 +76,6 @@ function SignUpComponent() {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <RadioGroup
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  defaultValue="student"
-                  name="radio-buttons-group"
-                  onChange={(e, value) => {
-                    if (value === "student") {
-                      setIsProfesor(false);
-                    } else {
-                      setIsProfesor(true);
-                    }
-                  }}
-                  row
-                >
-                  <FormControlLabel
-                    value="student"
-                    id="student"
-                    control={<Radio />}
-                    label="Student"
-                  />
-                  <FormControlLabel
-                    value="profesor"
-                    id="professor"
-                    control={<Radio />}
-                    label="Profesor"
-                  />
-                </RadioGroup>
-              </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
@@ -133,7 +97,7 @@ function SignUpComponent() {
                   autoComplete="family-name"
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
@@ -143,7 +107,7 @@ function SignUpComponent() {
                   autoComplete="email"
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <FormControl>
                   <TextField
                     fullWidth
@@ -196,11 +160,6 @@ function SignUpComponent() {
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <NavLink to="/">Already have an account? Sign in</NavLink>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>

@@ -12,8 +12,7 @@ const storeUser = async (
   email: string,
   phoneNumber: number,
   institue: string,
-  university: string,
-  professor: boolean
+  university: string
 ) => {
   const contributionIds: ContributionIds = { experienceID: [], projectID: [] };
   await addDoc(collection(db, "userProfile"), {
@@ -23,7 +22,6 @@ const storeUser = async (
     phoneNumber: phoneNumber,
     institute: institue,
     university: university,
-    professor: professor,
     admin: false,
     email: email,
     contributionIds: contributionIds,
@@ -37,21 +35,13 @@ export default function signUp(
   phoneNumber: number,
   institue: string,
   university: string,
-  professor: boolean,
   password: string
 ) {
-  if (
-    firstName === "" ||
-    lastName === "" ||
-    email === "" ||
-    password === "" ||
-    professor === null
-  ) {
+  if (firstName === "" || lastName === "" || email === "" || password === "") {
     return false;
   }
 
   const auth = getAuth(firebase);
-  console.log(professor);
   createUserWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
       console.log(userCredential);
@@ -63,8 +53,7 @@ export default function signUp(
         email,
         phoneNumber,
         institue,
-        university,
-        professor
+        university
       );
     })
     .catch((error: Error) => {

@@ -5,6 +5,7 @@ import Logo from "./../../images/logo.png";
 import ImageIcon from "./../../images/loginBilde.png";
 import React from "react";
 import Meta from "../../components/Meta";
+import { Link } from "react-router-dom";
 
 export default function SignUp() {
   const theme = createTheme();
@@ -28,6 +29,12 @@ export default function SignUp() {
         </div>
 
         <div className="loginPart">
+          <p className="signupRedirect">
+            Already have an account?&nbsp;
+            <Link to="/login" className="signupLink">
+              Log in.
+            </Link>
+          </p>
           <ThemeProvider theme={theme}>
             <SignUpComponent />
           </ThemeProvider>
