@@ -11,7 +11,14 @@ type FormatDataWithValue = {
   value: string;
 };
 
-type formatData = FormatDataWithOptions | FormatDataWithValue;
+type FormatDataWithout = {
+  className: string;
+};
+
+type formatData =
+  | FormatDataWithOptions
+  | FormatDataWithValue
+  | FormatDataWithout;
 
 interface CustomToolbarProps {
   onFontSizeChange: (fontSize: string) => void;
@@ -19,7 +26,7 @@ interface CustomToolbarProps {
 
 const renderOptions = (formatData: FormatDataWithOptions): JSX.Element => {
   const { className, options } = formatData;
-  const defaultSelectedValue = "12";
+  const defaultSelectedValue = "Normal";
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
   };
@@ -33,7 +40,7 @@ const renderOptions = (formatData: FormatDataWithOptions): JSX.Element => {
       {options.map((label, index) => {
         return (
           <option key={index} value={label}>
-            {label}
+            {label.charAt(0).toUpperCase() + label.slice(1)}
           </option>
         );
       })}
@@ -45,10 +52,18 @@ const renderSingle = (formatData: FormatDataWithValue): JSX.Element => {
   return <button className={className} value={value}></button>;
 };
 
+const renderNothing = (formatData: FormatDataWithout): JSX.Element => {
+  const { className } = formatData;
+  return <button className={className}></button>;
+};
+
 const hasOptions = (data: formatData): data is FormatDataWithOptions => {
   return "options" in data;
 };
 
+const hasValue = (data: formatData): data is FormatDataWithValue => {
+  return "value" in data;
+};
 const CustomToolbar = () => {
   const colors = ["red", "green", "blue", "orange", "violet"];
   const formats: formatData[][] = [
@@ -59,19 +74,7 @@ const CustomToolbar = () => {
       },
       {
         className: "ql-size",
-        options: [
-          "10",
-          "11",
-          "12",
-          "13",
-          "14",
-          "15",
-          "16",
-          "17",
-          "18",
-          "19",
-          "20",
-        ],
+        options: ["small", "large", "huge"],
       },
     ],
     [
@@ -103,6 +106,13 @@ const CustomToolbar = () => {
         className: "ql-header",
         value: "2",
       },
+    ],
+    [
+      { className: "ql-bold" },
+      { className: "ql-italic" },
+      { className: "ql-underline" },
+      { className: "ql-strike" },
+      { className: "ql-blockquote" },
     ],
     [
       {
@@ -143,7 +153,9 @@ const CustomToolbar = () => {
                 <React.Fragment key={innerIndex}>
                   {hasOptions(formatData)
                     ? renderOptions(formatData)
-                    : renderSingle(formatData)}
+                    : hasValue(formatData)
+                    ? renderSingle(formatData)
+                    : renderNothing(formatData)}
                 </React.Fragment>
               );
             })}
