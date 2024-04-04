@@ -2,7 +2,6 @@ import React from "react";
 import "../../styles/error.css";
 import Layout from "../../components/Navbar/Layout";
 import { Button } from "@mui/material";
-import RichTextEditor from "../../components/TextEditor/RichTextEditor";
 
 const errorMessages: string[] = [
   "Oops! Looks like this page is as broken as a shattered light bulb.",
@@ -62,7 +61,6 @@ function error() {
           >
             Homepage
           </Button>
-          <RichTextEditor html="" />
         </div>
       </Layout>
     </div>
