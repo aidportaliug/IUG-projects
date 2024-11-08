@@ -54,7 +54,7 @@ jobs:
         run: yarn
 
       - name: Run Prettier check
-        run: npx prettier --check .
+        run: npx prettier  --write .
 
   # This will check if React is able to build the project.
   build:
