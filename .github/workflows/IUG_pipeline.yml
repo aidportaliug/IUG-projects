@@ -42,17 +42,19 @@ jobs:
         if: steps.check_files.outputs.files_exists == 'false'
         run: echo Thank you for not adding the .env file!
 
-  # This will try to check if linting succeeds.
-  lint:
+  
+  # This job will check if code formatting with Prettier succeeds.
+  prettier:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: yarn
 
-      - name: Lint
-        run: yarn lint
+      - name: Run Prettier check
+        run: yarn prettier --check .
 
   # This will check if React is able to build the project.
   build:
