@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/homePage/HomePage";
+import Home from "./pages/homePage/homePage";
 import Login from "./pages/loginPage/LoginPage";
 import SignUp from "./pages/signupPage/SignupPage";
 import UserView from "./pages/userProfilePage/UserProfilePage";
@@ -11,7 +11,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { FirebaseAuthProvider } from "./services/AuthContext";
-import React from "react";
 
 function App() {
   //set default colors for all mui components

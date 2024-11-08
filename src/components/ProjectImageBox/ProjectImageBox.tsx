@@ -1,5 +1,5 @@
-import React, { ReactElement } from "react";
-import "../styles/ProjectImageBox.css";
+import { ReactElement } from "react";
+import "./projectImageBox.css";
 
 interface projectImageBoxProp {
   source: string;

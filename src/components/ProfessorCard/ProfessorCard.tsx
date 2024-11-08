@@ -1,5 +1,4 @@
-import React from "react";
-import "../styles/professorCard.css";
+import "./professorCard.css";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import trond_profil_bilde from "../images/trond_profil_bilde.png";
