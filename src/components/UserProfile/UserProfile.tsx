@@ -32,7 +32,7 @@ const UserProfileComponent: React.FC = () => {
     }
   };
 
-  const callGetUser = async (userId: string) => {
+  const CallGetUser = async (userId: string) => {
     return await useGetUser(userId);
   };
 
@@ -43,7 +43,7 @@ const UserProfileComponent: React.FC = () => {
       });
     }
     if (user && !userUpdated) {
-      callGetUser(user.uid).then((response) => setCustomUser(response));
+      CallGetUser(user.uid).then((response) => setCustomUser(response));
       setUserUpdated(true);
     }
   }, [imageName, user, userUpdated]);
