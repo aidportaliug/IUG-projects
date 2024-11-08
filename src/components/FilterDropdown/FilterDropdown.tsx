@@ -4,7 +4,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { SetStateAction } from 'react';
 import { studyFields, locations, sortByEnum } from '../../models/allowedValues';
 
-interface calanderDateProps {
+interface calenderDateProps {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   studyField?: boolean;
@@ -12,13 +12,13 @@ interface calanderDateProps {
   sortBy?: boolean;
 }
 
-const FilterDropdown = ({
+const FilterDropdown: React.FC<calenderDateProps> = ({
   value,
   setValue,
   studyField = false,
   location = false,
   sortBy = false,
-}: calanderDateProps) => {
+}: calenderDateProps) => {
   const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
     setValue(event.target.value);
   };

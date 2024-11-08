@@ -13,7 +13,7 @@ interface projectProps {
   id: string;
 }
 
-const ProjectCard = ({ title, description, date, topics, imagePath, id }: projectProps) => {
+const ProjectCard: React.FC<projectProps> = ({ title, description, date, topics, imagePath, id }: projectProps) => {
   const navigate = useNavigate();
   const topicsDivs = topics.map(function (topic) {
     return <TopicTag key={topic} topic={topic} />;

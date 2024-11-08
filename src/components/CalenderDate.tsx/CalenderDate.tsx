@@ -1,11 +1,11 @@
 import './calenderDate.css';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-interface calanderDateProps {
+interface calenderDateProps {
   date: Date;
 }
 
-const CalandarDate = ({ date }: calanderDateProps) => {
+const CalandarDate: React.FC<calenderDateProps> = ({ date }: calenderDateProps) => {
   return (
     <div className="date">
       <CalendarTodayIcon></CalendarTodayIcon>

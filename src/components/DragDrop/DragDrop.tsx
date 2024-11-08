@@ -8,7 +8,7 @@ interface dragDropProps {
   setImage: React.Dispatch<React.SetStateAction<Blob | Uint8Array | ArrayBuffer | undefined>>;
 }
 
-const DragDrop = ({ handleSubmit, setImage }: dragDropProps) => {
+const DragDrop: React.FC<dragDropProps> = ({ handleSubmit, setImage }: dragDropProps) => {
   const handleChange = (file: File) => {
     setImage(file);
   };

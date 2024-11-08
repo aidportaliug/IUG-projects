@@ -2,6 +2,7 @@ import './professorCard.css';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import trond_profil_bilde from '../images/trond_profil_bilde.png';
+import React from 'react';
 
 interface professorCardProp {
   name: string;
@@ -11,7 +12,7 @@ interface professorCardProp {
   phoneNumber: string;
   //add photo
 }
-const ProfessorCard = ({ name, professionalTitle, institute, email, phoneNumber }: professorCardProp) => {
+const ProfessorCard: React.FC<professorCardProp> = ({ name, professionalTitle, institute, email, phoneNumber }: professorCardProp) => {
   const imageProfessorCard = trond_profil_bilde;
   const altText: string = 'picture of' + name;
   return (
