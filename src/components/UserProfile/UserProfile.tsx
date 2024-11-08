@@ -7,6 +7,7 @@ import { logOut, deleteFromAuth } from '../../services/auth';
 import { useFirebaseAuth } from '../../services/AuthContext';
 import { useGetUser } from '../../services/useGetUser';
 import { deleteUserFromStore, getPicture, uploadImage } from '../../services/userData';
+import React from 'react';
 
 import FileUpload from '../DragDrop/DragDrop';
 

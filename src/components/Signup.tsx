@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../services/firebaseConfig';
 import signUp from '../services/signup';
+import React from 'react';
 
 function SignUpComponent() {
   const nav = useNavigate();
@@ -18,19 +19,19 @@ function SignUpComponent() {
     });
   }, [nav]);
 
-  const handleSignUp = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined }) => {
+  const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       const data = new FormData(event.currentTarget);
       const firstName = data.get('firstName') as string;
       const lastName = data.get('lastName') as string;
       const email = data.get('email') as string;
-      const phoneNumer = data.get('phoneNumber') as string;
+      const phoneNumber = data.get('phoneNumber') as string;
       const institute = data.get('institute') as string;
       const university = data.get('university') as string;
       const password = data.get('password') as string;
       if (firstName && lastName && email && password)
-        signUp(firstName, lastName, email, Number(phoneNumer), institute, university, password);
+        signUp(firstName, lastName, email, Number(phoneNumber), institute, university, password);
     } catch (error) {
       console.log(error as string);
     }
