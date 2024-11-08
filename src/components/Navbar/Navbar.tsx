@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -18,7 +18,7 @@ const pages = ['Masterprojects', 'Experience Reports'];
 const settings = ['Profile', 'Logout'];
 const loggedOutSettings = ['Login', 'Sign Up'];
 
-function Navbar() {
+const Navbar: React.FC = () => {
   const { user } = useFirebaseAuth();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -48,7 +48,7 @@ function Navbar() {
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
-              aria-label="account of current user"
+              aria-label="open navigation menu"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
@@ -88,7 +88,7 @@ function Navbar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/src/images/logo.png" />
+                <Avatar alt="User Avatar" src="/src/images/logo.png" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -107,7 +107,7 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {user !== null
+              {user
                 ? settings.map((setting) => <MenuItemIUG setting={setting} key={setting} />)
                 : loggedOutSettings.map((setting) => <MenuItemIUG setting={setting} key={setting} />)}
             </Menu>
@@ -116,5 +116,6 @@ function Navbar() {
       </Container>
     </AppBar>
   );
-}
+};
+
 export default Navbar;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './uploadProject.css';
-import UploadProjectForm from '../../components/uploadProjectFrom';
+import UploadProjectForm from '../../components/UploadProjectForm/UploadProjectForm';
 import { useFirebaseAuth } from '../../services/AuthContext';
 import { useGetUser } from '../../services/useGetUser';
 import { CustomUser } from '../../models/user';

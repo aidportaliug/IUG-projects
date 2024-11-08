@@ -1,23 +1,24 @@
+import React, { useEffect } from 'react';
 import { Container, Box, Typography, Grid, TextField, FormControl, Button } from '@mui/material';
 import { onAuthStateChanged } from 'firebase/auth';
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../services/firebaseConfig';
-import signUp from '../services/signup';
-import React from 'react';
+import { auth } from '../../services/firebaseConfig';
+import signUp from '../../services/signup';
 
-function SignUpComponent() {
-  const nav = useNavigate();
+const SignUpComponent: React.FC = () => {
+  const navigate = useNavigate();
 
   useEffect(() => {
-    onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         console.log('success!!!');
-        nav('/User');
+        navigate('/User');
+      } else {
+        console.log('not current user');
       }
-      console.log('not current user');
     });
-  }, [nav]);
+    return () => unsubscribe();
+  }, [navigate]);
 
   const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -30,10 +31,12 @@ function SignUpComponent() {
       const institute = data.get('institute') as string;
       const university = data.get('university') as string;
       const password = data.get('password') as string;
-      if (firstName && lastName && email && password)
-        signUp(firstName, lastName, email, Number(phoneNumber), institute, university, password);
+
+      if (firstName && lastName && email && password) {
+        await signUp(firstName, lastName, email, Number(phoneNumber), institute, university, password);
+      }
     } catch (error) {
-      console.log(error as string);
+      console.error(error);
     }
   };
 
@@ -128,6 +131,6 @@ function SignUpComponent() {
       </Container>
     </>
   );
-}
+};
 
 export default SignUpComponent;

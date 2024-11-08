@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './uploadExperienceReport.css';
-import UploadExperienceReportForm from '../../components/UploadExperienceReportForm';
+import UploadExperienceReportForm from '../../components/UploadExperienceReportForm/UploadExperienceReportForm';
 import { useFirebaseAuth } from '../../services/AuthContext';
 import { CustomUser } from '../../models/user';
 import { useGetUser } from '../../services/useGetUser';

@@ -2,14 +2,16 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import IUGlogo from '../../images/logo.png';
 
-const NavLogo = () => {
+const NavLogo: React.FC = () => {
   const navigate = useNavigate();
+
   const handleLogoClick = () => {
     navigate('/');
   };
+
   return (
     <button
-      onClick={() => handleLogoClick()}
+      onClick={handleLogoClick}
       style={{
         border: 'none',
         outline: 'none',

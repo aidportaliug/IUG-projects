@@ -1,13 +1,12 @@
 import React from 'react';
-import '../pages/uploadProject/uploadProject.css';
-import { Box, Button, MenuItem, Select, TextField, TextFieldProps } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
+import './uploadExperienceReportForm.css';
+import { Box, Button, MenuItem, Select, TextField } from '@mui/material';
 import { SetStateAction, useState } from 'react';
-import createProject from '../services/createProject';
-import { allowedLocations, allowedStudyFields } from '../models/allowedValues';
+import createExperienceReport from '../../services/createExperienceReport';
+import { allowedLocations, allowedStudyFields } from '../../models/allowedValues';
 import { useNavigate } from 'react-router-dom';
-const UploadProjectForm = () => {
-  const [value, setValue] = useState<string | null>(Date());
+
+const UploadExperienceReport: React.FC = () => {
   const [studyField, setStudyField] = useState('study_field');
   const [location, setLocation] = useState('location');
   const navigate = useNavigate();
@@ -35,8 +34,8 @@ const UploadProjectForm = () => {
       return;
     }
     const data = new FormData(event.currentTarget);
-    const duration = parseInt(data.get('duration') as string);
-    if (Number.isNaN(duration)) {
+    const year = parseInt(data.get('year') as string);
+    if (Number.isNaN(year)) {
       alert(`Duration must be a number`);
       return;
     }
@@ -53,29 +52,21 @@ const UploadProjectForm = () => {
 
     try {
       const shortTitle = data.get('shortTitle') as string;
-      const projectTitle = data.get('projectTitle') as string;
+      const experienceReportTitle = data.get('experienceReportTitle') as string;
 
-      const dateStr = data.get('date') as string;
-      const dateParts = dateStr.split('/');
-      const year = parseInt(dateParts[2], 10);
-      const month = parseInt(dateParts[1], 10) - 1; // January is 0, so subtract 1
-      const day = parseInt(dateParts[0], 10);
-
-      const deadline = new Date(year, month, day);
       const description = data.get('description') as string;
       const summaryDescription = data.get('summaryDescription') as string;
-
-      createProject(
-        projectTitle,
+      createExperienceReport(
+        experienceReportTitle,
         shortTitle,
         studyField,
         location,
-        deadline,
+        year,
         description,
-        duration,
-        summaryDescription
+        summaryDescription,
+        'hall'
       );
-      console.log('Successfull upload');
+      console.log('Successfully upload');
     } catch (error) {
       console.log(error as string);
       return;
@@ -88,7 +79,7 @@ const UploadProjectForm = () => {
         <TextField
           fullWidth
           id="shortTitle"
-          label="Project short title"
+          label="Experience report short title"
           name="shortTitle"
           sx={{ marginRight: '1em' }}
         />
@@ -110,14 +101,6 @@ const UploadProjectForm = () => {
           <MenuItem value="water_and_sanitation">Water and sanitation</MenuItem>
         </Select>
       </Box>
-      <TextField
-        required
-        fullWidth
-        id="projectTitle"
-        label="Project Title"
-        name="projectTitle"
-        sx={{ marginBottom: '1em' }}
-      />
       <Box display={'flex'} sx={{ marginBottom: '1em' }}>
         <Select
           id="location"
@@ -134,8 +117,16 @@ const UploadProjectForm = () => {
           <MenuItem value="south_america">South America</MenuItem>
           <MenuItem value="north_america">North America</MenuItem>
         </Select>
-        <TextField required fullWidth id="duration" label="Duration" name="duration" sx={{ marginLeft: '1em' }} />
+        <TextField required fullWidth id="year" label="Year" name="year" sx={{ marginLeft: '1em' }} />
       </Box>
+      <TextField
+        required
+        fullWidth
+        id="experienceReportTitle"
+        label="Experience report title"
+        name="experienceReportTitle"
+        sx={{ marginBottom: '1em' }}
+      />
       <TextField
         required
         fullWidth
@@ -153,21 +144,6 @@ const UploadProjectForm = () => {
       />
 
       <Box display={'flex'} sx={{ marginBottom: '1em' }}>
-        <Box sx={{ marginRight: '1em', width: '100%' }}>
-          <div>Application deadline</div>
-          <DatePicker
-            disablePast
-            value={value}
-            onChange={(newValue) => {
-              setValue(newValue);
-            }}
-            renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-              <TextField id="date" name="date" InputLabelProps={{ shrink: false }} {...params} />
-            )}
-            inputFormat="DD/MM/YYYY"
-          ></DatePicker>
-        </Box>
-
         <Button type="submit" fullWidth variant="contained" sx={{ marginLeft: '1em' }}>
           Upload
         </Button>
@@ -176,4 +152,4 @@ const UploadProjectForm = () => {
   );
 };
 
-export default UploadProjectForm;
+export default UploadExperienceReport;

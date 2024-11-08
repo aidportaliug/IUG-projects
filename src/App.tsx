@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/homePage/homePage';
 import Login from './pages/loginPage/LoginPage';
@@ -12,8 +13,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { FirebaseAuthProvider } from './services/AuthContext';
 
-function App() {
-  //set default colors for all mui components
+const App: React.FC = () => {
+  // Set default colors for all MUI components
   const theme = createTheme({
     palette: {
       primary: {
@@ -21,6 +22,7 @@ function App() {
       },
     },
   });
+
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -41,6 +43,6 @@ function App() {
       </LocalizationProvider>
     </ThemeProvider>
   );
-}
+};
 
 export default App;
