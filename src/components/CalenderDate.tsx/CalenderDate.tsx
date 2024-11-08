@@ -1,18 +1,20 @@
+import React from 'react';
 import './calenderDate.css';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-interface calenderDateProps {
+interface CalendarDateProps {
   date: Date;
 }
 
-const CalandarDate: React.FC<calenderDateProps> = ({ date }: calenderDateProps) => {
+const CalendarDate: React.FC<CalendarDateProps> = ({ date }) => {
   return (
     <div className="date">
-      <CalendarTodayIcon></CalendarTodayIcon>
+      <CalendarTodayIcon />
       <div style={{ margin: '10px' }}>
-        {date.getDate()}/{date.getMonth()}/{date.getFullYear()}{' '}
+        {date.getDate()}/{date.getMonth()}/{date.getFullYear()}
       </div>
     </div>
   );
 };
-export default CalandarDate;
+
+export default CalendarDate;

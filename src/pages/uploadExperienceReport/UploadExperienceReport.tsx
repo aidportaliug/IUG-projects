@@ -11,13 +11,13 @@ const UploadExperienceReport: React.FC = () => {
   const [userUpdated, setUserUpdated] = useState<boolean>(false);
   const [customUser, setCustomUser] = useState<CustomUser | null>(null);
 
-  async function callGetUser(userId: string) {
+  async function CallGetUser(userId: string) {
     return await useGetUser(userId);
   }
 
   useEffect(() => {
     if (user !== null && !userUpdated) {
-      callGetUser(user.uid).then((response) => setCustomUser(response));
+      CallGetUser(user.uid).then((response) => setCustomUser(response));
       setUserUpdated(true);
     }
   }, [customUser, user, userUpdated]);
