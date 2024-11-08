@@ -1,5 +1,5 @@
 import React from 'react';
-import './calenderDate.css';
+import './calendarDate.css';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 interface CalendarDateProps {
