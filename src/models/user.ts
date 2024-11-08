@@ -1,5 +1,5 @@
 /*
-Type used for an standard and admin user
+Type used for a standard and admin user
 */
 export interface CustomUser {
   userID: string;

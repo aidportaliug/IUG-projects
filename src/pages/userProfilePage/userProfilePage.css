@@ -1,4 +1,4 @@
-@import '../../styles/main.css';
+@import '../../mainStyles/mainStyles.css';
 
 .user {
   background-color: var(--mainBackground);
@@ -6,12 +6,12 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-family: var(--mainFontFamily);
+  font-family: var(--mainFontFamily), serif;
   color: var(--TypoBlack);
 }
 
 h1 {
-  font-family: var(--mainFontFamily);
+  font-family: var(--mainFontFamily), serif;
   color: var(--TypoBlack);
 }
 

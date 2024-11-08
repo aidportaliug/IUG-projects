@@ -1,4 +1,4 @@
-@import '../../styles/main.css';
+@import '../../mainStyles/mainStyles.css';
 body .app-bar {
   width: 100%;
   background-color: var(--navbarColor);
@@ -19,12 +19,12 @@ body .app-bar {
 }
 .bold {
   font-weight: 700 !important;
-  font-family: var(--mainFontFamily) !important;
+  font-family: var(--mainFontFamily), serif !important;
   text-transform: none !important;
 }
 
 .notBold {
   font-weight: 400 !important;
-  font-family: var(--mainFontFamily) !important;
+  font-family: var(--mainFontFamily), serif !important;
   text-transform: none !important;
 }

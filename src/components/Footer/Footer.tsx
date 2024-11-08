@@ -5,12 +5,13 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { IconButton } from '@mui/material';
+import React from 'react';
 
 /**
  *
  */
 
-interface footerProp {
+interface FooterProps {
   nameLink1: string;
   nameLink1URL: string;
   nameLink2: string;
@@ -26,7 +27,7 @@ interface footerProp {
 /**
  * This function returns a Footer with a buch of links. The parameters are the name
  * the names and targets of the link in the footer. The tow last parameters are the
- * headings of the Column, which dose not contian a link.
+ * headings of the Column, which dose not contain a link.
  * @param nameLink1
  * @param nameLink1URL
  * @param nameLink2
@@ -39,7 +40,7 @@ interface footerProp {
  * @param category2
  * @constructor
  */
-export const Footer = ({
+export const Footer: React.FC<FooterProps> = ({
   nameLink1,
   nameLink1URL,
   nameLink2,
@@ -50,7 +51,7 @@ export const Footer = ({
   nameLink4URL,
   category1,
   category2,
-}: footerProp) => {
+}: FooterProps) => {
   return (
     <Box
       className="Footer"

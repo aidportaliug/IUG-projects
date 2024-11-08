@@ -22,7 +22,7 @@ It can be installed as a plugin in VS Code
 
 ### ESLint
 
-Will be used to analyze the code for style and coding errors that may causes bugs.
+Will be used to analyze the code for style and coding errors that may cause bugs.
 To check for style and coding errors:
 
 ```bash
@@ -53,7 +53,7 @@ Generate documentation page by running
 $ yarn typedoc --out docs src
 ```
 
-This will generate HTML files in [/docs](./docs).
+This will generate HTML files in /docs. 
 
 ## Further Reading
 

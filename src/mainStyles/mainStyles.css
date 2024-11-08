@@ -26,5 +26,5 @@
 }
 
 html {
-  font-family: var(--mainFontFamily);
+  font-family: var(--mainFontFamily), serif;
 }

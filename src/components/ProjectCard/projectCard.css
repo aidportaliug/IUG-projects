@@ -1,4 +1,4 @@
-@import '../../styles/main.css';
+@import '../../mainStyles/mainStyles.css';
 
 .projectOutline {
   border-radius: 4px;
@@ -16,7 +16,7 @@
 
 .projectText {
   color: var(--mainGreen);
-  font-family: var(--mainFontFamily);
+  font-family: var(--mainFontFamily), serif;
   font-weight: 700;
   font-size: 25px;
   margin: 10px;
@@ -25,7 +25,7 @@
 .projectDescription {
   width: 95%;
   margin: 10px;
-  font-family: var(--mainFontFamily);
+  font-family: var(--mainFontFamily), serif;
   font-style: normal;
   font-weight: 400;
   font-size: 15px;
@@ -41,7 +41,7 @@
 .topicTag {
   width: 80px;
   height: 17px;
-  font-family: var(--mainFontFamily);
+  font-family: var(--mainFontFamily), serif;
   font-style: normal;
   font-weight: 400;
   font-size: 15px;
@@ -55,7 +55,7 @@
 }
 
 .date {
-  font-family: var(--mainFontFamily);
+  font-family: var(--mainFontFamily), serif;
   font-style: normal;
   font-weight: var(--mainFontWeight);
   font-size: 15px;

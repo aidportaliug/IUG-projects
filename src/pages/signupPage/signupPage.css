@@ -1,4 +1,4 @@
-@import '../../styles/main.css';
+@import '../../mainStyles/mainStyles.css';
 
 main {
   margin: auto;
@@ -73,6 +73,6 @@ main {
 }
 
 .loginHeader {
-  font-family: var(--mainFontFamily) !important;
+  font-family: var(--mainFontFamily), serif !important;
   font-weight: var(--headerFontWeight) !important;
 }

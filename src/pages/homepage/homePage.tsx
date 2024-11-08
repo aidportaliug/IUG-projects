@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ProjectCard from '../../components/ProjectCard/ProjectCard';
-import './homepage.css';
+import './homePage.css';
 import { getProjects } from '../../services/getProjects';
 import { Project } from '../../models/project';
 import { studyFields, locations } from '../../models/allowedValues';
@@ -11,6 +11,7 @@ import Layout from '../../components/Navbar/Layout';
 import CircularProgress from '@mui/material/CircularProgress';
 import Footer from '../../components/Footer/Footer';
 import Meta from '../../components/Meta';
+import React from 'react';
 
 const Home: React.FC = () => {
   const imagePath = './../../images/Trax_Ghana.png';

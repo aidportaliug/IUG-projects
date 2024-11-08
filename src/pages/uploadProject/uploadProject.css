@@ -1,11 +1,11 @@
-@import '../../styles/main.css';
+@import '../../mainStyles/mainStyles.css';
 
 .outline {
   text-align: center;
 }
 
 .title {
-  font-family: var(--mainFontFamily);
+  font-family: var(--mainFontFamily), serif;
   color: var(--mainGreen);
   font-size: 4em;
 }
