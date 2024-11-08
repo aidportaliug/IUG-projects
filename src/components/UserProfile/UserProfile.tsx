@@ -1,92 +1,93 @@
+import React, { useState, useEffect } from 'react';
 import { Avatar, Button } from '@mui/material';
-import { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { CustomUser } from '../../models/user';
 import { logOut, deleteFromAuth } from '../../services/auth';
 import { useFirebaseAuth } from '../../services/AuthContext';
 import { useGetUser } from '../../services/useGetUser';
 import { deleteUserFromStore, getPicture, uploadImage } from '../../services/userData';
-import React from 'react';
 
 import FileUpload from '../DragDrop/DragDrop';
 
-function UserProfileComponent() {
+const UserProfileComponent: React.FC = () => {
   const { user } = useFirebaseAuth();
   const [customUser, setCustomUser] = useState<CustomUser | null>(null);
   const [image, setImage] = useState<Blob | Uint8Array | ArrayBuffer | undefined>();
   const [url, setUrl] = useState<string>('');
-  const [userUpdatet, setUserUpdatet] = useState<boolean>(false);
+  const [userUpdated, setUserUpdated] = useState<boolean>(false);
   const imageName = '/profile/' + user?.email + 'ProfileImage';
-  const nav = useNavigate();
+  const navigate = useNavigate();
 
   const logout = async () => {
-    logOut();
+    await logOut();
     console.log('User signed out');
-    nav('/');
+    navigate('/');
   };
 
   const deleteUser = async () => {
     if (user) {
-      deleteUserFromStore(user.email as string);
-      deleteFromAuth(user.email as string);
+      await deleteUserFromStore(user.email as string);
+      await deleteFromAuth(user.email as string);
+      navigate('/');
     }
   };
 
-  async function CallGetUser(userId: string) {
+  const callGetUser = async (userId: string) => {
     return await useGetUser(userId);
-  }
+  };
 
   useEffect(() => {
-    if (imageName !== '') {
+    if (imageName) {
       getPicture(imageName).then((url) => {
-        url && setUrl(url);
+        if (url) setUrl(url);
       });
     }
-    if (user !== null && !userUpdatet) {
-      CallGetUser(user.uid).then((response) => setCustomUser(response));
-      setUserUpdatet(true);
+    if (user && !userUpdated) {
+      callGetUser(user.uid).then((response) => setCustomUser(response));
+      setUserUpdated(true);
     }
-  }, [customUser, imageName, user, userUpdatet]);
+  }, [imageName, user, userUpdated]);
 
   const handleSubmit = () => {
-    uploadImage(image as File, imageName).then((url) => {
-      setUrl(url);
-    });
+    if (image) {
+      uploadImage(image as File, imageName).then((url) => {
+        setUrl(url);
+      });
+    }
   };
-  if (user != null) {
+
+  if (user) {
     return (
-      <>
-        <div className="user">
-          <div className="top-part">
-            <h1 className="username">{user ? user.email : ''}</h1>
-          </div>
-          <div className="profileIcon">
-            <Avatar src={url} sx={{ width: 150, height: 150 }} />
-            <FileUpload handleSubmit={handleSubmit} setImage={setImage} />
-          </div>
-          <div className="interests">
-            <h3>My information:</h3>
-            <div className="myInterests">
-              <p>Mail: {customUser?.email}</p>
-              <p>First name: {customUser?.firstName}</p>
-              <p>Last name: {customUser?.lastName}</p>
-              <p>Phone number: {customUser?.phoneNumber}</p>
-              <p>University: {customUser?.university}</p>
-              <p>Institute: {customUser?.institute} </p>
-            </div>
-          </div>
-          <Button variant="contained" id="btnLogOut" onClick={logout}>
-            Log out
-          </Button>
-          <Button variant="contained" id="btnLogOut" onClick={deleteUser}>
-            Delete User
-          </Button>
+      <div className="user">
+        <div className="top-part">
+          <h1 className="username">{user.email}</h1>
         </div>
-      </>
+        <div className="profileIcon">
+          <Avatar src={url} sx={{ width: 150, height: 150 }} />
+          <FileUpload handleSubmit={handleSubmit} setImage={setImage} />
+        </div>
+        <div className="interests">
+          <h3>My information:</h3>
+          <div className="myInterests">
+            <p>Email: {customUser?.email}</p>
+            <p>First Name: {customUser?.firstName}</p>
+            <p>Last Name: {customUser?.lastName}</p>
+            <p>Phone Number: {customUser?.phoneNumber}</p>
+            <p>University: {customUser?.university}</p>
+            <p>Institute: {customUser?.institute}</p>
+          </div>
+        </div>
+        <Button variant="contained" id="btnLogOut" onClick={logout}>
+          Log out
+        </Button>
+        <Button variant="contained" id="btnDeleteUser" onClick={deleteUser}>
+          Delete User
+        </Button>
+      </div>
     );
   } else {
     return <Navigate to="/" />;
   }
-}
+};
+
 export default UserProfileComponent;
