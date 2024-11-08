@@ -2,13 +2,13 @@ import { Avatar, Button } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { CustomUser } from '../models/user';
-import { logOut, deleteFromAuth } from '../services/auth';
-import { useFirebaseAuth } from '../services/AuthContext';
-import { useGetUser } from '../services/useGetUser';
-import { deleteUserFromStore, getPicture, uploadImage } from '../services/userData';
+import { CustomUser } from '../../models/user';
+import { logOut, deleteFromAuth } from '../../services/auth';
+import { useFirebaseAuth } from '../../services/AuthContext';
+import { useGetUser } from '../../services/useGetUser';
+import { deleteUserFromStore, getPicture, uploadImage } from '../../services/userData';
 
-import FileUpload from './DragDrop/DragDrop';
+import FileUpload from '../DragDrop/DragDrop';
 
 function UserProfileComponent() {
   const { user } = useFirebaseAuth();

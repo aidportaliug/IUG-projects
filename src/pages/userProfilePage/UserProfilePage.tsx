@@ -1,6 +1,6 @@
 import React from 'react';
 import './userProfilePage.css';
-import UserProfileComponent from '../../components/UserProfile';
+import UserProfileComponent from '../../components/UserProfile/UserProfile';
 import Layout from '../../components/Navbar/Layout';
 import Meta from '../../components/Meta';
 

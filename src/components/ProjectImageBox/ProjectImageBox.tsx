@@ -1,12 +1,12 @@
-import { ReactElement } from 'react';
+import React from 'react';
 import './projectImageBox.css';
 
-interface projectImageBoxProp {
+interface ProjectImageBoxProps {
   source: string;
   altText: string;
 }
 
-const ProjectImageBox = ({ source, altText }: projectImageBoxProp): ReactElement => {
+const ProjectImageBox: React.FC<ProjectImageBoxProps> = ({ source, altText }) => {
   return (
     <div className="projectImageBox">
       <img src={source} alt={altText} />

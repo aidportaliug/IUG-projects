@@ -53,7 +53,7 @@ Generate documentation page by running
 $ yarn typedoc --out docs src
 ```
 
-This will generate HTML files in /docs. 
+This will generate HTML files in /docs.
 
 ## Further Reading
 
