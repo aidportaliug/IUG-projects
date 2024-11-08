@@ -65,7 +65,7 @@ const UploadExperienceReport = () => {
         summaryDescription,
         'hall'
       );
-      console.log('Successfull upload');
+      console.log('Successfully upload');
     } catch (error) {
       console.log(error as string);
       return;

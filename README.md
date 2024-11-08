@@ -20,14 +20,9 @@ You will also see any lint errors in the console.
 
 Installs all dependencies for the frontend. Here is a [Link](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable)
 
-### `yarn lint`
+### `npx prettier --write .`
 
-Will check if there are any lint errors.
-Since this is not setup, yet it does not work as it should, but will later be used in a pipeline.
-
-### `yarn lint --fix`
-
-Fixes linting errors (also not set up properly)
+Will check if there are any lint errors and fix them.
 
 ## Firebase
 

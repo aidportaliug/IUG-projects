@@ -12,7 +12,13 @@ interface professorCardProp {
   phoneNumber: string;
   //add photo
 }
-const ProfessorCard: React.FC<professorCardProp> = ({ name, professionalTitle, institute, email, phoneNumber }: professorCardProp) => {
+const ProfessorCard: React.FC<professorCardProp> = ({
+  name,
+  professionalTitle,
+  institute,
+  email,
+  phoneNumber,
+}: professorCardProp) => {
   const imageProfessorCard = trond_profil_bilde;
   const altText: string = 'picture of' + name;
   return (

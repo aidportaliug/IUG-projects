@@ -37,7 +37,7 @@ jobs:
         with:
           files: '.env'
 
-      # Thanks you if the .env file isn't there and moves on.
+      # Thanks to the .env file isn't there and moves on.
       - name: File exists
         if: steps.check_files.outputs.files_exists == 'false'
         run: echo Thank you for not adding the .env file!
