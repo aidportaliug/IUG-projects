@@ -1,0 +1,30 @@
+:root {
+  /** Color for the Project */
+  --mainGreen: #3d7844; /* iug green*/
+  --secondaryGreen: #9fc4a3;
+  --tertiaryGreen: rgba(224, 234, 223, 1);
+  --mainBackground: #ffffff; /*EDEDED,  #E0EADF, #FCFDFD, #DDEEF5  user.css... */
+  --link: #61dafb; /*?*/
+  --UiGray: #727171;
+  --UiLightGray: #e3e3e3; /*not implemented yet? */
+  --someBackground: #282c34;
+  --navbarColor: #e0eadf;
+
+  /** Typography */
+
+  --mainFontFamily: 'Droid Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Helvetica Neue', 'Archivo', sans-serif;
+  --mainFontStyle: normal;
+  --mainFontWeight: 400;
+  --headerFontWeight: 700;
+  --TypoGary: #727171;
+  --TypoGreen: #3d7844;
+  --TypoBlack: #000000;
+  --fontSizeNormal: medium;
+  --fontSizeBig: x-large;
+  --fontSizeSmall: x-small;
+}
+
+html {
+  font-family: var(--mainFontFamily), serif;
+}

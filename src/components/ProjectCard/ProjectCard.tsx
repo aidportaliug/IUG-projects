@@ -1,11 +1,11 @@
-import React from "react";
-import "../../styles/projectCard.css";
-import CalandarDate from "../CalanderDate";
-import TopicTag from "./TopicTag";
-import { useNavigate } from "react-router-dom";
-import imageProjectCard from "./../../images/Trax_Ghana.png";
+import React from 'react';
+import './projectCard.css';
+import CalendarDate from '../CalendarDate/CalendarDate';
+import TopicTag from './TopicTag';
+import { useNavigate } from 'react-router-dom';
+import imageProjectCard from './../../images/Trax_Ghana.png';
 
-interface projectProps {
+interface ProjectProps {
   title: string;
   description: string;
   date: Date;
@@ -14,39 +14,29 @@ interface projectProps {
   id: string;
 }
 
-const ProjectCard = ({
-  title,
-  description,
-  date,
-  topics,
-  imagePath,
-  id,
-}: projectProps) => {
+const ProjectCard: React.FC<ProjectProps> = ({ title, description, date, topics, imagePath, id }) => {
   const navigate = useNavigate();
-  const topicsDivs = topics.map(function (topic) {
-    return <TopicTag key={topic} topic={topic} />;
-  });
-  function sendToProjectPage() {
+
+  const topicsDivs = topics.map((topic) => <TopicTag key={topic} topic={topic} />);
+
+  const sendToProjectPage = () => {
     navigate(`/project/${id}`);
-  }
+  };
 
   return (
     <div className="projectCardContainer" onClick={sendToProjectPage}>
       <div className="projectOutline">
-        <img
-          className="projectPicture"
-          src={imageProjectCard}
-          alt="Project card"
-        />
-        <div className="projectText"> {title} </div>
-        <div className="projectDescription"> {description} </div>
+        <img className="projectPicture" src={imageProjectCard} alt="Project card" />
+        <div className="projectText">{title}</div>
+        <div className="projectDescription">{description}</div>
         <div className="wrapperTopicTagDate">
-          <div className="topicDivs"> {topicsDivs} </div>
-          <CalandarDate date={date} />
+          <div className="topicDivs">{topicsDivs}</div>
+          <CalendarDate date={date} />
         </div>
       </div>
-      <div className="projectCardBottomRow"> </div>
+      <div className="projectCardBottomRow"></div>
     </div>
   );
 };
+
 export default ProjectCard;
