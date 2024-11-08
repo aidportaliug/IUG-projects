@@ -1,4 +1,3 @@
-import React from "react";
 import { Avatar, Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
@@ -13,7 +12,7 @@ import {
   uploadImage,
 } from "../services/userData";
 
-import FileUpload from "./DragDrop";
+import FileUpload from "./DragDrop/DragDrop";
 
 function UserProfileComponent() {
   const { user } = useFirebaseAuth();

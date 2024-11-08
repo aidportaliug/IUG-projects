@@ -1,7 +1,6 @@
-import React from "react";
 import { Box, Container } from "@mui/material";
-import NavLogo from "./Navbar/Navlogo";
-import "./../styles/Footer.css";
+import NavLogo from "../Navbar/Navlogo";
+import "./footer.css";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";

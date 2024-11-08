@@ -8,8 +8,7 @@ import {
   Button,
   Divider,
 } from "@mui/material";
-import logIn from "../services/auth";
-import React from "react";
+import logIn from "../../services/auth";
 
 function LoginComponent() {
   const handleLogin = async (event: {

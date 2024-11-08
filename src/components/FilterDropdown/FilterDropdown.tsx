@@ -1,8 +1,8 @@
 import React from "react";
-import "../styles/projectCard.css";
+import "./filterDropdown.css";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { SetStateAction } from "react";
-import { studyFields, locations, sortByEnum } from "../models/allowedValues";
+import { studyFields, locations, sortByEnum } from "../../models/allowedValues";
 
 interface calanderDateProps {
   value: string;

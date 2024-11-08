@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ProjectCard from "../../components/ProjectCard/ProjectCard";
 import "../../styles/homepage.css";
 import { getProjects } from "../../services/getProjects";
 import { Project } from "../../models/project";
 import { studyFields, locations } from "../../models/allowedValues";
-import FilterDropdown from "../../components/FilterDropdown";
+import FilterDropdown from "../../components/FilterDropdown/FilterDropdown";
 import { DocumentData } from "firebase/firestore";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Layout from "../../components/Navbar/Layout";
 import CircularProgress from "@mui/material/CircularProgress";
-import Footer from "../../components/Footer";
+import Footer from "../../components/Footer/Footer";
 import Meta from "../../components/Meta";
 
 function Home() {

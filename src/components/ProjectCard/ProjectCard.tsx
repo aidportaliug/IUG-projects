@@ -1,6 +1,5 @@
-import React from "react";
-import "../../styles/projectCard.css";
-import CalandarDate from "../CalanderDate";
+import "./projectCard.css";
+import CalendarDate from "../CalenderDate.tsx/CalenderDate";
 import TopicTag from "./TopicTag";
 import { useNavigate } from "react-router-dom";
 import imageProjectCard from "./../../images/Trax_Ghana.png";
@@ -42,7 +41,7 @@ const ProjectCard = ({
         <div className="projectDescription"> {description} </div>
         <div className="wrapperTopicTagDate">
           <div className="topicDivs"> {topicsDivs} </div>
-          <CalandarDate date={date} />
+          <CalendarDate date={date} />
         </div>
       </div>
       <div className="projectCardBottomRow"> </div>

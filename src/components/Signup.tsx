@@ -12,7 +12,6 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../services/firebaseConfig";
 import signUp from "../services/signup";
-import React from "react";
 
 function SignUpComponent() {
   const nav = useNavigate();
