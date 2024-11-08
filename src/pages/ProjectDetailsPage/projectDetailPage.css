@@ -27,7 +27,7 @@
 }
 
 .projectDetailDate {
-  font-family: var(--mainFontFamily);
+  font-family: var(--mainFontFamily), serif;
   font-style: normal;
   font-weight: var(--mainFontWeight);
   height: 18px;

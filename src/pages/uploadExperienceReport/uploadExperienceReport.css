@@ -28,7 +28,5 @@
   display: grid;
   gap: 4em;
   grid-template-columns: repeat(2, 1fr);
-  margin: 2em;
-  margin-left: 10em;
-  margin-right: 10em;
+  margin: 2em 10em;
 }
