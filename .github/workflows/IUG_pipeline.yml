@@ -2,66 +2,66 @@
 name: Lint and Build
 
 on:
-    # Enables the possibility to manually trigger the workflow.
-    workflow_dispatch:
-    
-    # Makes the workflow run on every push to main.
-    push:
-        branches: ['main']
-        #Ignore changes to gitignore
-        paths-ignore:
-            - '.gitignore'
-    # Makes the workflow run on every pull request to main. 
-    pull_request:
-        branches: ['main']
-        types: [opened, synchronize, reopened, ready_for_review]
-        paths-ignore:
-            - '.gitignore'
+  # Enables the possibility to manually trigger the workflow.
+  workflow_dispatch:
+
+  # Makes the workflow run on every push to main.
+  push:
+    branches: ['main']
+    #Ignore changes to gitignore
+    paths-ignore:
+      - '.gitignore'
+  # Makes the workflow run on every pull request to main.
+  pull_request:
+    branches: ['main']
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore:
+      - '.gitignore'
 
 env:
-  # Creates the environment secret. 
+  # Creates the environment secret.
   API_KEY: $ {{secrets.ENV}}
 
 jobs:
-    # Will check if the .env file exists in the push
-    check_env_file:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+  # Will check if the .env file exists in the push
+  check_env_file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-            # Checks if the .env file is in the repo. 
-            - name: Check files existence
-              id: check_files
-              uses: andstor/file-existence-action@v3
-              with:
-                files: ".env"
+      # Checks if the .env file is in the repo.
+      - name: Check files existence
+        id: check_files
+        uses: andstor/file-existence-action@v3
+        with:
+          files: '.env'
 
-            # Thanks you if the .env file isn't there and moves on. 
-            - name: File exists
-              if: steps.check_files.outputs.files_exists == 'false'
-              run: echo Thank you for not adding the .env file!
-    
-    # This will try to check if linting succeeds. 
-    lint:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
+      # Thanks you if the .env file isn't there and moves on.
+      - name: File exists
+        if: steps.check_files.outputs.files_exists == 'false'
+        run: echo Thank you for not adding the .env file!
 
-        - name: Install dependencies
-          run: yarn
+  # This will try to check if linting succeeds.
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-        - name: Lint
-          run: yarn lint
+      - name: Install dependencies
+        run: yarn
 
-    # This will check if React is able to build the project. 
-    build:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
+      - name: Lint
+        run: yarn lint
 
-        - name: install dependencies
-          run: yarn
+  # This will check if React is able to build the project.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-        - name: build react app
-          run: yarn build
+      - name: install dependencies
+        run: yarn
+
+      - name: build react app
+        run: yarn build

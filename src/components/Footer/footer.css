@@ -1,34 +1,33 @@
-@import "../../styles/main.css";
+@import '../../styles/main.css';
 
-.Footer{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    background-color: var(--mainGreen);
+.Footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  background-color: var(--mainGreen);
 }
 @media (max-width: 600px) {
-    .Footer .MuiContainer-root .MuiContainer-maxWidthLg .css-1oqqzyl-MuiContainer-root
-    {
-        padding: 0!important;
-    }
+  .Footer .MuiContainer-root .MuiContainer-maxWidthLg .css-1oqqzyl-MuiContainer-root {
+    padding: 0 !important;
+  }
 
-    .css-1oqqzyl-MuiContainer-root {
-        padding-right: 0!important;
-    }
-    .Footer svg {
-        width: 20px!important;
-        height: 20px!important;
-    }
+  .css-1oqqzyl-MuiContainer-root {
+    padding-right: 0 !important;
+  }
+  .Footer svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
 }
 
-.Footer div h4{
-    color: var(--mainGreen);
-    margin: auto;
-
+.Footer div h4 {
+  color: var(--mainGreen);
+  margin: auto;
 }
 
-.Footer div div a, .Footer div div a :visited {
-    color: var(--secondaryGreen);
+.Footer div div a,
+.Footer div div a :visited {
+  color: var(--secondaryGreen);
 }

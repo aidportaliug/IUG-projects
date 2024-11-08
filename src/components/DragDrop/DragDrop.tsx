@@ -1,13 +1,11 @@
-import React from "react";
-import { FileUploader } from "react-drag-drop-files";
-import { Button } from "@mui/material";
+import React from 'react';
+import { FileUploader } from 'react-drag-drop-files';
+import { Button } from '@mui/material';
 
-const fileTypes = ["JPG", "PNG", "GIF"];
+const fileTypes = ['JPG', 'PNG', 'GIF'];
 interface dragDropProps {
   handleSubmit: () => void;
-  setImage: React.Dispatch<
-    React.SetStateAction<Blob | Uint8Array | ArrayBuffer | undefined>
-  >;
+  setImage: React.Dispatch<React.SetStateAction<Blob | Uint8Array | ArrayBuffer | undefined>>;
 }
 
 const DragDrop = ({ handleSubmit, setImage }: dragDropProps) => {

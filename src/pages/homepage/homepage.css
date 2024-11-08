@@ -1,82 +1,80 @@
-
-.homeOutline{
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top: 2%;
+.homeOutline {
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 2%;
 }
 
-.rowHome{
-    display: grid;
-    gap: 2em;
-    grid-template-columns: repeat(3, 1fr);
+.rowHome {
+  display: grid;
+  gap: 2em;
+  grid-template-columns: repeat(3, 1fr);
 }
-
 
 @media screen and (min-width: 750px) and (max-width: 1200px) {
-    .rowHome{
-        grid-template-columns: 1fr 1fr;
-    }
+  .rowHome {
+    grid-template-columns: 1fr 1fr;
+  }
 }
-@media screen and (min-width: 1200pX) and (max-width: 1400px) {
-    .homeOutline{
-        margin-left: 5%;
-        margin-right: 5%;
-    }
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
+  .homeOutline {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
 }
-@media screen and (min-width: 1100pX) and (max-width: 1200px) {
-    .homeOutline{
-        margin-left: 15%;
-        margin-right: 15%;
-    }
+@media screen and (min-width: 1100px) and (max-width: 1200px) {
+  .homeOutline {
+    margin-left: 15%;
+    margin-right: 15%;
+  }
 }
-@media screen and (min-width: 850pX) and (max-width: 1100px) {
-    .homeOutline{
-        margin-left: 10%;
-        margin-right: 10%;
-    }
+@media screen and (min-width: 850px) and (max-width: 1100px) {
+  .homeOutline {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
 }
-@media screen and (min-width: 750pX) and (max-width: 850px) {
-    .homeOutline{
-        margin-left: 5%;
-        margin-right: 5%;
-    }
+@media screen and (min-width: 750px) and (max-width: 850px) {
+  .homeOutline {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
 }
 
 @media screen and (min-width: 450px) and (max-width: 600px) {
-    .homeOutline{
-        margin-left: 15%;
-        margin-right: 15%;
-    }
+  .homeOutline {
+    margin-left: 15%;
+    margin-right: 15%;
+  }
 }
 @media screen and (min-width: 600px) and (max-width: 750px) {
-    .homeOutline{
-        margin-left: 20%;
-        margin-right: 20%;
-    }
+  .homeOutline {
+    margin-left: 20%;
+    margin-right: 20%;
+  }
 }
 @media screen and (max-width: 500px) {
-    .homeOutline{
-        margin-left: 5%;
-        margin-right: 5%;
-    }
+  .homeOutline {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
 }
 
 /* For Tablets */
 @media screen and (max-width: 750px) {
-    .rowHome {
-        grid-template-columns: 1fr;
-    }
+  .rowHome {
+    grid-template-columns: 1fr;
+  }
 }
 
-.homeBackground{
-    background-color: #fff;
+.homeBackground {
+  background-color: #fff;
 }
 
-.homeTitle{
-    font-style: normal;
-    font-weight: 500;
-    font-size: 4em; 
-    text-align: center;
-    color: #3D7844;
-    margin-bottom: 5%;
+.homeTitle {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 4em;
+  text-align: center;
+  color: #3d7844;
+  margin-bottom: 5%;
 }

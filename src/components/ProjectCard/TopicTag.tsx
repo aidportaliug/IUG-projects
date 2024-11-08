@@ -1,4 +1,4 @@
-import "./projectCard.css";
+import './projectCard.css';
 
 interface topicTagInterface {
   topic: string;

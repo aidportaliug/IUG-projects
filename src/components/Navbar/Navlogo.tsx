@@ -1,24 +1,24 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import IUGlogo from "../../images/logo.png";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import IUGlogo from '../../images/logo.png';
 
 const NavLogo = () => {
   const navigate = useNavigate();
   const handleLogoClick = () => {
-    navigate("/");
+    navigate('/');
   };
   return (
     <button
       onClick={() => handleLogoClick()}
       style={{
-        border: "none",
-        outline: "none",
+        border: 'none',
+        outline: 'none',
         padding: 0,
-        backgroundColor: "transparent",
-        cursor: "pointer",
+        backgroundColor: 'transparent',
+        cursor: 'pointer',
       }}
     >
-      <img src={IUGlogo} alt="IUGLogo" style={{ width: "12em" }} />
+      <img src={IUGlogo} alt="IUGLogo" style={{ width: '12em' }} />
     </button>
   );
 };

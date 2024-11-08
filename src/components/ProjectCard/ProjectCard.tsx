@@ -1,8 +1,8 @@
-import "./projectCard.css";
-import CalendarDate from "../CalenderDate.tsx/CalenderDate";
-import TopicTag from "./TopicTag";
-import { useNavigate } from "react-router-dom";
-import imageProjectCard from "./../../images/Trax_Ghana.png";
+import './projectCard.css';
+import CalendarDate from '../CalenderDate.tsx/CalenderDate';
+import TopicTag from './TopicTag';
+import { useNavigate } from 'react-router-dom';
+import imageProjectCard from './../../images/Trax_Ghana.png';
 
 interface projectProps {
   title: string;
@@ -13,14 +13,7 @@ interface projectProps {
   id: string;
 }
 
-const ProjectCard = ({
-  title,
-  description,
-  date,
-  topics,
-  imagePath,
-  id,
-}: projectProps) => {
+const ProjectCard = ({ title, description, date, topics, imagePath, id }: projectProps) => {
   const navigate = useNavigate();
   const topicsDivs = topics.map(function (topic) {
     return <TopicTag key={topic} topic={topic} />;
@@ -32,11 +25,7 @@ const ProjectCard = ({
   return (
     <div className="projectCardContainer" onClick={sendToProjectPage}>
       <div className="projectOutline">
-        <img
-          className="projectPicture"
-          src={imageProjectCard}
-          alt="Project card"
-        />
+        <img className="projectPicture" src={imageProjectCard} alt="Project card" />
         <div className="projectText"> {title} </div>
         <div className="projectDescription"> {description} </div>
         <div className="wrapperTopicTagDate">

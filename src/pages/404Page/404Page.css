@@ -1,8 +1,8 @@
-@import "../../styles/main.css";
-#error{
-    background-color: rgba(159, 196, 163,0);
-    top: 25%;
-    left: 10%;
-    right: 10%;
-    position: absolute;
+@import '../../styles/main.css';
+#error {
+  background-color: rgba(159, 196, 163, 0);
+  top: 25%;
+  left: 10%;
+  right: 10%;
+  position: absolute;
 }

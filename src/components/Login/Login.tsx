@@ -1,24 +1,12 @@
-import {
-  Container,
-  Box,
-  Typography,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Button,
-  Divider,
-} from "@mui/material";
-import logIn from "../../services/auth";
+import { Container, Box, Typography, TextField, FormControlLabel, Checkbox, Button, Divider } from '@mui/material';
+import logIn from '../../services/auth';
 
 function LoginComponent() {
-  const handleLogin = async (event: {
-    preventDefault: () => void;
-    currentTarget: HTMLFormElement | undefined;
-  }) => {
+  const handleLogin = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined }) => {
     try {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      await logIn(data.get("email") as string, data.get("password") as string);
+      await logIn(data.get('email') as string, data.get('password') as string);
     } catch (error) {
       console.log(error as string);
     }
@@ -28,9 +16,9 @@ function LoginComponent() {
       <Container component="main" maxWidth="xs">
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
           <Typography className="loginHeader" component="h1" variant="h5">
@@ -40,7 +28,7 @@ function LoginComponent() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
-            style={{ backgroundColor: "#3D7844", color: "#FFFFFF" }}
+            style={{ backgroundColor: '#3D7844', color: '#FFFFFF' }}
           >
             Feide Login
           </Button>
@@ -66,22 +54,19 @@ function LoginComponent() {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              style={{ backgroundColor: "#3D7844", color: "#FFFFFF" }}
+              style={{ backgroundColor: '#3D7844', color: '#FFFFFF' }}
             >
               Sign In
             </Button>
           </Box>
         </Box>
-        <a className={"signupLink"} href="/signup">
+        <a className={'signupLink'} href="/signup">
           Forgot password?
         </a>
       </Container>

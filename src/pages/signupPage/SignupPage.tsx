@@ -1,11 +1,11 @@
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import "./signupPage.css";
-import SignUpComponent from "../../components/Signup";
-import Logo from "./../../images/logo.png";
-import ImageIcon from "./../../images/loginBilde.png";
-import React from "react";
-import Meta from "../../components/Meta";
-import { Link } from "react-router-dom";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import './signupPage.css';
+import SignUpComponent from '../../components/Signup';
+import Logo from './../../images/logo.png';
+import ImageIcon from './../../images/loginBilde.png';
+import React from 'react';
+import Meta from '../../components/Meta';
+import { Link } from 'react-router-dom';
 
 export default function SignUp() {
   const theme = createTheme();
@@ -15,7 +15,7 @@ export default function SignUp() {
 
   return (
     <>
-      <Meta title={"SignUp"}></Meta>
+      <Meta title={'SignUp'}></Meta>
       <div className="wholeLogin">
         <div className="loginBanner">
           <img className="loginBannerImage" src={imageIcon} alt="" />

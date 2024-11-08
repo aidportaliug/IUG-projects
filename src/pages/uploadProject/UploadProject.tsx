@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import "./uploadProject.css";
-import UploadProjectForm from "../../components/uploadProjectFrom";
-import { useFirebaseAuth } from "../../services/AuthContext";
-import { useGetUser } from "../../services/useGetUser";
-import { CustomUser } from "../../models/user";
-import Meta from "../../components/Meta";
+import React, { useEffect, useState } from 'react';
+import './uploadProject.css';
+import UploadProjectForm from '../../components/uploadProjectFrom';
+import { useFirebaseAuth } from '../../services/AuthContext';
+import { useGetUser } from '../../services/useGetUser';
+import { CustomUser } from '../../models/user';
+import Meta from '../../components/Meta';
 
 const UploadProject = () => {
   //const [user, setUser] = useState<User | null>(null)
@@ -24,7 +24,7 @@ const UploadProject = () => {
   if (customUser !== null && customUser?.professor === true) {
     return (
       <>
-        <Meta title={"Upload your project"}></Meta>
+        <Meta title={'Upload your project'}></Meta>
         <div className="outline">
           <div className="title"> Upload Project </div>
           <UploadProjectForm />

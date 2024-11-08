@@ -1,10 +1,10 @@
-import { Box, Container } from "@mui/material";
-import NavLogo from "../Navbar/Navlogo";
-import "./footer.css";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import { IconButton } from "@mui/material";
+import { Box, Container } from '@mui/material';
+import NavLogo from '../Navbar/Navlogo';
+import './footer.css';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import { IconButton } from '@mui/material';
 
 /**
  *
@@ -55,11 +55,11 @@ export const Footer = ({
     <Box
       className="Footer"
       sx={{
-        width: "100%",
-        height: "148px",
-        backgroundColor: "#dfe9de",
-        paddingTop: "1rem",
-        paddingBottom: "1rem",
+        width: '100%',
+        height: '148px',
+        backgroundColor: '#dfe9de',
+        paddingTop: '1rem',
+        paddingBottom: '1rem',
       }}
     >
       <Container maxWidth="lg">
@@ -69,37 +69,31 @@ export const Footer = ({
         <h4>{category1}</h4>
         <a href={nameLink1URL}>{nameLink1}</a>
         <div>
-          <a href={nameLink2URL}>{nameLink2}</a>{" "}
+          <a href={nameLink2URL}>{nameLink2}</a>{' '}
         </div>
       </Container>
 
       <Container>
         <h4>{category2}</h4>
         <div>
-          <a href={nameLink3URL}>{nameLink3}</a>{" "}
+          <a href={nameLink3URL}>{nameLink3}</a>{' '}
         </div>
         <div>
-          <a href={nameLink4URL}>{nameLink4}</a>{" "}
+          <a href={nameLink4URL}>{nameLink4}</a>{' '}
         </div>
       </Container>
 
       <Container />
 
       <Container>
-        <IconButton
-          href="https://www.facebook.com/iugntnu/?locale=nb_NO"
-          style={{ color: "#3D7844" }}
-        >
+        <IconButton href="https://www.facebook.com/iugntnu/?locale=nb_NO" style={{ color: '#3D7844' }}>
           <FacebookIcon fontSize="large"></FacebookIcon>
         </IconButton>
-        <IconButton
-          href="https://www.instagram.com/iugntnu/"
-          style={{ color: "#3D7844" }}
-        >
+        <IconButton href="https://www.instagram.com/iugntnu/" style={{ color: '#3D7844' }}>
           <InstagramIcon fontSize="large" />
         </IconButton>
         <IconButton href="https://no.linkedin.com/company/ingeni%C3%B8rerutengrenserntnu">
-          <LinkedInIcon fontSize="large" style={{ color: "#3D7844" }} />
+          <LinkedInIcon fontSize="large" style={{ color: '#3D7844' }} />
         </IconButton>
       </Container>
     </Box>

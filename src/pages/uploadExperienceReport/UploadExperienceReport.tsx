@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import "./uploadExperienceReport.css";
-import UploadExperienceReportForm from "../../components/UploadExperienceReportForm";
-import { useFirebaseAuth } from "../../services/AuthContext";
-import { CustomUser } from "../../models/user";
-import { useGetUser } from "../../services/useGetUser";
-import Meta from "../../components/Meta";
+import React, { useEffect, useState } from 'react';
+import './uploadExperienceReport.css';
+import UploadExperienceReportForm from '../../components/UploadExperienceReportForm';
+import { useFirebaseAuth } from '../../services/AuthContext';
+import { CustomUser } from '../../models/user';
+import { useGetUser } from '../../services/useGetUser';
+import Meta from '../../components/Meta';
 const UploadExperienceReport = () => {
   const { user } = useFirebaseAuth();
   const [userUpdatet, setUserUpdatet] = useState<boolean>(false);
@@ -22,7 +22,7 @@ const UploadExperienceReport = () => {
   if (customUser !== null && customUser?.professor === false) {
     return (
       <>
-        <Meta title={"Upload your Report"}></Meta>
+        <Meta title={'Upload your Report'}></Meta>
         <div className="outline">
           <div className="title"> Upload Experience Report </div>
           <UploadExperienceReportForm />

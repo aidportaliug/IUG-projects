@@ -1,31 +1,27 @@
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItemIUG from "./MenuItemIUG";
-import ButtonForNavbar from "./ButtonForNavbar";
-import NavLogo from "./Navlogo";
-import { useFirebaseAuth } from "../../services/AuthContext";
-import "./navbar.css";
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItemIUG from './MenuItemIUG';
+import ButtonForNavbar from './ButtonForNavbar';
+import NavLogo from './Navlogo';
+import { useFirebaseAuth } from '../../services/AuthContext';
+import './navbar.css';
 
-const pages = ["Masterprojects", "Experience Reports"];
-const settings = ["Profile", "Logout"];
-const loggedOutSettings = ["Login", "Sign Up"];
+const pages = ['Masterprojects', 'Experience Reports'];
+const settings = ['Profile', 'Logout'];
+const loggedOutSettings = ['Login', 'Sign Up'];
 
 function Navbar() {
   const { user } = useFirebaseAuth();
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
-  );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -47,16 +43,16 @@ function Navbar() {
   return (
     <AppBar position="fixed" elevation={0} className="app-bar">
       <Container maxWidth="xl">
-        <Toolbar disableGutters style={{ width: "100%" }}>
+        <Toolbar disableGutters style={{ width: '100%' }}>
           <NavLogo /> {/* This is the EWB logo */}
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              sx={{ color: "#3D7844" }}
+              sx={{ color: '#3D7844' }}
             >
               <MenuIcon />
             </IconButton>
@@ -64,18 +60,18 @@ function Navbar() {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
+                vertical: 'bottom',
+                horizontal: 'left',
               }}
               keepMounted
               transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
+                vertical: 'top',
+                horizontal: 'left',
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none" },
+                display: { xs: 'block', md: 'none' },
               }}
             >
               {pages.map((page) => (
@@ -84,7 +80,7 @@ function Navbar() {
             </Menu>
           </Box>
           {/* Her skal det være en annen logo for når nettsiden endrer størrelse (Kanskje ikke) */}
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <ButtonForNavbar page={page} location={location} key={page} />
             ))}
@@ -96,28 +92,24 @@ function Navbar() {
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: "45px" }}
+              sx={{ mt: '45px' }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
+                vertical: 'top',
+                horizontal: 'right',
               }}
               keepMounted
               transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
+                vertical: 'top',
+                horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
               {user !== null
-                ? settings.map((setting) => (
-                    <MenuItemIUG setting={setting} key={setting} />
-                  ))
-                : loggedOutSettings.map((setting) => (
-                    <MenuItemIUG setting={setting} key={setting} />
-                  ))}
+                ? settings.map((setting) => <MenuItemIUG setting={setting} key={setting} />)
+                : loggedOutSettings.map((setting) => <MenuItemIUG setting={setting} key={setting} />)}
             </Menu>
           </Box>
         </Toolbar>

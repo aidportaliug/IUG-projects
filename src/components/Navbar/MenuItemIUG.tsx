@@ -1,8 +1,8 @@
-import MenuItem from "@mui/material/MenuItem";
-import Typography from "@mui/material/Typography";
-import { useNavigate } from "react-router-dom";
-import { logOut } from "../../services/auth";
-import React from "react";
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
+import { logOut } from '../../services/auth';
+import React from 'react';
 
 interface MenuProps {
   setting: string;
@@ -11,23 +11,23 @@ interface MenuProps {
 const MenuItemIUG = ({ setting }: MenuProps) => {
   const logout = async () => {
     logOut();
-    console.log("User signed out");
-    navigate("/");
+    console.log('User signed out');
+    navigate('/');
   };
 
   const navigate = useNavigate();
   const handleOpenUserProfile = () => {
-    if (setting === "Profile") {
-      navigate("/user");
+    if (setting === 'Profile') {
+      navigate('/user');
     }
-    if (setting === "Logout") {
+    if (setting === 'Logout') {
       logout();
     }
-    if (setting === "Login") {
-      navigate("/login");
+    if (setting === 'Login') {
+      navigate('/login');
     }
-    if (setting === "Sign Up") {
-      navigate("/signup");
+    if (setting === 'Sign Up') {
+      navigate('/signup');
     }
   };
   return (

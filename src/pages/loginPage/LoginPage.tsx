@@ -1,12 +1,12 @@
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import "./loginPage.css";
-import LoginComponent from "../../components/Login/Login";
-import { useFirebaseAuth } from "../../services/AuthContext";
-import { Link, Navigate } from "react-router-dom";
-import imageLogo from "./../../images/logo.png";
-import imageIcon from "./../../images/loginBilde.png";
-import React from "react";
-import Meta from "../../components/Meta";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import './loginPage.css';
+import LoginComponent from '../../components/Login/Login';
+import { useFirebaseAuth } from '../../services/AuthContext';
+import { Link, Navigate } from 'react-router-dom';
+import imageLogo from './../../images/logo.png';
+import imageIcon from './../../images/loginBilde.png';
+import React from 'react';
+import Meta from '../../components/Meta';
 
 const theme = createTheme();
 export default function Login() {
@@ -14,7 +14,7 @@ export default function Login() {
   if (user === null) {
     return (
       <>
-        <Meta title={"LogIn"}></Meta>
+        <Meta title={'LogIn'}></Meta>
         <div className="wholeLogin">
           <div className="loginBanner">
             <img className="loginBannerImage" src={imageIcon} alt="" />

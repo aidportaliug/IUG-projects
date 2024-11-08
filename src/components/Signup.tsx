@@ -1,17 +1,9 @@
-import {
-  Container,
-  Box,
-  Typography,
-  Grid,
-  TextField,
-  FormControl,
-  Button,
-} from "@mui/material";
-import { onAuthStateChanged } from "firebase/auth";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../services/firebaseConfig";
-import signUp from "../services/signup";
+import { Container, Box, Typography, Grid, TextField, FormControl, Button } from '@mui/material';
+import { onAuthStateChanged } from 'firebase/auth';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../services/firebaseConfig';
+import signUp from '../services/signup';
 
 function SignUpComponent() {
   const nav = useNavigate();
@@ -19,37 +11,26 @@ function SignUpComponent() {
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
-        console.log("success!!!");
-        nav("/User");
+        console.log('success!!!');
+        nav('/User');
       }
-      console.log("not current user");
+      console.log('not current user');
     });
   }, [nav]);
 
-  const handleSignUp = async (event: {
-    preventDefault: () => void;
-    currentTarget: HTMLFormElement | undefined;
-  }) => {
+  const handleSignUp = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined }) => {
     event.preventDefault();
     try {
       const data = new FormData(event.currentTarget);
-      const firstName = data.get("firstName") as string;
-      const lastName = data.get("lastName") as string;
-      const email = data.get("email") as string;
-      const phoneNumer = data.get("phoneNumber") as string;
-      const institute = data.get("institute") as string;
-      const university = data.get("university") as string;
-      const password = data.get("password") as string;
+      const firstName = data.get('firstName') as string;
+      const lastName = data.get('lastName') as string;
+      const email = data.get('email') as string;
+      const phoneNumer = data.get('phoneNumber') as string;
+      const institute = data.get('institute') as string;
+      const university = data.get('university') as string;
+      const password = data.get('password') as string;
       if (firstName && lastName && email && password)
-        signUp(
-          firstName,
-          lastName,
-          email,
-          Number(phoneNumer),
-          institute,
-          university,
-          password
-        );
+        signUp(firstName, lastName, email, Number(phoneNumer), institute, university, password);
     } catch (error) {
       console.log(error as string);
     }
@@ -60,20 +41,15 @@ function SignUpComponent() {
       <Container component="main" maxWidth="xs">
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
           <Typography className="loginHeader" component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSignUp}
-            sx={{ mt: 3 }}
-          >
+          <Box component="form" noValidate onSubmit={handleSignUp} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -97,14 +73,7 @@ function SignUpComponent() {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
+                <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <FormControl>
@@ -119,13 +88,7 @@ function SignUpComponent() {
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  name="institute"
-                  label="Institute"
-                  id="institute"
-                  autoComplete="Institute"
-                />
+                <TextField fullWidth name="institute" label="Institute" id="institute" autoComplete="Institute" />
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -155,7 +118,7 @@ function SignUpComponent() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              style={{ backgroundColor: "#3D7844", color: "#FFFFFF" }}
+              style={{ backgroundColor: '#3D7844', color: '#FFFFFF' }}
             >
               Sign Up
             </Button>
