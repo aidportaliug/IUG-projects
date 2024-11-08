@@ -1,4 +1,4 @@
-@import "main.css";
+@import "../../styles/main.css";
 body .app-bar {
     width: 100%;
     background-color: var(--navbarColor);

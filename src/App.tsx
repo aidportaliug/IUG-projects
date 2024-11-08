@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/homePage/homePage";
-import Login from "./pages/loginPage/loginPage";
-import SignUp from "./pages/signupPage/signupPage";
-import UserView from "./pages/userProfilePage/userProfilePage";
-import ProjectDetailsPage from "./pages/ProjectDetailsPage/projectDetailsPage";
-import UploadProject from "./pages/uploadProject/uploadProject";
-import UploadExperienceReport from "./pages/uploadExperienceReport/uploadExperienceReport";
+import Home from "./pages/homePage/HomePage";
+import Login from "./pages/loginPage/LoginPage";
+import SignUp from "./pages/signupPage/SignupPage";
+import UserView from "./pages/userProfilePage/UserProfilePage";
+import ProjectDetailsPage from "./pages/ProjectDetailsPage/ProjectDetailsPage";
+import UploadProject from "./pages/uploadProject/UploadProject";
+import UploadExperienceReport from "./pages/uploadExperienceReport/UploadExperienceReport";
 import Error from "./pages/404Page/404Page";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";

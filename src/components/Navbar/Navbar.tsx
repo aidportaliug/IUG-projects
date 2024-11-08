@@ -12,7 +12,7 @@ import MenuItemIUG from "./MenuItemIUG";
 import ButtonForNavbar from "./ButtonForNavbar";
 import NavLogo from "./Navlogo";
 import { useFirebaseAuth } from "../../services/AuthContext";
-import "../../styles/navbar.css";
+import "./navbar.css";
 
 const pages = ["Masterprojects", "Experience Reports"];
 const settings = ["Profile", "Logout"];
