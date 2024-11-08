@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Container, Box, Typography, TextField, FormControlLabel, Checkbox, Button, Divider } from '@mui/material';
 import logIn from '../../services/auth';
 
