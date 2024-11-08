@@ -1,16 +1,18 @@
+import React from 'react';
 import './userProfilePage.css';
 import UserProfileComponent from '../../components/UserProfile';
-import React from 'react';
 import Layout from '../../components/Navbar/Layout';
 import Meta from '../../components/Meta';
 
-export default function UserView() {
+const UserView: React.FC = () => {
   return (
     <>
-      <Meta title={'Your profile'}></Meta>
+      <Meta title="Your profile" />
       <Layout>
         <UserProfileComponent />
       </Layout>
     </>
   );
-}
+};
+
+export default UserView;

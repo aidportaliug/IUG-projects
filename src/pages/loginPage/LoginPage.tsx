@@ -1,3 +1,4 @@
+import React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './loginPage.css';
 import LoginComponent from '../../components/Login/Login';
@@ -5,24 +6,24 @@ import { useFirebaseAuth } from '../../services/AuthContext';
 import { Link, Navigate } from 'react-router-dom';
 import imageLogo from './../../images/logo.png';
 import imageIcon from './../../images/loginBilde.png';
-import React from 'react';
 import Meta from '../../components/Meta';
 
-const theme = createTheme();
-export default function Login() {
+const Login: React.FC = () => {
+  const theme = createTheme();
   const { user } = useFirebaseAuth();
+
   if (user === null) {
     return (
       <>
-        <Meta title={'LogIn'}></Meta>
+        <Meta title="LogIn" />
         <div className="wholeLogin">
           <div className="loginBanner">
             <img className="loginBannerImage" src={imageIcon} alt="" />
             <div className="loginText">
               <p>Share your projects.</p>
-              <p>connect with students.</p>
+              <p>Connect with students.</p>
               <p>Make a difference.</p>
-              <p>together.</p>
+              <p>Together.</p>
             </div>
             <img className="imgLogo" src={imageLogo} alt="" />
           </div>
@@ -44,4 +45,6 @@ export default function Login() {
   } else {
     return <Navigate to="/user" />;
   }
-}
+};
+
+export default Login;

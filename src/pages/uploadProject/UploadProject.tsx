@@ -6,7 +6,7 @@ import { useGetUser } from '../../services/useGetUser';
 import { CustomUser } from '../../models/user';
 import Meta from '../../components/Meta';
 
-const UploadProject = () => {
+const UploadProject: React.FC = () => {
   //const [user, setUser] = useState<User | null>(null)
   const { user } = useFirebaseAuth();
   const [userUpdatet, setUserUpdatet] = useState<boolean>(false);

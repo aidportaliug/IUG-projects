@@ -5,31 +5,35 @@ import { useFirebaseAuth } from '../../services/AuthContext';
 import { CustomUser } from '../../models/user';
 import { useGetUser } from '../../services/useGetUser';
 import Meta from '../../components/Meta';
-const UploadExperienceReport = () => {
+
+const UploadExperienceReport: React.FC = () => {
   const { user } = useFirebaseAuth();
-  const [userUpdatet, setUserUpdatet] = useState<boolean>(false);
+  const [userUpdated, setUserUpdated] = useState<boolean>(false);
   const [customUser, setCustomUser] = useState<CustomUser | null>(null);
-  async function CallGetUser(userId: string) {
+
+  async function callGetUser(userId: string) {
     return await useGetUser(userId);
   }
+
   useEffect(() => {
-    if (user !== null && !userUpdatet) {
-      CallGetUser(user.uid).then((response) => setCustomUser(response));
-      setUserUpdatet(true);
+    if (user !== null && !userUpdated) {
+      callGetUser(user.uid).then((response) => setCustomUser(response));
+      setUserUpdated(true);
     }
-  }, [customUser, user, userUpdatet]);
+  }, [customUser, user, userUpdated]);
 
   if (customUser !== null && customUser?.professor === false) {
     return (
       <>
-        <Meta title={'Upload your Report'}></Meta>
+        <Meta title="Upload your Report" />
         <div className="outline">
-          <div className="title"> Upload Experience Report </div>
+          <div className="title">Upload Experience Report</div>
           <UploadExperienceReportForm />
         </div>
       </>
     );
   }
+
   return <div>You must be logged in and be a student</div>;
 };
 

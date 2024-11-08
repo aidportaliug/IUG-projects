@@ -47,17 +47,17 @@ const errorMessages: string[] = [
   'Our apologies, this page is dimmer than a faulty light bulb.',
 ];
 
-function error() {
+const ErrorPage: React.FC = () => {
   return (
     <>
       <Meta title="404" />
       <div className="homeBackground" id="error">
         <Layout>
           <div className="homeOutline">
-            <div className="homeTitle"> 404</div>
+            <div className="homeTitle">404</div>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <h4>{errorMessages[Math.floor(Math.random() * 40)]}</h4>
+            <h4>{errorMessages[Math.floor(Math.random() * errorMessages.length)]}</h4>
             <Button href="./" style={{ backgroundColor: '#3d7844', color: '#FFFFFF' }}>
               Homepage
             </Button>
@@ -66,6 +66,6 @@ function error() {
       </div>
     </>
   );
-}
+};
 
-export default error;
+export default ErrorPage;

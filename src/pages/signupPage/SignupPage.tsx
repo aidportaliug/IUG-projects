@@ -7,7 +7,7 @@ import React from 'react';
 import Meta from '../../components/Meta';
 import { Link } from 'react-router-dom';
 
-export default function SignUp() {
+const SignUp: React.FC = () => {
   const theme = createTheme();
 
   const imageLogo = Logo;
@@ -21,9 +21,9 @@ export default function SignUp() {
           <img className="loginBannerImage" src={imageIcon} alt="" />
           <div className="loginText">
             <p>Share your projects.</p>
-            <p>connect with students.</p>
+            <p>Connect with students.</p>
             <p>Make a difference.</p>
-            <p>together.</p>
+            <p>Together.</p>
           </div>
           <img className="imgLogo" src={imageLogo} alt="" />
         </div>
@@ -42,4 +42,6 @@ export default function SignUp() {
       </div>
     </>
   );
-}
+};
+
+export default SignUp;

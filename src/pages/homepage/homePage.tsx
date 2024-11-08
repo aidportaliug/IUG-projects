@@ -12,7 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Footer from '../../components/Footer/Footer';
 import Meta from '../../components/Meta';
 
-function Home() {
+const Home: React.FC = () => {
   const imagePath = './../../images/Trax_Ghana.png';
   const [projects, setProjects] = useState<Project[]>([]);
   const [orderBy, setOrderBy] = useState<string>('deadline');
