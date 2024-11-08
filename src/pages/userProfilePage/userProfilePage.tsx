@@ -1,4 +1,4 @@
-import "../../styles/user.css";
+import "./userProfilePage.css";
 import UserProfileComponent from "../../components/UserProfile";
 import React from "react";
 import Layout from "../../components/Navbar/Layout";

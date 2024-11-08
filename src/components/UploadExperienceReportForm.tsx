@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/uploadProject.css";
+import "../pages/uploadProject/uploadProject.css";
 import { Box, Button, MenuItem, Select, TextField } from "@mui/material";
 import { SetStateAction, useState } from "react";
 import createExperienceReport from "../services/createExperienceReport";

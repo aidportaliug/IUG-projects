@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/error.css";
+import "./404Page.css";
 import Layout from "../../components/Navbar/Layout";
 import { Button } from "@mui/material";
 import Meta from "../../components/Meta";

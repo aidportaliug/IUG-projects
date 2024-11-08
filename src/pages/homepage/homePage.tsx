@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ProjectCard from "../../components/ProjectCard/ProjectCard";
-import "../../styles/homepage.css";
+import "./homepage.css";
 import { getProjects } from "../../services/getProjects";
 import { Project } from "../../models/project";
 import { studyFields, locations } from "../../models/allowedValues";

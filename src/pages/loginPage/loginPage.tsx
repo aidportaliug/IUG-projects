@@ -1,6 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import "../../styles/login.css";
-import LoginComponent from "../../components/Login";
+import "./loginPage.css";
+import LoginComponent from "../../components/Login/Login";
 import { useFirebaseAuth } from "../../services/AuthContext";
 import { Link, Navigate } from "react-router-dom";
 import imageLogo from "./../../images/logo.png";

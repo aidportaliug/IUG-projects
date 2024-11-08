@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import "../../styles/login.css";
+import "./signupPage.css";
 import SignUpComponent from "../../components/Signup";
 import Logo from "./../../images/logo.png";
 import ImageIcon from "./../../images/loginBilde.png";

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "../styles/uploadProject.css";
-import UploadProjectForm from "../components/uploadProjectFrom";
-import { useFirebaseAuth } from "../services/AuthContext";
-import { useGetUser } from "../services/useGetUser";
-import { CustomUser } from "../models/user";
-import Meta from "../components/Meta";
+import "./uploadProject.css";
+import UploadProjectForm from "../../components/uploadProjectFrom";
+import { useFirebaseAuth } from "../../services/AuthContext";
+import { useGetUser } from "../../services/useGetUser";
+import { CustomUser } from "../../models/user";
+import Meta from "../../components/Meta";
 
 const UploadProject = () => {
   //const [user, setUser] = useState<User | null>(null)

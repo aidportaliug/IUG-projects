@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "../styles/uploadProject.css";
-import UploadExperienceReportForm from "../components/UploadExperienceReportForm";
-import { useFirebaseAuth } from "../services/AuthContext";
-import { CustomUser } from "../models/user";
-import { useGetUser } from "../services/useGetUser";
-import Meta from "../components/Meta";
+import "./uploadExperienceReport.css";
+import UploadExperienceReportForm from "../../components/UploadExperienceReportForm";
+import { useFirebaseAuth } from "../../services/AuthContext";
+import { CustomUser } from "../../models/user";
+import { useGetUser } from "../../services/useGetUser";
+import Meta from "../../components/Meta";
 const UploadExperienceReport = () => {
   const { user } = useFirebaseAuth();
   const [userUpdatet, setUserUpdatet] = useState<boolean>(false);

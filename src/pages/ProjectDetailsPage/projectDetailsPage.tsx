@@ -1,13 +1,13 @@
 import { Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Project } from "../models/project";
-import { getProject } from "../services/getProject";
-import InformationBox from "../components/ProjectDetail/InformationBox";
-import "../styles/projectDetail.css";
-import Trax_Ghana from "./../images/Trax_Ghana.png";
-import ProjectImageBox from "../components/ProjectImageBox";
-import Meta from "../components/Meta";
+import { Project } from "../../models/project";
+import { getProject } from "../../services/getProject";
+import InformationBox from "../../components/ProjectDetail/InformationBox";
+import "./projectDetailPage.css";
+import Trax_Ghana from "../../images/Trax_Ghana.png";
+import ProjectImageBox from "../../components/ProjectImageBox";
+import Meta from "../../components/Meta";
 
 const ProjectDetailsPage: React.FC = () => {
   const { id } = useParams();

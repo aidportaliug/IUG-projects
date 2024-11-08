@@ -4,7 +4,7 @@ import { locations, studyFields } from "../../models/allowedValues";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import "../../styles/projectDetail.css";
+import "../../pages/ProjectDetailsPage/projectDetailPage.css";
 
 interface InformationBoxProps {
   deadline: Date;
