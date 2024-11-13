@@ -1,0 +1,89 @@
+@import '../../mainStyles/mainStyles.css';
+
+.projectOutline {
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: var(--mainBackground);
+  border: 3px solid var(--mainGreen);
+  height: auto;
+}
+
+.projectPicture {
+  width: 100%;
+  object-fit: cover;
+  height: 175px;
+}
+
+.projectText {
+  color: var(--mainGreen);
+  font-family: var(--mainFontFamily), serif;
+  font-weight: 700;
+  font-size: 25px;
+  margin: 10px;
+}
+
+.projectDescription {
+  width: 95%;
+  margin: 10px;
+  font-family: var(--mainFontFamily), serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--UiGray);
+}
+
+.projectCardBottomRow {
+  flex-direction: row;
+  display: flex;
+  width: 100%;
+}
+
+.topicTag {
+  width: 80px;
+  height: 17px;
+  font-family: var(--mainFontFamily), serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  background: var(--secondaryGreen);
+  border-radius: 8px;
+  color: var(--mainBackground);
+  margin-left: 10px;
+  margin-top: 10px;
+  padding: 4px;
+  text-align: center;
+}
+
+.date {
+  font-family: var(--mainFontFamily), serif;
+  font-style: normal;
+  font-weight: var(--mainFontWeight);
+  font-size: 15px;
+  color: var(--UiGray);
+  height: 18px;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.alignRight {
+  margin-left: auto;
+}
+
+.projectCardContainer:hover {
+  cursor: pointer;
+}
+
+.wrapperTopicTagDate {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.topicDivs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}

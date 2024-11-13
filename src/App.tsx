@@ -1,27 +1,28 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/homepage";
-import Login from "./pages/login";
-import SignUp from "./pages/signup";
-import UserView from "./pages/userprofile";
-import ProjectDetailsPage from "./pages/ProjectDetailsPage";
-import UploadProject from "./pages/UploadProject";
-import UploadExperienceReport from "./pages/UploadExperienceReport";
-import Error from "./pages/404";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { FirebaseAuthProvider } from "./services/AuthContext";
-import React from "react";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/homePage/homePage';
+import Login from './pages/loginPage/LoginPage';
+import SignUp from './pages/signupPage/SignupPage';
+import UserView from './pages/userProfilePage/UserProfilePage';
+import ProjectDetailsPage from './pages/ProjectDetailsPage/ProjectDetailsPage';
+import UploadProject from './pages/uploadProject/UploadProject';
+import UploadExperienceReport from './pages/uploadExperienceReport/UploadExperienceReport';
+import Error from './pages/404Page/404Page';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { FirebaseAuthProvider } from './services/AuthContext';
 
-function App() {
-  //set default colors for all mui components
+const App: React.FC = () => {
+  // Set default colors for all MUI components
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#3D7844", // green color
+        main: '#3D7844', // green color
       },
     },
   });
+
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -34,10 +35,7 @@ function App() {
               <Route path="/signUp" element={<SignUp />} />
               <Route path="/project/:id" element={<ProjectDetailsPage />} />
               <Route path="/uploadProject" element={<UploadProject />} />
-              <Route
-                path="/uploadexperienceReport"
-                element={<UploadExperienceReport />}
-              />
+              <Route path="/uploadexperienceReport" element={<UploadExperienceReport />} />
               <Route path="/404" element={<Error />} />
             </Routes>
           </BrowserRouter>
@@ -45,6 +43,6 @@ function App() {
       </LocalizationProvider>
     </ThemeProvider>
   );
-}
+};
 
 export default App;

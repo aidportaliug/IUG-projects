@@ -1,6 +1,6 @@
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { addDoc, collection } from "firebase/firestore";
-import firebase, { db } from "./firebaseConfig";
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { addDoc, collection } from 'firebase/firestore';
+import firebase, { db } from './firebaseConfig';
 interface ContributionIds {
   experienceID: string[];
   projectID: string[];
@@ -15,7 +15,7 @@ const storeUser = async (
   university: string
 ) => {
   const contributionIds: ContributionIds = { experienceID: [], projectID: [] };
-  await addDoc(collection(db, "userProfile"), {
+  await addDoc(collection(db, 'userProfile'), {
     userID: userID,
     firstName: firstName,
     lastName: lastName,
@@ -37,7 +37,7 @@ export default function signUp(
   university: string,
   password: string
 ) {
-  if (firstName === "" || lastName === "" || email === "" || password === "") {
+  if (firstName === '' || lastName === '' || email === '' || password === '') {
     return false;
   }
 
@@ -46,15 +46,7 @@ export default function signUp(
     .then(async (userCredential) => {
       console.log(userCredential);
       const userID = userCredential.user.uid;
-      await storeUser(
-        userID,
-        firstName,
-        lastName,
-        email,
-        phoneNumber,
-        institue,
-        university
-      );
+      await storeUser(userID, firstName, lastName, email, phoneNumber, institue, university);
     })
     .catch((error: Error) => {
       //const errorCode:string = error.code;

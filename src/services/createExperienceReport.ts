@@ -10,11 +10,11 @@ import {
   QuerySnapshot,
   updateDoc,
   where,
-} from "firebase/firestore";
-import firebase, { db } from "./firebaseConfig";
-import { getAuth } from "firebase/auth";
-import { allowedLocations, allowedStudyFields } from "../models/allowedValues";
-import { useGetUser } from "./useGetUser";
+} from 'firebase/firestore';
+import firebase, { db } from './firebaseConfig';
+import { getAuth } from 'firebase/auth';
+import { allowedLocations, allowedStudyFields } from '../models/allowedValues';
+import { useGetUser } from './useGetUser';
 
 async function CallGetUser(userId: string) {
   return await useGetUser(userId);
@@ -33,7 +33,7 @@ const storeExperienceReport = async (
 ) => {
   const customUser = await CallGetUser(studentId);
   if (customUser !== null && customUser.professor === false) {
-    const docRef = await addDoc(collection(db, "experienceReport"), {
+    const docRef = await addDoc(collection(db, 'experienceReport'), {
       title: title,
       shortTitle: shortTitle,
       studyField: studyField,
@@ -45,17 +45,14 @@ const storeExperienceReport = async (
       projectId: projectId,
     });
 
-    const queryGetUser: CollectionReference<DocumentData> = collection(
-      db,
-      "userProfile"
-    );
-    const q = query(queryGetUser, where("userID", "==", studentId));
+    const queryGetUser: CollectionReference<DocumentData> = collection(db, 'userProfile');
+    const q = query(queryGetUser, where('userID', '==', studentId));
     const userProfileSnapshot: QuerySnapshot<DocumentData> = await getDocs(q);
 
     if (!userProfileSnapshot.empty) {
-      const userRef = doc(db, "userProfile", userProfileSnapshot.docs[0].id);
+      const userRef = doc(db, 'userProfile', userProfileSnapshot.docs[0].id);
       await updateDoc(userRef, {
-        "contributionIds.experienceID": arrayUnion(docRef.id),
+        'contributionIds.experienceID': arrayUnion(docRef.id),
       });
       console.log(userProfileSnapshot);
     }
@@ -74,10 +71,7 @@ export default async function createExperienceReport(
 ) {
   const auth = getAuth(firebase);
   if (auth.currentUser?.getIdToken()) {
-    if (
-      allowedLocations.includes(location) &&
-      allowedStudyFields.includes(studyField)
-    ) {
+    if (allowedLocations.includes(location) && allowedStudyFields.includes(studyField)) {
       storeExperienceReport(
         title,
         shortTitle,
@@ -86,15 +80,15 @@ export default async function createExperienceReport(
         year,
         description,
         summaryDescription,
-        projectId ?? "",
+        projectId ?? '',
         await auth.currentUser.uid
       ).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        throw alert(errorCode + " " + errorMessage);
+        throw alert(errorCode + ' ' + errorMessage);
       });
     } else {
-      console.log("not valid location or studyfield");
+      console.log('not valid location or studyfield');
     }
   }
 }
