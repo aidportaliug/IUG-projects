@@ -20,10 +20,6 @@ const InformationBox: React.FC<InformationBoxProps> = ({ deadline, location, dur
       style={{
         marginTop: '20px',
         width: '70%',
-        borderTop: '1px solid #3D7844',
-        paddingTop: '20px',
-        borderBottom: '1px solid #3D7844',
-        paddingBottom: '20px',
         marginBottom: '20px',
       }}
     >

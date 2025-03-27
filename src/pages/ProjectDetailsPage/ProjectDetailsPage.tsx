@@ -29,14 +29,15 @@ const ProjectDetailsPage: React.FC = () => {
         <Meta title={'Your profile'}></Meta>
         <div className="projectDetailoutline">
           <div className="Title">{project?.title}</div>
-          <ProjectImageBox source={imageIcon} altText={'String'} />
-          <Grid container spacing={10}></Grid>
+          <ProjectImageBox source={imageIcon} altText={'Project Image'} />
+          <hr />
           <InformationBox
             deadline={project.deadline.toDate()}
             location={project.location}
             duration={project.duration}
             studyField={project.studyField}
-          ></InformationBox>
+          />
+          <hr />
           <div style={{ width: '70%', fontSize: '15px' }}>{project.description}</div>
         </div>
       </>
