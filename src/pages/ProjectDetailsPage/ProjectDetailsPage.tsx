@@ -39,7 +39,9 @@ const ProjectDetailsPage: React.FC = () => {
               studyField={project.studyField}
             />
             <hr />
-            <div style={{ width: '70%', fontSize: '15px' }}>{project.description}</div>
+            <div className="projectDetails" style={{ fontSize: '15px' }}>
+              {project.description}
+            </div>
           </div>
         </Layout>
       </>

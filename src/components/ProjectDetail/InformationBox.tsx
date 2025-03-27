@@ -27,19 +27,19 @@ const InformationBox: React.FC<InformationBoxProps> = ({ deadline, location, dur
       <div style={{ fontSize: '20px' }}>
         <div className="projectDetails">
           <LocationOnIcon style={{ color: '#3D7844' }} />
-          <div style={{ margin: '10px' }}>{locations[location as keyof typeof locations]}</div>
+          <div style={{ marginLeft: '10px' }}>{locations[location as keyof typeof locations]}</div>
         </div>
       </div>
       <div style={{ fontSize: '20px' }}>
         <div className="projectDetails">
           <CalendarTodayIcon style={{ color: '#3D7844' }} />
-          <div style={{ margin: '10px' }}>{duration} Months</div>
+          <div style={{ marginLeft: '10px' }}>{duration} Months</div>
         </div>
       </div>
       <div style={{ fontSize: '20px' }}>
         <div className="projectDetails">
           <NotificationsNoneIcon style={{ color: '#3D7844' }} />
-          <div style={{ margin: '10px' }}>
+          <div style={{ marginLeft: '10px' }}>
             Application deadline: {deadline.getDate()}/{deadline.getMonth() + 1}/{deadline.getFullYear()}
           </div>
         </div>
@@ -47,7 +47,7 @@ const InformationBox: React.FC<InformationBoxProps> = ({ deadline, location, dur
       <div style={{ fontSize: '20px' }}>
         <div className="projectDetails">
           <LightbulbIcon style={{ color: '#3D7844' }} />
-          <div style={{ margin: '10px' }}>{studyFields[studyField as keyof typeof studyFields]}</div>
+          <div style={{ marginLeft: '10px' }}>{studyFields[studyField as keyof typeof studyFields]}</div>
         </div>
       </div>
     </Stack>
