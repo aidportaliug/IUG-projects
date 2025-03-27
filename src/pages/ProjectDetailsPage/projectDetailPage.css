@@ -27,13 +27,14 @@
   width: 100%;
 }
 
-.projectDetailDate {
+.projectDetails {
   font-family: var(--mainFontFamily), serif;
   font-style: normal;
   font-weight: var(--mainFontWeight);
-  height: 18px;
+  height: 30px;
   display: flex;
   align-items: center;
+  color: #3d7844;
 }
 
 hr {
