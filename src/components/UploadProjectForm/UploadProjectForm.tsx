@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from 'react';
+import React, { SetStateAction, useState, useRef } from 'react';
 import './uploadProjectForm.css';
 import { Box, Button, MenuItem, Select, TextField, TextFieldProps } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
@@ -11,6 +11,21 @@ const UploadProjectForm: React.FC = () => {
   const [studyField, setStudyField] = useState('study_field');
   const [location, setLocation] = useState('location');
   const navigate = useNavigate();
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setImageUrl(url);
+    }
+  };
 
   const handleStudyFieldChange = (event: { target: { value: SetStateAction<string> } }) => {
     setStudyField(event.target.value);
@@ -84,14 +99,17 @@ const UploadProjectForm: React.FC = () => {
   };
 
   return (
-    <Box component="form" noValidate onSubmit={handleUpload} sx={{ margin: '0 auto', maxWidth: '60%' }}>
+    <Box component="form" noValidate onSubmit={handleUpload} sx={{ margin: '0 auto', width: 500 }}>
       <Box display={'flex'} sx={{ marginBottom: '1em', marginTop: '1em' }}>
         <TextField
           fullWidth
           id="shortTitle"
           label="Project short title"
           name="shortTitle"
-          sx={{ marginRight: '1em' }}
+          sx={{ marginRight: '1em', backgroundColor: '#e0e0e0',
+          '&:focus-within': {
+            backgroundColor: 'white',
+          }}}
         />
         <Select
           labelId="studyField"
@@ -100,7 +118,10 @@ const UploadProjectForm: React.FC = () => {
           value={studyField}
           name="studyField"
           onChange={handleStudyFieldChange}
-          sx={{ width: '100%', marginLeft: '1em' }}
+          sx={{ width: '100%', marginLeft: '1em', backgroundColor: '#e0e0e0',
+          '&:focus-within': {
+            backgroundColor: 'white',
+          }}}
         >
           <MenuItem value="study_field">Study field</MenuItem>
           <MenuItem value="it">IT</MenuItem>
@@ -117,7 +138,10 @@ const UploadProjectForm: React.FC = () => {
         id="projectTitle"
         label="Project Title"
         name="projectTitle"
-        sx={{ marginBottom: '1em' }}
+        sx={{ marginBottom: '1em', backgroundColor: '#e0e0e0',
+          '&:focus-within': {
+            backgroundColor: 'white',
+        }}}
       />
       <Box display={'flex'} sx={{ marginBottom: '1em' }}>
         <Select
@@ -126,7 +150,10 @@ const UploadProjectForm: React.FC = () => {
           value={location}
           name="location"
           onChange={handleLocationChange}
-          sx={{ width: '100%', marginRight: '1em' }}
+          sx={{ width: '100%', marginRight: '1em', backgroundColor: '#e0e0e0',
+          '&:focus-within': {
+            backgroundColor: 'white',
+          }}}
         >
           <MenuItem value="location">Location</MenuItem>
           <MenuItem value="europe">Europe</MenuItem>
@@ -135,44 +162,84 @@ const UploadProjectForm: React.FC = () => {
           <MenuItem value="south_america">South America</MenuItem>
           <MenuItem value="north_america">North America</MenuItem>
         </Select>
-        <TextField required fullWidth id="duration" label="Duration" name="duration" sx={{ marginLeft: '1em' }} />
+        <TextField required fullWidth id="duration" label="Duration" name="duration" sx={{ marginLeft: '1em', backgroundColor: '#e0e0e0',
+          '&:focus-within': {
+            backgroundColor: 'white',
+          }}} />
       </Box>
+      
       <TextField
         required
         fullWidth
         id="description"
         label="Description"
         name="description"
-        sx={{ marginBottom: '1em' }}
+        multiline
+        minRows={6}
+        sx={{ marginBottom: '1em', backgroundColor: '#e0e0e0',
+        '&:focus-within': {
+          backgroundColor: 'white',
+        }}}
       />
       <TextField
         fullWidth
         id="summaryDescription"
         label="Summary description"
         name="summaryDescription"
-        sx={{ marginBottom: '1em' }}
+        multiline
+        minRows={4}
+        sx={{ marginBottom: '1em', backgroundColor: '#e0e0e0',
+        '&:focus-within': {
+          backgroundColor: 'white',
+        }}}
       />
 
-      <Box display={'flex'} sx={{ marginBottom: '1em' }}>
-        <Box sx={{ marginRight: '1em', width: '100%' }}>
-          <div>Application deadline</div>
-          <DatePicker
-            disablePast
-            value={value}
-            onChange={(newValue) => {
-              setValue(newValue);
-            }}
-            renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-              <TextField id="date" name="date" InputLabelProps={{ shrink: false }} {...params} />
-            )}
-            inputFormat="DD/MM/YYYY"
-          ></DatePicker>
-        </Box>
-
-        <Button type="submit" fullWidth variant="contained" sx={{ marginLeft: '1em' }}>
-          Upload
+      <div>Application deadline</div>
+      <Box display={'flex'} sx={{ marginBottom: '1em',  }}>
+        <DatePicker
+          disablePast
+          value={value}
+          onChange={(newValue) => {
+            setValue(newValue);
+          }}
+          renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+            <TextField id="date" name="date" InputLabelProps={{ shrink: false }} {...params} 
+              sx={{ width: '100%',  marginRight: '1em', backgroundColor: '#e0e0e0',
+              '&:focus-within': {
+                backgroundColor: 'white',
+              }}}/>
+          )}
+          inputFormat="DD/MM/YYYY"
+        ></DatePicker>
+        
+        <input
+        type='file'
+        accept='image/*'
+        style={{ display: 'none'}}
+        ref={fileInputRef}
+        onChange={handleFileChange}/>
+        <Button 
+          size="large"
+          variant="contained"
+          onClick={handleButtonClick} 
+          style={{ width: '300px', color: 'black', textTransform: "none", border: '1px solid grey',
+            marginLeft: '1em', backgroundColor: '#e0e0e0'}}
+          onFocus={e => e.target.style.backgroundColor = 'white'}
+          onBlur={e => e.target.style.backgroundColor = '#e0e0e0'}>
+          Upload Picture
         </Button>
+        
+{/*        {imageUrl && (
+          <div style={{ marginTop: '1em' }}>
+            <img src={imageUrl} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: 300 }} />
+          </div>
+        )}
+*/}
+
       </Box>
+      <Button type="submit" variant='contained' style={{ width: 200, height: 50, margin: '1em' }}>
+          Upload Form
+      </Button>
     </Box>
   );
 };

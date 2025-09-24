@@ -22,17 +22,17 @@ const UploadProject: React.FC = () => {
   }, [customUser, user, userUpdatet]);
 
   if (customUser !== null && customUser?.professor === true) {
-    return (
-      <>
-        <Meta title={'Upload your project'}></Meta>
-        <div className="outline">
-          <div className="title"> Upload Project </div>
-          <UploadProjectForm />
-        </div>
-      </>
-    );
+    return <div>You must be logged in, and be a professor</div>;
   }
-  return <div>You must be logged in, and be a professor</div>;
+  return (
+    <>
+      <Meta title={'Upload your project'}></Meta>
+      <div className="outline">
+        <div className="title"> Upload Your Project </div>
+        <UploadProjectForm />
+      </div>
+    </>
+  );
 };
 
 export default UploadProject;
