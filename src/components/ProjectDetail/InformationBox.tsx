@@ -2,6 +2,7 @@ import React from 'react';
 import { Stack } from '@mui/material';
 import { locations, studyFields } from '../../models/allowedValues';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import '../../pages/ProjectDetailsPage/projectDetailPage.css';
@@ -20,33 +21,33 @@ const InformationBox: React.FC<InformationBoxProps> = ({ deadline, location, dur
       style={{
         marginTop: '20px',
         width: '70%',
-        borderBottom: '1px solid #3D7844',
-        paddingBottom: '20px',
         marginBottom: '20px',
       }}
     >
       <div style={{ fontSize: '20px' }}>
-        <div className="projectDetailDate">
+        <div className="projectDetails">
           <LocationOnIcon style={{ color: '#3D7844' }} />
-          <div style={{ fontSize: '20px' }}>{locations[location as keyof typeof locations]}</div>
+          <div style={{ marginLeft: '10px' }}>{locations[location as keyof typeof locations]}</div>
         </div>
       </div>
-
-      <div style={{ fontSize: '20px' }}>{studyFields[studyField as keyof typeof studyFields]}</div>
       <div style={{ fontSize: '20px' }}>
-        <div className="projectDetailDate">
+        <div className="projectDetails">
           <CalendarTodayIcon style={{ color: '#3D7844' }} />
-          <div style={{ margin: '10px' }}>{duration}</div>
+          <div style={{ marginLeft: '10px' }}>{duration} Months</div>
         </div>
       </div>
       <div style={{ fontSize: '20px' }}>
-        <div style={{ fontSize: '20px' }}>
-          <div className="projectDetailDate">
-            <NotificationsNoneIcon style={{ color: '#3D7844' }} />
-            <div style={{ margin: '10px' }}>
-              Application deadline: {deadline.getDate()}/{deadline.getMonth() + 1}/{deadline.getFullYear()}
-            </div>
+        <div className="projectDetails">
+          <NotificationsNoneIcon style={{ color: '#3D7844' }} />
+          <div style={{ marginLeft: '10px' }}>
+            Application deadline: {deadline.getDate()}/{deadline.getMonth() + 1}/{deadline.getFullYear()}
           </div>
+        </div>
+      </div>
+      <div style={{ fontSize: '20px' }}>
+        <div className="projectDetails">
+          <LightbulbIcon style={{ color: '#3D7844' }} />
+          <div style={{ marginLeft: '10px' }}>{studyFields[studyField as keyof typeof studyFields]}</div>
         </div>
       </div>
     </Stack>

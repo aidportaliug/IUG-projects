@@ -64,9 +64,11 @@ const Home: React.FC = () => {
         <Layout>
           <div className="homeOutline">
             <div className="homeTitle"> Projects</div>
-            <FilterDropdown value={orderBy} setValue={setOrderBy} sortBy={true} />
-            <FilterDropdown value={filterLocation} setValue={setFilterLocation} location={true} />
-            <FilterDropdown value={filterStudyField} setValue={setFilterStudyField} studyField={true} />
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <FilterDropdown value={orderBy} setValue={setOrderBy} sortBy={true} />
+              <FilterDropdown value={filterLocation} setValue={setFilterLocation} location={true} />
+              <FilterDropdown value={filterStudyField} setValue={setFilterStudyField} studyField={true} />
+            </div>
             <InfiniteScroll
               dataLength={projects.length}
               next={fetchMoreData}
