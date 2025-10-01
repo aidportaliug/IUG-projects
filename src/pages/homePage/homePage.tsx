@@ -12,6 +12,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Footer from '../../components/Footer/Footer';
 import Meta from '../../components/Meta';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Box } from '@mui/material';
 
 const Home: React.FC = () => {
   const imagePath = './../../images/Trax_Ghana.png';
@@ -24,6 +26,7 @@ const Home: React.FC = () => {
   const [hasMore, setHasMore] = useState(true);
   const [noProject, setNoProject] = useState(false);
   const limit = 6;
+  const navigate = useNavigate();
 
   async function fetchMoreData() {
     setLoading(true);
@@ -68,6 +71,9 @@ const Home: React.FC = () => {
               <FilterDropdown value={orderBy} setValue={setOrderBy} sortBy={true} />
               <FilterDropdown value={filterLocation} setValue={setFilterLocation} location={true} />
               <FilterDropdown value={filterStudyField} setValue={setFilterStudyField} studyField={true} />
+              <Button onClick={() => navigate('/uploadProject')} 
+              style={{marginLeft: 'auto', color: 'black', textTransform: "none", border: '1px solid grey',
+               backgroundColor: '#e0e0e0'}}>Upload your project</Button>
             </div>
             <InfiniteScroll
               dataLength={projects.length}

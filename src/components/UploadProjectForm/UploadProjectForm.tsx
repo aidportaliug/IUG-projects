@@ -118,10 +118,17 @@ const UploadProjectForm: React.FC = () => {
           value={studyField}
           name="studyField"
           onChange={handleStudyFieldChange}
-          sx={{ width: '100%', marginLeft: '1em', backgroundColor: '#e0e0e0',
-          '&:focus-within': {
-            backgroundColor: 'white',
-          }}}
+          sx={{ width: '100%', marginLeft: '1em', 
+            '& .MuiSelect-select': {
+              backgroundColor: '#e0e0e0',
+            },
+            '&.Mui-focused .MuiSelect-select': {
+              backgroundColor: 'white',
+            },
+            '& fieldset': {
+              legend: { display: 'none' },
+            }
+        }}
         >
           <MenuItem value="study_field">Study field</MenuItem>
           <MenuItem value="it">IT</MenuItem>
@@ -150,10 +157,17 @@ const UploadProjectForm: React.FC = () => {
           value={location}
           name="location"
           onChange={handleLocationChange}
-          sx={{ width: '100%', marginRight: '1em', backgroundColor: '#e0e0e0',
-          '&:focus-within': {
-            backgroundColor: 'white',
-          }}}
+          sx={{ width: '100%', marginRight: '1em', 
+            '& .MuiSelect-select': {
+              backgroundColor: '#e0e0e0',
+            },
+            '&.Mui-focused .MuiSelect-select': {
+              backgroundColor: 'white',
+            },
+            '& fieldset': {
+              legend: { display: 'none' },
+            }
+          }}
         >
           <MenuItem value="location">Location</MenuItem>
           <MenuItem value="europe">Europe</MenuItem>
@@ -194,7 +208,8 @@ const UploadProjectForm: React.FC = () => {
         }}}
       />
 
-      <div>Application deadline</div>
+      <div style={{textAlign: 'left', paddingBottom: 7, fontWeight: 'bold'}}>Application deadline</div>
+
       <Box display={'flex'} sx={{ marginBottom: '1em',  }}>
         <DatePicker
           disablePast
@@ -228,15 +243,12 @@ const UploadProjectForm: React.FC = () => {
           onBlur={e => e.target.style.backgroundColor = '#e0e0e0'}>
           Upload Picture
         </Button>
-        
-{/*        {imageUrl && (
-          <div style={{ marginTop: '1em' }}>
-            <img src={imageUrl} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: 300 }} />
-          </div>
-        )}
-*/}
-
       </Box>
+      {imageUrl && (
+        <div style={{ marginTop: '1em' }}>
+          <img src={imageUrl} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: 300 }} />
+        </div>
+      )}
       <Button type="submit" variant='contained' style={{ width: 200, height: 50, margin: '1em' }}>
           Upload Form
       </Button>
