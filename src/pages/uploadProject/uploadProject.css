@@ -8,6 +8,8 @@
   font-family: var(--mainFontFamily), serif;
   color: var(--mainGreen);
   font-size: 4em;
+  font-weight: bold;
+  padding-bottom: 30px;
 }
 
 .group {
