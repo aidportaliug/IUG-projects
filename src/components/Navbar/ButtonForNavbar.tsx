@@ -30,6 +30,8 @@ const ButtonForNavbar: React.FC<ButtonProps> = ({ page, location }) => {
 
 
 
+
+
   /*
    const handleClick = () = > {
     navigate(path);
@@ -43,7 +45,7 @@ const ButtonForNavbar: React.FC<ButtonProps> = ({ page, location }) => {
 
   const checkPage = () => {
     if (page === 'Masterprojects') {
-      return location === '/masterprojects';
+      return location === '/masterprojects' || location === '/';
     } else if (page === 'Experience Reports') {
       return location === '/experience-reports';
     }
