@@ -22,9 +22,9 @@ const ButtonForNavbar: React.FC<ButtonProps> = ({ page, location }) => {
 
   const handleClick = () => {
   if (page === 'Masterprojects') {
-    navigate('/masterprojects');
+    navigate('/project/:id');
   } else if (page === 'Experience Reports') {
-    navigate('/experience-reports');
+    navigate('/experienceReports');
   }
 };
 
@@ -45,9 +45,9 @@ const ButtonForNavbar: React.FC<ButtonProps> = ({ page, location }) => {
 
   const checkPage = () => {
     if (page === 'Masterprojects') {
-      return location === '/masterprojects' || location === '/';
+      return location === '/project/:id';
     } else if (page === 'Experience Reports') {
-      return location === '/experience-reports';
+      return location === '/experienceReports';
     }
     return false;
   };
