@@ -71,7 +71,7 @@ const ExperienceReports: React.FC = () => {
               <FilterDropdown value={orderBy} setValue={setOrderBy} sortBy={true} />
               <FilterDropdown value={filterLocation} setValue={setFilterLocation} location={true} />
               <FilterDropdown value={filterStudyField} setValue={setFilterStudyField} studyField={true} />
-              <Button onClick={() => navigate('/uploadProject')} 
+              <Button onClick={() => navigate('/uploadexperienceReport')} 
               style={{marginLeft: 'auto', color: 'black', textTransform: "none", border: '1px solid grey',
                backgroundColor: '#e0e0e0'}}>Upload your report</Button>
             </div>
