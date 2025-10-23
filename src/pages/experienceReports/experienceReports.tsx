@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ProjectCard from '../../components/ProjectCard/ProjectCard';
-import './homePage.css';
+import './experienceReports.css';
 import { getProjects } from '../../services/getProjects';
 import { Project } from '../../models/project';
 import { studyFields, locations } from '../../models/allowedValues';
@@ -15,7 +15,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Box } from '@mui/material';
 
-const Home: React.FC = () => {
+const ExperienceReports: React.FC = () => {
   const imagePath = './../../images/Trax_Ghana.png';
   const [projects, setProjects] = useState<Project[]>([]);
   const [orderBy, setOrderBy] = useState<string>('deadline');
@@ -62,18 +62,18 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <Meta title="Home"></Meta>
-      <div className="homeBackground">
+      <Meta title="Experience Reports"></Meta>
+      <div className="reportBackground">
         <Layout>
-          <div className="homeOutline">
-            <div className="homeTitle"> Projects</div>
+          <div className="reportOutline">
+            <div className="reportTitle"> Experience reports</div>
             <div style={{ display: 'flex', gap: '10px' }}>
               <FilterDropdown value={orderBy} setValue={setOrderBy} sortBy={true} />
               <FilterDropdown value={filterLocation} setValue={setFilterLocation} location={true} />
               <FilterDropdown value={filterStudyField} setValue={setFilterStudyField} studyField={true} />
-              <Button onClick={() => navigate('/uploadProject')} 
+              <Button onClick={() => navigate('/uploadexperienceReport')} 
               style={{marginLeft: 'auto', color: 'black', textTransform: "none", border: '1px solid grey',
-               backgroundColor: '#e0e0e0'}}>Upload your project</Button>
+               backgroundColor: '#e0e0e0'}}>Upload your report</Button>
             </div>
             <InfiniteScroll
               dataLength={projects.length}
@@ -89,7 +89,7 @@ const Home: React.FC = () => {
               scrollableTarget="scrollableDiv"
               endMessage={<h4>{noProject}</h4>}
             >
-              <div className="rowHome">
+              <div className="rowReport">
                 {projects.map((project) => (
                   <ProjectCard
                     key={project.id}
@@ -125,4 +125,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default ExperienceReports;

@@ -1,0 +1,44 @@
+.Title {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 4em;
+  color: #3d7844;
+  margin-bottom: 5%;
+}
+
+.projectDetailoutline {
+  margin-right: 25%;
+  margin-left: 25%;
+  margin-top: 40px;
+}
+.row {
+  display: flex;
+}
+
+.columLeft {
+  flex: 70%;
+}
+.columRight {
+  flex: 30%;
+}
+
+.projectDetailImage {
+  border-radius: 20px;
+  width: 100%;
+}
+
+.projectDetails {
+  font-family: var(--mainFontFamily), serif;
+  font-style: normal;
+  font-weight: var(--mainFontWeight);
+  display: flex;
+  align-items: center;
+  color: #3d7844;
+  margin: 5px;
+}
+
+hr {
+  border-top: 2px solid #3d7844;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

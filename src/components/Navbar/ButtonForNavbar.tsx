@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
 
 interface ButtonProps {
   location: string;
@@ -8,14 +9,64 @@ interface ButtonProps {
 }
 
 const ButtonForNavbar: React.FC<ButtonProps> = ({ page, location }) => {
-  const [, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
 
-  const handleCloseNavMenu = () => {
+  //const [, setAnchorElNav] = useState<null | HTMLElement>(null);
+
+  /*const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+  */
 
-  const checkPage = () => location === '/' && page === 'Masterprojects';
+  //const path = '/' + page.toLowerCase().replace(/\s+g,'-');
 
+  const handleClick = () => {
+  if (page === 'Masterprojects') {
+    navigate('/');
+  } else if (page === 'Experience Reports') {
+    navigate('/experienceReports');
+  }
+};
+
+
+
+
+
+  /*
+   const handleClick = () = > {
+    navigate(path);
+
+  };
+  */
+
+  //const checkPage = () => location === '/' && page === 'Masterprojects';
+
+  //const checkPage = () => location === path;
+
+  const checkPage = () => {
+    if (page === 'Masterprojects') {
+      return location === '/';
+    } else if (page === 'Experience Reports') {
+      return location === '/experienceReports';
+    }
+    return false;
+  };
+
+
+
+  return (
+    <Button onClick = {handleClick}sx={{ my: 2, color: '#3D7844', display: 'block' }}>
+      {checkPage() ? (
+        <Typography className="bold">{page}</Typography>
+      ) : (
+        <Typography className="notBold">{page}</Typography>
+      )}
+
+    </Button>
+  )
+
+
+/*
   return (
     <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: '#3D7844', display: 'block' }}>
       {checkPage() ? (
@@ -25,6 +76,8 @@ const ButtonForNavbar: React.FC<ButtonProps> = ({ page, location }) => {
       )}
     </Button>
   );
+  */
+
 };
 
 export default ButtonForNavbar;

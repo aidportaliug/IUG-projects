@@ -7,6 +7,7 @@ import UserView from './pages/userProfilePage/UserProfilePage';
 import ProjectDetailsPage from './pages/ProjectDetailsPage/ProjectDetailsPage';
 import UploadProject from './pages/uploadProject/UploadProject';
 import UploadExperienceReport from './pages/uploadExperienceReport/UploadExperienceReport';
+import ExperienceReports from './pages/experienceReports/experienceReports';
 import Error from './pages/404Page/404Page';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -36,6 +37,7 @@ const App: React.FC = () => {
               <Route path="/project/:id" element={<ProjectDetailsPage />} />
               <Route path="/uploadProject" element={<UploadProject />} />
               <Route path="/uploadexperienceReport" element={<UploadExperienceReport />} />
+              <Route path='/experienceReports' element={<ExperienceReports/>} />
               <Route path="/404" element={<Error />} />
             </Routes>
           </BrowserRouter>
