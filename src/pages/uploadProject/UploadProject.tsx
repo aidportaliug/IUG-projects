@@ -7,6 +7,7 @@ import { CustomUser } from '../../models/user';
 import Meta from '../../components/Meta';
 import { useNavigate } from 'react-router-dom';
 import { Button, Box} from '@mui/material';
+import { Footer } from '../../components/Footer/Footer';
 
 const UploadProject: React.FC = () => {
   //const [user, setUser] = useState<User | null>(null)
@@ -52,6 +53,18 @@ const UploadProject: React.FC = () => {
         
         <UploadProjectForm />
       </div>
+      <Footer
+                    nameLink1="Demo_1"
+                    nameLink1URL="demo.com"
+                    nameLink2="Demo_1"
+                    nameLink2URL="demo.com"
+                    nameLink3="Demo_1"
+                    nameLink3URL="demo.com"
+                    nameLink4="Demo_1"
+                    nameLink4URL="demo.com"
+                    category1="category1"
+                    category2="category2"
+      />
     </>
   );
 };
