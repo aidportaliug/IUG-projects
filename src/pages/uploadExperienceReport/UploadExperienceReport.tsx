@@ -5,6 +5,8 @@ import { useFirebaseAuth } from '../../services/AuthContext';
 import { CustomUser } from '../../models/user';
 import { useGetUser } from '../../services/useGetUser';
 import Meta from '../../components/Meta';
+import { Footer } from '../../components/Footer/Footer';
+import Navbar from '../../components/Navbar/Navbar';
 
 const UploadExperienceReport: React.FC = () => {
   const { user } = useFirebaseAuth();
@@ -22,14 +24,26 @@ const UploadExperienceReport: React.FC = () => {
     }
   }, [customUser, user, userUpdated]);
 
-  if (customUser !== null && customUser?.professor === false) {
+  if (true) {
     return (
       <>
         <Meta title="Upload your Report" />
+        <Navbar />
         <div className="outline">
-          <div className="title">Upload Experience Report</div>
           <UploadExperienceReportForm />
         </div>
+        <Footer
+                    nameLink1="Demo_1"
+                    nameLink1URL="demo.com"
+                    nameLink2="Demo_1"
+                    nameLink2URL="demo.com"
+                    nameLink3="Demo_1"
+                    nameLink3URL="demo.com"
+                    nameLink4="Demo_1"
+                    nameLink4URL="demo.com"
+                    category1="category1"
+                    category2="category2"
+          />
       </>
     );
   }

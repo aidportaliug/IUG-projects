@@ -1,34 +1,131 @@
-@import '../../mainStyles/mainStyles.css';
-
-.outline {
-  text-align: center;
+.upload-form-container {
+  margin: 0 auto;
+  padding: 2rem;
+  max-width: 60%;
 }
 
-.title {
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.form-title {
   font-family: var(--mainFontFamily), serif;
   color: var(--mainGreen);
   font-size: 4em;
 }
 
-.group {
-  display: block;
-  font-size: 1.5em;
+.header-button {
+  padding: 0.75rem 1.5rem;
+  background-color: white;
+  color: #727171;
+  border: 1px solid #727171;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
 }
 
-.inputField {
+.header-button:hover {
+  background-color: #f5f5f5;
+}
+
+.form-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  max-width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-group.full-width {
+  flex-direction: column;
+}
+
+.input-field,
+.select-field,
+.textarea-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
   background-color: #e3e3e3;
   border: none;
-  min-height: 3em;
-  border-radius: 1em;
-  width: 100%;
-  padding-left: 1em;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-family: inherit;
 }
 
-.uploadProjectform {
-  display: grid;
-  gap: 4em;
-  grid-template-columns: repeat(2, 1fr);
-  margin: 2em;
-  margin-left: 10em;
-  margin-right: 10em;
+.input-field:focus,
+.select-field:focus,
+.textarea-field:focus {
+  outline: 2px solid #3d7844;
+  outline-offset: 2px;
+}
+
+.textarea-field {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.label-text {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #000000;
+}
+
+.label-with-line {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+}
+
+.label-with-line::before,
+.label-with-line::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #727171;
+}
+
+.label-with-line span {
+  font-weight: 500;
+  color: #727171;
+}
+
+.divider {
+  height: 1px;
+  background-color: #727171;
+  margin: 2rem auto 1.5rem auto;
+  max-width: 40%;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  max-width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.upload-button {
+  padding: 0.75rem 2rem;
+  background-color: #3d7844;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.upload-button:hover {
+  background-color: #2d5a33;
+}
+
+.upload-button:active {
+  transform: scale(0.98);
 }
