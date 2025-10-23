@@ -24,6 +24,7 @@ const UploadExperienceReport: React.FC = () => {
     }
   }, [customUser, user, userUpdated]);
 
+  //if (customUser !== null && customUser?.professor === false) {
   if (true) {
     return (
       <>
