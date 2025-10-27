@@ -13,6 +13,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { FirebaseAuthProvider } from './services/AuthContext';
+import EditProfile from './pages/editProfile/editProfile';
 
 const App: React.FC = () => {
   // Set default colors for all MUI components
@@ -38,6 +39,7 @@ const App: React.FC = () => {
               <Route path="/uploadProject" element={<UploadProject />} />
               <Route path="/uploadexperienceReport" element={<UploadExperienceReport />} />
               <Route path='/experienceReports' element={<ExperienceReports/>} />
+              <Route path='/editprofile' element={<EditProfile/>} />
               <Route path="/404" element={<Error />} />
             </Routes>
           </BrowserRouter>

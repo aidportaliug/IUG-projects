@@ -76,6 +76,9 @@ const UserProfileComponent: React.FC = () => {
             <p>University: {customUser?.university}</p>
             <p>Institute: {customUser?.institute}</p>
           </div>
+          <Button variant="contained" id="btnLogOut" onClick={() => navigate('/editProfile')}>
+            Edit
+          </Button>
         </div>
         <Button variant="contained" id="btnLogOut" onClick={logout}>
           Log out
