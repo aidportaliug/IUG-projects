@@ -1,4 +1,4 @@
-import { doc, updateDoc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, setDoc, getDocs, query, collection, where, getDoc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 
 type UserUpdate = {
@@ -10,28 +10,38 @@ type UserUpdate = {
   [key: string]: any;
 };
 
+/**
+ * Updates the user profile document in Firestore based on their userID field.
+ * Falls back to setDoc with merge if updateDoc fails.
+ */
 export default async function updateUser(uid: string, data: UserUpdate): Promise<Record<string, any>> {
   if (!uid) throw new Error('updateUser: uid is required');
   if (!data || Object.keys(data).length === 0) return {};
 
-  const userRef = doc(db, 'users', uid);
-  console.log('updateUser called', { uid, data });
-
   try {
-    await updateDoc(userRef, data);
-  } catch (err: any) {
-    console.warn('updateDoc failed, falling back to setDoc with merge:', err?.message || err);
-    try {
-      await setDoc(userRef, data, { merge: true });
-    } catch (err2) {
-      console.error('setDoc also failed', err2);
-      throw err2; // rethrow so caller sees the error
-    }
-  }
+    // First find the document in "userProfile" that matches this uid
+    const q = query(collection(db, 'userProfile'), where('userID', '==', uid));
+    const snap = await getDocs(q);
 
-  const snap = await getDoc(userRef);
-  if (!snap.exists()) return {};
-  const result = snap.data() as Record<string, any>;
-  console.log('updateUser result', result);
-  return result;
+    if (snap.empty) {
+      throw new Error(`No userProfile found for uid: ${uid}`);
+    }
+
+    const docRef = snap.docs[0].ref; // assuming 1 document per user
+
+    // Try updating first
+    try {
+      await updateDoc(docRef, data);
+    } catch (err) {
+      console.warn('updateDoc failed, falling back to setDoc with merge:', err);
+      await setDoc(docRef, data, { merge: true });
+    }
+
+    // Return the updated data
+    const updatedSnap = await getDoc(docRef);
+    return updatedSnap.data() as Record<string, any>;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
 }
