@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './uploadProject.css';
 import UploadProjectForm from '../../components/UploadProjectForm/UploadProjectForm';
 import { useFirebaseAuth } from '../../services/AuthContext';
-import { useGetUser } from '../../services/useGetUser';
+import { getCurrentUser } from '../../services/auth';
 import { CustomUser } from '../../models/user';
 import Meta from '../../components/Meta';
 import { useNavigate } from 'react-router-dom';
@@ -15,12 +15,12 @@ const UploadProject: React.FC = () => {
   const [userUpdatet, setUserUpdatet] = useState<boolean>(false);
   const [customUser, setCustomUser] = useState<CustomUser | null>(null);
   const navigate = useNavigate();
-  async function CallGetUser(userId: string) {
-    return await useGetUser(userId);
+  async function CallGetUser() {
+    return await getCurrentUser();
   }
   useEffect(() => {
     if (user !== null && !userUpdatet) {
-      CallGetUser(user.uid).then((response) => setCustomUser(response));
+      CallGetUser().then((response) => setCustomUser(null));
       setUserUpdatet(true);
     }
   }, [customUser, user, userUpdatet]);

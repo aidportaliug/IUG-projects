@@ -2,7 +2,7 @@ import React, { SetStateAction, useState, useRef } from 'react';
 import './uploadProjectForm.css';
 import { Box, Button, MenuItem, Select, TextField, TextFieldProps } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import createProject from '../../services/createProject';
+import { createProject } from '../../services/projectService';
 import { allowedLocations, allowedStudyFields } from '../../models/allowedValues';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,9 +30,11 @@ const UploadProjectForm: React.FC = () => {
   const handleStudyFieldChange = (event: { target: { value: SetStateAction<string> } }) => {
     setStudyField(event.target.value);
   };
+  
   const handleLocationChange = (event: { target: { value: SetStateAction<string> } }) => {
     setLocation(event.target.value);
   };
+  
   const handleUpload = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined }) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -49,12 +51,14 @@ const UploadProjectForm: React.FC = () => {
       alert(`Please fill in the following required fields: ${fieldNames.join(', ')}`);
       return;
     }
+    
     const data = new FormData(event.currentTarget);
     const duration = parseInt(data.get('duration') as string);
     if (Number.isNaN(duration)) {
       alert(`Duration must be a number`);
       return;
     }
+    
     const location = data.get('location') as string;
     const studyField = data.get('studyField') as string;
     if (!allowedLocations.includes(location)) {
@@ -62,7 +66,7 @@ const UploadProjectForm: React.FC = () => {
       return;
     }
     if (!allowedStudyFields.includes(studyField)) {
-      alert('You must choose a studyfield drom the list.');
+      alert('You must choose a studyfield from the list.');
       return;
     }
 
@@ -73,29 +77,33 @@ const UploadProjectForm: React.FC = () => {
       const dateStr = data.get('date') as string;
       const dateParts = dateStr.split('/');
       const year = parseInt(dateParts[2], 10);
-      const month = parseInt(dateParts[1], 10) - 1; // January is 0, so subtract 1
+      const month = parseInt(dateParts[1], 10) - 1;
       const day = parseInt(dateParts[0], 10);
 
       const deadline = new Date(year, month, day);
       const description = data.get('description') as string;
       const summaryDescription = data.get('summaryDescription') as string;
 
-      createProject(
-        projectTitle,
-        shortTitle,
-        studyField,
-        location,
-        deadline,
-        description,
-        duration,
-        summaryDescription
-      );
-      console.log('Successfull upload');
-    } catch (error) {
-      console.log(error as string);
-      return;
+      // Format deadline as ISO date string (YYYY-MM-DD)
+      const deadlineISO = deadline.toISOString().split('T')[0];
+
+      await createProject({
+        name: projectTitle,
+        shortTitle: shortTitle || undefined,
+        description: description || undefined,
+        summaryDescription: summaryDescription || undefined,
+        studyField: studyField,
+        location: location,
+        deadline: deadlineISO,
+        duration: duration
+      });
+      
+      alert('Successfully uploaded project');
+      navigate('/');
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      alert(error.message || 'Failed to upload project');
     }
-    navigate('/');
   };
 
   return (

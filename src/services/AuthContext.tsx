@@ -1,48 +1,61 @@
-import { getAuth, User } from 'firebase/auth';
-import React, { useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { getCurrentUser, isAuthenticated, UserResponse } from './auth';
 
-type ContextState = { user: User | null };
-const auth = getAuth();
-
-const FirebaseAuthContext = React.createContext<ContextState | undefined>(undefined);
-
-interface AuthContextProps {
-  children?: React.ReactNode;
+interface AuthContextType {
+  user: UserResponse | null;
+  loading: boolean;
+  refreshUser: () => Promise<void>;
 }
-const FirebaseAuthProvider = ({ children }: AuthContextProps) => {
-  const [user, setUser] = React.useState<User | null>(null);
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const value = { user };
+
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  loading: true,
+  refreshUser: async () => {},
+});
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within AuthProvider');
+  }
+  return context;
+};
+
+interface AuthProviderProps {
+  children: React.ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<UserResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const refreshUser = async () => {
+    if (isAuthenticated()) {
+      try {
+        const userData = await getCurrentUser();
+        setUser(userData);
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+        setUser(null);
+        localStorage.removeItem('token');
+      }
+    } else {
+      setUser(null);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
-      if (firebaseUser != null) {
-        setUser(firebaseUser);
-      } else {
-        setUser(null);
-      }
-      setLoading(false);
-    });
-    return unsubscribe;
-  }, [user]);
-  //What should we do here? Can also have a blank screen?
-  if (loading) {
-    return <div> loading</div>;
-  }
-  return <FirebaseAuthContext.Provider value={value}>{!loading && children}</FirebaseAuthContext.Provider>;
+    refreshUser();
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ user, loading, refreshUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-function useFirebaseAuth() {
-  const context = React.useContext(FirebaseAuthContext);
-  if (context === undefined) {
-    throw new Error('useFirebaseAuth must be used within a FirebaseAuthProvider');
-  }
-  return { user: context.user, isAuthenticated: context.user != null };
-}
-
-export { FirebaseAuthProvider, useFirebaseAuth };
-
-export const useAuthState = () => {
-  const auth = useContext(FirebaseAuthContext);
-  return { ...auth, isAuthenticated: auth?.user != null };
-};
+// Keep backward compatibility with old name
+export const useFirebaseAuth = useAuth;
+export const FirebaseAuthProvider = AuthProvider;

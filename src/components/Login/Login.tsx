@@ -1,14 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Box, Typography, TextField, FormControlLabel, Checkbox, Button, Divider } from '@mui/material';
 import logIn from '../../services/auth';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../services/AuthContext';
 
 const LoginComponent: React.FC = () => {
+  const navigate = useNavigate();
+  const { refreshUser } = useAuth();
+  const [error, setError] = useState('');
+
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError('');
+    
     try {
       const data = new FormData(event.currentTarget);
-      await logIn(data.get('email') as string, data.get('password') as string);
-    } catch (error) {
+      const success = await logIn(
+        data.get('email') as string,
+        data.get('password') as string
+      );
+      
+      if (success) {
+        await refreshUser();
+        navigate('/User');
+      }
+    } catch (error: any) {
+      setError(error.message || 'Login failed');
       console.error(error);
     }
   };
@@ -25,15 +42,13 @@ const LoginComponent: React.FC = () => {
         <Typography className="loginHeader" component="h1" variant="h5">
           Log in to Projects Without Borders
         </Typography>
-        <Button
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-          style={{ backgroundColor: '#3D7844', color: '#FFFFFF' }}
-        >
-          Feide Login
-        </Button>
-        <Divider sx={{ width: 400 }}>or</Divider>
+        
+        {error && (
+          <Typography color="error" sx={{ mt: 2 }}>
+            {error}
+          </Typography>
+        )}
+
         <Box component="form" onSubmit={handleLogin} sx={{ mt: 1 }}>
           <TextField
             margin="normal"
@@ -67,9 +82,6 @@ const LoginComponent: React.FC = () => {
           </Button>
         </Box>
       </Box>
-      <a className="signupLink" href="/signup">
-        Forgot password?
-      </a>
     </Container>
   );
 };

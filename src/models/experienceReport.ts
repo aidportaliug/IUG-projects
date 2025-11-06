@@ -1,15 +1,19 @@
-import { Timestamp } from "firebase/firestore";
+import { Timestamp } from 'firebase/firestore';
 
 export interface experienceReport {
   id: string;
   title: string;
-  deadline: Timestamp;
   shortTitle?: string;
   description: string;
   summaryDescription?: string;
+  projectId: number | string;
+  projectName?: string;
+  authorId: number | string;
+  authorUsername?: string;
+  deadline: Timestamp | { toDate: () => Date };
   studyField: string;
-  picture?: string;
-  status?: string;
-  studentId: string;
-  projectId: string;
+  location: string;
+  year?: number;
+  duration: number;
+  thesisLink?: string;
 }

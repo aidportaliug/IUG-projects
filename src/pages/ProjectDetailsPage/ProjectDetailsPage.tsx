@@ -11,19 +11,32 @@ import Layout from '../../components/Navbar/Layout';
 
 const ProjectDetailsPage: React.FC = () => {
   const { id } = useParams();
-  const [project, setProject] = useState<Project | null>();
+  const [project, setProject] = useState<Project | null>(null);
+  const [loading, setLoading] = useState(true);
   const imageIcon = Trax_Ghana;
 
   async function getProjectData(projectId: string) {
-    const project = await getProject(projectId);
-    setProject(project);
+    setLoading(true);
+    const fetchedProject = await getProject(projectId);
+    setProject(fetchedProject);
+    setLoading(false);
   }
+  
   useEffect(() => {
     if (id) {
       getProjectData(id);
     }
   }, [id]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   if (project != null) {
+    const deadline = project.deadline?.toDate 
+      ? project.deadline.toDate() 
+      : (project.deadline instanceof Date ? project.deadline : new Date());
+
     return (
       <>
         <Meta title={project?.title}></Meta>
@@ -33,7 +46,7 @@ const ProjectDetailsPage: React.FC = () => {
             <ProjectImageBox source={imageIcon} altText={'Project Image'} />
             <hr />
             <InformationBox
-              deadline={project.deadline.toDate()}
+              deadline={deadline}
               location={project.location}
               duration={project.duration}
               studyField={project.studyField}
@@ -47,7 +60,8 @@ const ProjectDetailsPage: React.FC = () => {
       </>
     );
   }
-  return <div>404: page not found</div>;
+  
+  return <div>404: Project not found</div>;
 };
 
 export default ProjectDetailsPage;

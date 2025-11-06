@@ -3,7 +3,7 @@ import './uploadExperienceReport.css';
 import UploadExperienceReportForm from '../../components/UploadExperienceReportForm/UploadExperienceReportForm';
 import { useFirebaseAuth } from '../../services/AuthContext';
 import { CustomUser } from '../../models/user';
-import { useGetUser } from '../../services/useGetUser';
+import { getCurrentUser } from '../../services/auth';
 import Meta from '../../components/Meta';
 import { Footer } from '../../components/Footer/Footer';
 import Navbar from '../../components/Navbar/Navbar';
@@ -13,13 +13,13 @@ const UploadExperienceReport: React.FC = () => {
   const [userUpdated, setUserUpdated] = useState<boolean>(false);
   const [customUser, setCustomUser] = useState<CustomUser | null>(null);
 
-  async function CallGetUser(userId: string) {
-    return await useGetUser(userId);
+  async function CallGetUser() {
+    return await getCurrentUser();
   }
 
   useEffect(() => {
     if (user !== null && !userUpdated) {
-      CallGetUser(user.uid).then((response) => setCustomUser(response));
+      CallGetUser().then((response) => setCustomUser(null));
       setUserUpdated(true);
     }
   }, [customUser, user, userUpdated]);

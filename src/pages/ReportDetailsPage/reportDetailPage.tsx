@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { experienceReport } from '../../models/experienceReport';
-import { getProject } from '../../services/getProject';
+import { getReport } from '../../services/getReport';
 import ReportInformationBox from '../../components/ExperienceReportDetail/ReportInformationBox';
-import './projectDetailPage.css';
+import './reportDetailsPage.css';
 import Trax_Ghana from '../../images/Trax_Ghana.png';
 import ProjectImageBox from '../../components/ProjectImageBox/ProjectImageBox';
 import Meta from '../../components/Meta';
@@ -11,41 +11,55 @@ import Layout from '../../components/Navbar/Layout';
 
 const ReportDetailsPage: React.FC = () => {
   const { id } = useParams();
-  const [experienceReport, setProject] = useState<experienceReport | null>();
+  const [report, setReport] = useState<experienceReport | null>(null);
   const imageIcon = Trax_Ghana;
 
-  async function getProjectData(projectId: string) {
-    const project = await getProject(projectId);
-    setProject(experienceReport);
+  async function getReportData(reportId: string) {
+    const fetchedReport = await getReport(reportId);
+    setReport(fetchedReport);
   }
+  
   useEffect(() => {
     if (id) {
-      getProjectData(id);
+      getReportData(id);
     }
   }, [id]);
-  if (experienceReport != null) {
+  
+  if (report != null) {
     return (
       <>
-        <Meta title={experienceReport?.title}></Meta>
+        <Meta title={report?.title}></Meta>
         <Layout>
           <div className="projectDetailoutline">
-            <div className="Title">{experienceReport?.title}</div>
-            <ProjectImageBox source={imageIcon} altText={'Project Image'} />
+            <div className="Title">{report?.title}</div>
+            <ProjectImageBox source={imageIcon} altText={'Report Image'} />
             <hr />
             <ReportInformationBox
-              deadline={experienceReport.deadline.toDate()}
-              studyField={experienceReport.studyField}
+              deadline={report.deadline.toDate()}
+              studyField={report.studyField}
             />
             <hr />
             <div className="projectDetails" style={{ fontSize: '15px' }}>
-              {experienceReport.description}
+              {report.description}
             </div>
+            {report.thesisLink && (
+              <>
+                <hr />
+                <div style={{ marginTop: '20px' }}>
+                  <strong>Thesis Link:</strong>{' '}
+                  <a href={report.thesisLink} target="_blank" rel="noopener noreferrer">
+                    {report.thesisLink}
+                  </a>
+                </div>
+              </>
+            )}
           </div>
         </Layout>
       </>
     );
   }
-  return <div>404: page not found</div>;
+  
+  return <div>404: Report not found</div>;
 };
 
 export default ReportDetailsPage;
