@@ -1,58 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { Avatar, Button } from '@mui/material';
+import React, { useState } from 'react';
+import { Avatar, Button, TextField, Grid, Box } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { CustomUser } from '../../models/user';
-import { logOut, deleteFromAuth } from '../../services/auth';
-import { useFirebaseAuth } from '../../services/AuthContext';
-import { useGetUser } from '../../services/useGetUser';
-import { deleteUserFromStore, getPicture, uploadImage } from '../../services/userData';
-
-import FileUpload from '../DragDrop/DragDrop';
+import { logOut } from '../../services/auth';
+import { useAuth } from '../../services/AuthContext';
+import { apiClient } from '../../services/apiClient';
 
 const UserProfileComponent: React.FC = () => {
-  const { user } = useFirebaseAuth();
-  const [customUser, setCustomUser] = useState<CustomUser | null>(null);
-  const [image, setImage] = useState<Blob | Uint8Array | ArrayBuffer | undefined>();
-  const [url, setUrl] = useState<string>('');
-  const [userUpdated, setUserUpdated] = useState<boolean>(false);
-  const imageName = '/profile/' + user?.email + 'ProfileImage';
+  const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
+  const [editing, setEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    username: user?.username || '',
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    phoneNumber: user?.phoneNumber || '',
+    institute: user?.institute || '',
+    university: user?.university || '',
+  });
 
   const logout = async () => {
     await logOut();
+    await refreshUser();
     console.log('User signed out');
     navigate('/');
   };
 
-  const deleteUser = async () => {
-    if (user) {
-      await deleteUserFromStore(user.email as string);
-      await deleteFromAuth(user.email as string);
-      navigate('/');
-    }
-  };
-
-  const CallGetUser = async (userId: string) => {
-    return await useGetUser(userId);
-  };
-
-  useEffect(() => {
-    if (imageName) {
-      getPicture(imageName).then((url) => {
-        if (url) setUrl(url);
-      });
-    }
-    if (user && !userUpdated) {
-      CallGetUser(user.uid).then((response) => setCustomUser(response));
-      setUserUpdated(true);
-    }
-  }, [imageName, user, userUpdated]);
-
-  const handleSubmit = () => {
-    if (image) {
-      uploadImage(image as File, imageName).then((url) => {
-        setUrl(url);
-      });
+  const handleUpdate = async () => {
+    try {
+      await apiClient.put('/me', formData);
+      await refreshUser();
+      setEditing(false);
+      alert('Profile updated successfully!');
+    } catch (error: any) {
+      console.error('Update error:', error);
+      alert(error.message || 'Failed to update profile');
     }
   };
 
@@ -60,29 +41,123 @@ const UserProfileComponent: React.FC = () => {
     return (
       <div className="user">
         <div className="top-part">
-          <h1 className="username">{user.email}</h1>
+          <h1 className="username">{user.username}</h1>
         </div>
         <div className="profileIcon">
-          <Avatar src={url} sx={{ width: 150, height: 150 }} />
-          <FileUpload handleSubmit={handleSubmit} setImage={setImage} />
+          <Avatar sx={{ width: 150, height: 150 }}>{user.username.charAt(0).toUpperCase()}</Avatar>
         </div>
-        <div className="interests">
-          <h3>My information:</h3>
-          <div className="myInterests">
-            <p>Email: {customUser?.email}</p>
-            <p>First Name: {customUser?.firstName}</p>
-            <p>Last Name: {customUser?.lastName}</p>
-            <p>Phone Number: {customUser?.phoneNumber}</p>
-            <p>University: {customUser?.university}</p>
-            <p>Institute: {customUser?.institute}</p>
-          </div>
-        </div>
-        <Button variant="contained" id="btnLogOut" onClick={logout}>
-          Log out
-        </Button>
-        <Button variant="contained" id="btnDeleteUser" onClick={deleteUser}>
-          Delete User
-        </Button>
+
+        {!editing ? (
+          <>
+            <div className="interests">
+              <h3>My information:</h3>
+              <div className="myInterests">
+                <p>
+                  <strong>Email:</strong> {user.email}
+                </p>
+                <p>
+                  <strong>Username:</strong> {user.username}
+                </p>
+                {user.firstName && (
+                  <p>
+                    <strong>First Name:</strong> {user.firstName}
+                  </p>
+                )}
+                {user.lastName && (
+                  <p>
+                    <strong>Last Name:</strong> {user.lastName}
+                  </p>
+                )}
+                {user.phoneNumber && (
+                  <p>
+                    <strong>Phone:</strong> {user.phoneNumber}
+                  </p>
+                )}
+                {user.institute && (
+                  <p>
+                    <strong>Institute:</strong> {user.institute}
+                  </p>
+                )}
+                {user.university && (
+                  <p>
+                    <strong>University:</strong> {user.university}
+                  </p>
+                )}
+                <p>
+                  <strong>User Type:</strong> {user.isProfessor ? 'Professor' : 'Student'}
+                </p>
+              </div>
+            </div>
+            <Button variant="contained" onClick={() => setEditing(true)} sx={{ mr: 2 }}>
+              Edit Profile
+            </Button>
+            <Button variant="contained" id="btnLogOut" onClick={logout}>
+              Log out
+            </Button>
+          </>
+        ) : (
+          <Box sx={{ width: '100%', maxWidth: 600, mt: 3, p: 3 }}>
+            <h3>Edit Profile</h3>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Username"
+                  value={formData.username}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="First Name"
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Last Name"
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Phone Number"
+                  value={formData.phoneNumber}
+                  onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Institute"
+                  value={formData.institute}
+                  onChange={(e) => setFormData({ ...formData, institute: e.target.value })}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="University"
+                  value={formData.university}
+                  onChange={(e) => setFormData({ ...formData, university: e.target.value })}
+                />
+              </Grid>
+            </Grid>
+            <Box sx={{ mt: 2 }}>
+              <Button variant="contained" onClick={handleUpdate} sx={{ mr: 2 }}>
+                Save Changes
+              </Button>
+              <Button variant="outlined" onClick={() => setEditing(false)}>
+                Cancel
+              </Button>
+            </Box>
+          </Box>
+        )}
       </div>
     );
   } else {

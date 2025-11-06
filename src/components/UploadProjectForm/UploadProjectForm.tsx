@@ -2,7 +2,7 @@ import React, { SetStateAction, useState, useRef } from 'react';
 import './uploadProjectForm.css';
 import { Box, Button, MenuItem, Select, TextField, TextFieldProps } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import createProject from '../../services/createProject';
+import { createProject } from '../../services/projectService';
 import { allowedLocations, allowedStudyFields } from '../../models/allowedValues';
 import { useNavigate } from 'react-router-dom';
 
@@ -30,9 +30,11 @@ const UploadProjectForm: React.FC = () => {
   const handleStudyFieldChange = (event: { target: { value: SetStateAction<string> } }) => {
     setStudyField(event.target.value);
   };
+
   const handleLocationChange = (event: { target: { value: SetStateAction<string> } }) => {
     setLocation(event.target.value);
   };
+
   const handleUpload = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined }) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -49,12 +51,14 @@ const UploadProjectForm: React.FC = () => {
       alert(`Please fill in the following required fields: ${fieldNames.join(', ')}`);
       return;
     }
+
     const data = new FormData(event.currentTarget);
     const duration = parseInt(data.get('duration') as string);
     if (Number.isNaN(duration)) {
       alert(`Duration must be a number`);
       return;
     }
+
     const location = data.get('location') as string;
     const studyField = data.get('studyField') as string;
     if (!allowedLocations.includes(location)) {
@@ -62,7 +66,7 @@ const UploadProjectForm: React.FC = () => {
       return;
     }
     if (!allowedStudyFields.includes(studyField)) {
-      alert('You must choose a studyfield drom the list.');
+      alert('You must choose a studyfield from the list.');
       return;
     }
 
@@ -73,29 +77,33 @@ const UploadProjectForm: React.FC = () => {
       const dateStr = data.get('date') as string;
       const dateParts = dateStr.split('/');
       const year = parseInt(dateParts[2], 10);
-      const month = parseInt(dateParts[1], 10) - 1; // January is 0, so subtract 1
+      const month = parseInt(dateParts[1], 10) - 1;
       const day = parseInt(dateParts[0], 10);
 
       const deadline = new Date(year, month, day);
       const description = data.get('description') as string;
       const summaryDescription = data.get('summaryDescription') as string;
 
-      createProject(
-        projectTitle,
-        shortTitle,
-        studyField,
-        location,
-        deadline,
-        description,
-        duration,
-        summaryDescription
-      );
-      console.log('Successfull upload');
-    } catch (error) {
-      console.log(error as string);
-      return;
+      // Format deadline as ISO date string (YYYY-MM-DD)
+      const deadlineISO = deadline.toISOString().split('T')[0];
+
+      await createProject({
+        name: projectTitle,
+        shortTitle: shortTitle || undefined,
+        description: description || undefined,
+        summaryDescription: summaryDescription || undefined,
+        studyField: studyField,
+        location: location,
+        deadline: deadlineISO,
+        duration: duration,
+      });
+
+      alert('Successfully uploaded project');
+      navigate('/');
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      alert(error.message || 'Failed to upload project');
     }
-    navigate('/');
   };
 
   return (
@@ -106,10 +114,13 @@ const UploadProjectForm: React.FC = () => {
           id="shortTitle"
           label="Project short title"
           name="shortTitle"
-          sx={{ marginRight: '1em', backgroundColor: '#e0e0e0',
-          '&:focus-within': {
-            backgroundColor: 'white',
-          }}}
+          sx={{
+            marginRight: '1em',
+            backgroundColor: '#e0e0e0',
+            '&:focus-within': {
+              backgroundColor: 'white',
+            },
+          }}
         />
         <Select
           labelId="studyField"
@@ -118,7 +129,9 @@ const UploadProjectForm: React.FC = () => {
           value={studyField}
           name="studyField"
           onChange={handleStudyFieldChange}
-          sx={{ width: '100%', marginLeft: '1em', 
+          sx={{
+            width: '100%',
+            marginLeft: '1em',
             '& .MuiSelect-select': {
               backgroundColor: '#e0e0e0',
             },
@@ -127,8 +140,8 @@ const UploadProjectForm: React.FC = () => {
             },
             '& fieldset': {
               legend: { display: 'none' },
-            }
-        }}
+            },
+          }}
         >
           <MenuItem value="study_field">Study field</MenuItem>
           <MenuItem value="it">IT</MenuItem>
@@ -145,10 +158,13 @@ const UploadProjectForm: React.FC = () => {
         id="projectTitle"
         label="Project Title"
         name="projectTitle"
-        sx={{ marginBottom: '1em', backgroundColor: '#e0e0e0',
+        sx={{
+          marginBottom: '1em',
+          backgroundColor: '#e0e0e0',
           '&:focus-within': {
             backgroundColor: 'white',
-        }}}
+          },
+        }}
       />
       <Box display={'flex'} sx={{ marginBottom: '1em' }}>
         <Select
@@ -157,7 +173,9 @@ const UploadProjectForm: React.FC = () => {
           value={location}
           name="location"
           onChange={handleLocationChange}
-          sx={{ width: '100%', marginRight: '1em', 
+          sx={{
+            width: '100%',
+            marginRight: '1em',
             '& .MuiSelect-select': {
               backgroundColor: '#e0e0e0',
             },
@@ -166,7 +184,7 @@ const UploadProjectForm: React.FC = () => {
             },
             '& fieldset': {
               legend: { display: 'none' },
-            }
+            },
           }}
         >
           <MenuItem value="location">Location</MenuItem>
@@ -176,12 +194,22 @@ const UploadProjectForm: React.FC = () => {
           <MenuItem value="south_america">South America</MenuItem>
           <MenuItem value="north_america">North America</MenuItem>
         </Select>
-        <TextField required fullWidth id="duration" label="Duration" name="duration" sx={{ marginLeft: '1em', backgroundColor: '#e0e0e0',
-          '&:focus-within': {
-            backgroundColor: 'white',
-          }}} />
+        <TextField
+          required
+          fullWidth
+          id="duration"
+          label="Duration"
+          name="duration"
+          sx={{
+            marginLeft: '1em',
+            backgroundColor: '#e0e0e0',
+            '&:focus-within': {
+              backgroundColor: 'white',
+            },
+          }}
+        />
       </Box>
-      
+
       <TextField
         required
         fullWidth
@@ -190,10 +218,13 @@ const UploadProjectForm: React.FC = () => {
         name="description"
         multiline
         minRows={6}
-        sx={{ marginBottom: '1em', backgroundColor: '#e0e0e0',
-        '&:focus-within': {
-          backgroundColor: 'white',
-        }}}
+        sx={{
+          marginBottom: '1em',
+          backgroundColor: '#e0e0e0',
+          '&:focus-within': {
+            backgroundColor: 'white',
+          },
+        }}
       />
       <TextField
         fullWidth
@@ -202,15 +233,18 @@ const UploadProjectForm: React.FC = () => {
         name="summaryDescription"
         multiline
         minRows={4}
-        sx={{ marginBottom: '1em', backgroundColor: '#e0e0e0',
-        '&:focus-within': {
-          backgroundColor: 'white',
-        }}}
+        sx={{
+          marginBottom: '1em',
+          backgroundColor: '#e0e0e0',
+          '&:focus-within': {
+            backgroundColor: 'white',
+          },
+        }}
       />
 
-      <div style={{textAlign: 'left', paddingBottom: 7, fontWeight: 'bold'}}>Application deadline</div>
+      <div style={{ textAlign: 'left', paddingBottom: 7, fontWeight: 'bold' }}>Application deadline</div>
 
-      <Box display={'flex'} sx={{ marginBottom: '1em',  }}>
+      <Box display={'flex'} sx={{ marginBottom: '1em' }}>
         <DatePicker
           disablePast
           value={value}
@@ -218,29 +252,46 @@ const UploadProjectForm: React.FC = () => {
             setValue(newValue);
           }}
           renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-            <TextField id="date" name="date" InputLabelProps={{ shrink: false }} {...params} 
-              sx={{ width: '100%',  marginRight: '1em', backgroundColor: '#e0e0e0',
-              '&:focus-within': {
-                backgroundColor: 'white',
-              }}}/>
+            <TextField
+              id="date"
+              name="date"
+              InputLabelProps={{ shrink: false }}
+              {...params}
+              sx={{
+                width: '100%',
+                marginRight: '1em',
+                backgroundColor: '#e0e0e0',
+                '&:focus-within': {
+                  backgroundColor: 'white',
+                },
+              }}
+            />
           )}
           inputFormat="DD/MM/YYYY"
         ></DatePicker>
-        
+
         <input
-        type='file'
-        accept='image/*'
-        style={{ display: 'none'}}
-        ref={fileInputRef}
-        onChange={handleFileChange}/>
-        <Button 
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+          ref={fileInputRef}
+          onChange={handleFileChange}
+        />
+        <Button
           size="large"
           variant="contained"
-          onClick={handleButtonClick} 
-          style={{ width: '300px', color: 'black', textTransform: "none", border: '1px solid grey',
-            marginLeft: '1em', backgroundColor: '#e0e0e0'}}
-          onFocus={e => e.target.style.backgroundColor = 'white'}
-          onBlur={e => e.target.style.backgroundColor = '#e0e0e0'}>
+          onClick={handleButtonClick}
+          style={{
+            width: '300px',
+            color: 'black',
+            textTransform: 'none',
+            border: '1px solid grey',
+            marginLeft: '1em',
+            backgroundColor: '#e0e0e0',
+          }}
+          onFocus={(e) => (e.target.style.backgroundColor = 'white')}
+          onBlur={(e) => (e.target.style.backgroundColor = '#e0e0e0')}
+        >
           Upload Picture
         </Button>
       </Box>
@@ -249,8 +300,8 @@ const UploadProjectForm: React.FC = () => {
           <img src={imageUrl} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: 300 }} />
         </div>
       )}
-      <Button type="submit" variant='contained' style={{ width: 200, height: 50, margin: '1em' }}>
-          Upload Form
+      <Button type="submit" variant="contained" style={{ width: 200, height: 50, margin: '1em' }}>
+        Upload Form
       </Button>
     </Box>
   );
