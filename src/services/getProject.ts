@@ -29,9 +29,7 @@ function convertToLegacyProject(project: ProjectResponse): Project {
 
 export async function getProject(id: string): Promise<Project | null> {
   try {
-    const project = await apiClient.get<ProjectResponse>(
-      `${BackendConfig.endpoint.GetProjectById}${id}`
-    );
+    const project = await apiClient.get<ProjectResponse>(`${BackendConfig.endpoint.GetProjectById}${id}`);
     return convertToLegacyProject(project);
   } catch (error) {
     console.error('Failed to fetch project:', error);

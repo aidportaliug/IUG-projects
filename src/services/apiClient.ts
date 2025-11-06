@@ -15,10 +15,7 @@ class ApiClient {
     return localStorage.getItem('token');
   }
 
-  private async request<T>(
-    endpoint: string,
-    options: ApiRequestOptions = {}
-  ): Promise<T> {
+  private async request<T>(endpoint: string, options: ApiRequestOptions = {}): Promise<T> {
     const { requiresAuth = true, ...fetchOptions } = options;
 
     const headers: Record<string, string> = {

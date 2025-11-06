@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { createReport } from "../../services/reportService";
-import { getProjects } from "../../services/getProjects";
-import "./uploadExperienceReportForm.css";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createReport } from '../../services/reportService';
+import { getProjects } from '../../services/getProjects';
+import './uploadExperienceReportForm.css';
 
 export const UploadExperienceReportForm = () => {
-  const [duration, setDuration] = useState("");
+  const [duration, setDuration] = useState('');
   const [projects, setProjects] = useState<any[]>([]);
-  const [selectedProject, setSelectedProject] = useState("");
+  const [selectedProject, setSelectedProject] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -60,7 +60,7 @@ export const UploadExperienceReportForm = () => {
         location: location || 'global',
         year: year ? parseInt(year) : undefined,
         duration: durationValue ? parseInt(durationValue) : 0,
-        thesisLink: thesisLink || undefined
+        thesisLink: thesisLink || undefined,
       });
 
       alert('Successfully uploaded report');
@@ -111,48 +111,28 @@ export const UploadExperienceReportForm = () => {
           <label htmlFor="projectTitle" className="label-text">
             Report Title
           </label>
-          <input
-            id="projectTitle"
-            name="projectTitle"
-            className="input-field"
-            required
-          />
+          <input id="projectTitle" name="projectTitle" className="input-field" required />
         </div>
 
         <div className="form-group full-width">
           <label htmlFor="shortTitle" className="label-text">
             Short Title
           </label>
-          <input
-            id="shortTitle"
-            name="shortTitle"
-            className="input-field"
-          />
+          <input id="shortTitle" name="shortTitle" className="input-field" />
         </div>
 
         <div className="form-group full-width">
           <div className="label-with-line">
             <span>Description/Content</span>
           </div>
-          <textarea
-            id="description"
-            name="description"
-            className="textarea-field"
-            rows={8}
-            required
-          />
+          <textarea id="description" name="description" className="textarea-field" rows={8} required />
         </div>
 
         <div className="form-group full-width">
           <label htmlFor="summaryDescription" className="label-text">
             Summary description
           </label>
-          <textarea
-            id="summaryDescription"
-            name="summaryDescription"
-            className="textarea-field"
-            rows={4}
-          />
+          <textarea id="summaryDescription" name="summaryDescription" className="textarea-field" rows={4} />
         </div>
 
         <div className="form-group">
@@ -160,11 +140,7 @@ export const UploadExperienceReportForm = () => {
             <label htmlFor="studyField" className="label-text">
               Study Field
             </label>
-            <select
-              id="studyField"
-              name="studyField"
-              className="select-field"
-            >
+            <select id="studyField" name="studyField" className="select-field">
               <option value="general">General</option>
               <option value="it">IT</option>
               <option value="construction_and_infrastructure">Construction and infrastructure</option>
@@ -178,11 +154,7 @@ export const UploadExperienceReportForm = () => {
             <label htmlFor="location" className="label-text">
               Location
             </label>
-            <select
-              id="location"
-              name="location"
-              className="select-field"
-            >
+            <select id="location" name="location" className="select-field">
               <option value="global">Global</option>
               <option value="europe">Europe</option>
               <option value="asia">Asia</option>

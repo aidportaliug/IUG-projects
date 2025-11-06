@@ -21,7 +21,7 @@ const ProjectDetailsPage: React.FC = () => {
     setProject(fetchedProject);
     setLoading(false);
   }
-  
+
   useEffect(() => {
     if (id) {
       getProjectData(id);
@@ -33,9 +33,11 @@ const ProjectDetailsPage: React.FC = () => {
   }
 
   if (project != null) {
-    const deadline = project.deadline?.toDate 
-      ? project.deadline.toDate() 
-      : (project.deadline instanceof Date ? project.deadline : new Date());
+    const deadline = project.deadline?.toDate
+      ? project.deadline.toDate()
+      : project.deadline instanceof Date
+      ? project.deadline
+      : new Date();
 
     return (
       <>
@@ -60,7 +62,7 @@ const ProjectDetailsPage: React.FC = () => {
       </>
     );
   }
-  
+
   return <div>404: Project not found</div>;
 };
 

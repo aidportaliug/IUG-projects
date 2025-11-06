@@ -49,11 +49,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     refreshUser();
   }, []);
 
-  return (
-    <AuthContext.Provider value={{ user, loading, refreshUser }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, loading, refreshUser }}>{children}</AuthContext.Provider>;
 };
 
 // Keep backward compatibility with old name

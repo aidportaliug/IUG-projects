@@ -44,31 +44,51 @@ const UserProfileComponent: React.FC = () => {
           <h1 className="username">{user.username}</h1>
         </div>
         <div className="profileIcon">
-          <Avatar sx={{ width: 150, height: 150 }}>
-            {user.username.charAt(0).toUpperCase()}
-          </Avatar>
+          <Avatar sx={{ width: 150, height: 150 }}>{user.username.charAt(0).toUpperCase()}</Avatar>
         </div>
-        
+
         {!editing ? (
           <>
             <div className="interests">
               <h3>My information:</h3>
               <div className="myInterests">
-                <p><strong>Email:</strong> {user.email}</p>
-                <p><strong>Username:</strong> {user.username}</p>
-                {user.firstName && <p><strong>First Name:</strong> {user.firstName}</p>}
-                {user.lastName && <p><strong>Last Name:</strong> {user.lastName}</p>}
-                {user.phoneNumber && <p><strong>Phone:</strong> {user.phoneNumber}</p>}
-                {user.institute && <p><strong>Institute:</strong> {user.institute}</p>}
-                {user.university && <p><strong>University:</strong> {user.university}</p>}
-                <p><strong>User Type:</strong> {user.isProfessor ? 'Professor' : 'Student'}</p>
+                <p>
+                  <strong>Email:</strong> {user.email}
+                </p>
+                <p>
+                  <strong>Username:</strong> {user.username}
+                </p>
+                {user.firstName && (
+                  <p>
+                    <strong>First Name:</strong> {user.firstName}
+                  </p>
+                )}
+                {user.lastName && (
+                  <p>
+                    <strong>Last Name:</strong> {user.lastName}
+                  </p>
+                )}
+                {user.phoneNumber && (
+                  <p>
+                    <strong>Phone:</strong> {user.phoneNumber}
+                  </p>
+                )}
+                {user.institute && (
+                  <p>
+                    <strong>Institute:</strong> {user.institute}
+                  </p>
+                )}
+                {user.university && (
+                  <p>
+                    <strong>University:</strong> {user.university}
+                  </p>
+                )}
+                <p>
+                  <strong>User Type:</strong> {user.isProfessor ? 'Professor' : 'Student'}
+                </p>
               </div>
             </div>
-            <Button 
-              variant="contained" 
-              onClick={() => setEditing(true)}
-              sx={{ mr: 2 }}
-            >
+            <Button variant="contained" onClick={() => setEditing(true)} sx={{ mr: 2 }}>
               Edit Profile
             </Button>
             <Button variant="contained" id="btnLogOut" onClick={logout}>
@@ -129,17 +149,10 @@ const UserProfileComponent: React.FC = () => {
               </Grid>
             </Grid>
             <Box sx={{ mt: 2 }}>
-              <Button 
-                variant="contained" 
-                onClick={handleUpdate}
-                sx={{ mr: 2 }}
-              >
+              <Button variant="contained" onClick={handleUpdate} sx={{ mr: 2 }}>
                 Save Changes
               </Button>
-              <Button 
-                variant="outlined" 
-                onClick={() => setEditing(false)}
-              >
+              <Button variant="outlined" onClick={() => setEditing(false)}>
                 Cancel
               </Button>
             </Box>

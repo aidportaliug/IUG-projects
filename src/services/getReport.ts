@@ -42,9 +42,7 @@ function convertToLegacyReport(report: ReportResponse): any {
 
 export async function getReport(id: string): Promise<any> {
   try {
-    const report = await apiClient.get<ReportResponse>(
-      `${BackendConfig.endpoint.getReportById}${id}`
-    );
+    const report = await apiClient.get<ReportResponse>(`${BackendConfig.endpoint.getReportById}${id}`);
     return convertToLegacyReport(report);
   } catch (error) {
     console.error('Failed to fetch report:', error);

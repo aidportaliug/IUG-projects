@@ -48,7 +48,9 @@ function convertToLegacyProject(project: ProjectResponse): any {
     summaryDescription: project.summaryDescription || project.description || '',
     ownerId: project.ownerId,
     ownerUsername: project.ownerUsername,
-    deadline: project.deadline ? { toDate: () => new Date(project.deadline!) } as any : { toDate: () => new Date() } as any,
+    deadline: project.deadline
+      ? ({ toDate: () => new Date(project.deadline!) } as any)
+      : ({ toDate: () => new Date() } as any),
     studyField: project.studyField || 'general',
     location: project.location || 'global',
     duration: project.duration || 0,
@@ -58,9 +60,7 @@ function convertToLegacyProject(project: ProjectResponse): any {
 
 export async function getProject(id: string): Promise<any> {
   try {
-    const project = await apiClient.get<ProjectResponse>(
-      `${BackendConfig.endpoint.GetProjectById}${id}`
-    );
+    const project = await apiClient.get<ProjectResponse>(`${BackendConfig.endpoint.GetProjectById}${id}`);
     return convertToLegacyProject(project);
   } catch (error) {
     console.error('Failed to fetch project:', error);
@@ -79,35 +79,33 @@ export async function getProjects(
   try {
     // Build query parameters
     const params = new URLSearchParams();
-    
+
     params.append('pageSize', (limit || 100).toString());
     params.append('page', '1');
-    
+
     if (orderBy && orderBy !== 'deadline') {
       params.append('orderBy', orderBy);
     } else {
       params.append('orderBy', 'deadline');
     }
     params.append('orderDirection', 'asc');
-    
+
     if (filterLocation && filterLocation !== 'location') {
       params.append('location', filterLocation);
     }
-    
+
     if (filterStudyField && filterStudyField !== 'study_field') {
       params.append('studyField', filterStudyField);
     }
-    
-    const response = await apiClient.get<any>(
-      `${BackendConfig.endpoint.GetAllProjects}?${params.toString()}`
-    );
-    
+
+    const response = await apiClient.get<any>(`${BackendConfig.endpoint.GetAllProjects}?${params.toString()}`);
+
     const convertedProjects = response.projects.map(convertToLegacyProject);
-    
+
     if (setLastVisible) {
       setLastVisible(null);
     }
-    
+
     return convertedProjects;
   } catch (error) {
     console.error('Failed to fetch projects:', error);
@@ -117,19 +115,16 @@ export async function getProjects(
 
 export async function createProject(data: ProjectCreateRequest): Promise<ProjectResponse | null> {
   try {
-    const project = await apiClient.post<ProjectResponse>(
-      BackendConfig.endpoint.createProject,
-      {
-        name: data.name,
-        shortTitle: data.shortTitle,
-        description: data.description,
-        summaryDescription: data.summaryDescription,
-        studyField: data.studyField || 'general',
-        location: data.location || 'global',
-        deadline: data.deadline,
-        duration: data.duration || 0
-      }
-    );
+    const project = await apiClient.post<ProjectResponse>(BackendConfig.endpoint.createProject, {
+      name: data.name,
+      shortTitle: data.shortTitle,
+      description: data.description,
+      summaryDescription: data.summaryDescription,
+      studyField: data.studyField || 'general',
+      location: data.location || 'global',
+      deadline: data.deadline,
+      duration: data.duration || 0,
+    });
     return project;
   } catch (error) {
     console.error('Failed to create project:', error);
@@ -137,15 +132,9 @@ export async function createProject(data: ProjectCreateRequest): Promise<Project
   }
 }
 
-export async function updateProject(
-  id: number,
-  data: ProjectUpdateRequest
-): Promise<ProjectResponse | null> {
+export async function updateProject(id: number, data: ProjectUpdateRequest): Promise<ProjectResponse | null> {
   try {
-    const project = await apiClient.put<ProjectResponse>(
-      `${BackendConfig.endpoint.updateProject}/${id}`,
-      data
-    );
+    const project = await apiClient.put<ProjectResponse>(`${BackendConfig.endpoint.updateProject}/${id}`, data);
     return project;
   } catch (error) {
     console.error('Failed to update project:', error);

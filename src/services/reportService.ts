@@ -68,9 +68,7 @@ function convertToLegacyReport(report: ReportResponse): any {
 
 export async function getReport(id: string): Promise<any> {
   try {
-    const report = await apiClient.get<ReportResponse>(
-      `${BackendConfig.endpoint.getReportById}${id}`
-    );
+    const report = await apiClient.get<ReportResponse>(`${BackendConfig.endpoint.getReportById}${id}`);
     return convertToLegacyReport(report);
   } catch (error) {
     console.error('Failed to fetch report:', error);
@@ -89,39 +87,37 @@ export async function getReports(
 ): Promise<any[]> {
   try {
     const params = new URLSearchParams();
-    
+
     params.append('pageSize', (limit || 100).toString());
     params.append('page', '1');
-    
+
     if (projectId) {
       params.append('projectId', projectId.toString());
     }
-    
+
     if (orderBy && orderBy !== 'deadline') {
       params.append('orderBy', orderBy);
     } else {
       params.append('orderBy', 'createdAt');
     }
     params.append('orderDirection', 'desc');
-    
+
     if (filterLocation && filterLocation !== 'location') {
       params.append('location', filterLocation);
     }
-    
+
     if (filterStudyField && filterStudyField !== 'study_field') {
       params.append('studyField', filterStudyField);
     }
-    
-    const response = await apiClient.get<any>(
-      `${BackendConfig.endpoint.getAllReports}?${params.toString()}`
-    );
-    
+
+    const response = await apiClient.get<any>(`${BackendConfig.endpoint.getAllReports}?${params.toString()}`);
+
     const convertedReports = response.reports.map(convertToLegacyReport);
-    
+
     if (setLastVisible) {
       setLastVisible(null);
     }
-    
+
     return convertedReports;
   } catch (error) {
     console.error('Failed to fetch reports:', error);
@@ -131,21 +127,18 @@ export async function getReports(
 
 export async function createReport(data: ReportCreateRequest): Promise<ReportResponse | null> {
   try {
-    const report = await apiClient.post<ReportResponse>(
-      BackendConfig.endpoint.createReport,
-      {
-        title: data.title,
-        shortTitle: data.shortTitle,
-        content: data.content,
-        summaryDescription: data.summaryDescription,
-        projectId: data.projectId,
-        studyField: data.studyField || 'general',
-        location: data.location || 'global',
-        year: data.year,
-        duration: data.duration || 0,
-        thesisLink: data.thesisLink
-      }
-    );
+    const report = await apiClient.post<ReportResponse>(BackendConfig.endpoint.createReport, {
+      title: data.title,
+      shortTitle: data.shortTitle,
+      content: data.content,
+      summaryDescription: data.summaryDescription,
+      projectId: data.projectId,
+      studyField: data.studyField || 'general',
+      location: data.location || 'global',
+      year: data.year,
+      duration: data.duration || 0,
+      thesisLink: data.thesisLink,
+    });
     return report;
   } catch (error) {
     console.error('Failed to create report:', error);
@@ -153,15 +146,9 @@ export async function createReport(data: ReportCreateRequest): Promise<ReportRes
   }
 }
 
-export async function updateReport(
-  id: number,
-  data: ReportUpdateRequest
-): Promise<ReportResponse | null> {
+export async function updateReport(id: number, data: ReportUpdateRequest): Promise<ReportResponse | null> {
   try {
-    const report = await apiClient.put<ReportResponse>(
-      `${BackendConfig.endpoint.updateReport}${id}`,
-      data
-    );
+    const report = await apiClient.put<ReportResponse>(`${BackendConfig.endpoint.updateReport}${id}`, data);
     return report;
   } catch (error) {
     console.error('Failed to update report:', error);

@@ -32,7 +32,7 @@ const SignUpComponent: React.FC = () => {
           lastName,
           phoneNumber,
           institute,
-          university
+          university,
         });
 
         if (result) {
@@ -65,10 +65,7 @@ const SignUpComponent: React.FC = () => {
           </Typography>
 
           {error && (
-            <Typography 
-              color={error.includes('successful') ? 'success' : 'error'} 
-              sx={{ mt: 2 }}
-            >
+            <Typography color={error.includes('successful') ? 'success' : 'error'} sx={{ mt: 2 }}>
               {error}
             </Typography>
           )}
@@ -87,51 +84,27 @@ const SignUpComponent: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  name="firstName"
-                  autoComplete="given-name"
-                />
+                <TextField fullWidth id="firstName" label="First Name" name="firstName" autoComplete="given-name" />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
+                <TextField fullWidth id="lastName" label="Last Name" name="lastName" autoComplete="family-name" />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField 
-                  required 
-                  fullWidth 
-                  id="email" 
-                  label="Email Address" 
-                  name="email" 
-                  autoComplete="email" 
-                />
+                <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
-                  <TextField
-                    id="phoneNumber"
-                    label="Phone number"
-                    name="phoneNumber"
-                    autoComplete="tel"
-                  />
+                  <TextField id="phoneNumber" label="Phone number" name="phoneNumber" autoComplete="tel" />
                 </FormControl>
               </Grid>
 
               <Grid item xs={12}>
-                <TextField 
-                  fullWidth 
-                  name="institute" 
-                  label="Institute" 
-                  id="institute" 
-                  autoComplete="organization-title" 
+                <TextField
+                  fullWidth
+                  name="institute"
+                  label="Institute"
+                  id="institute"
+                  autoComplete="organization-title"
                 />
               </Grid>
               <Grid item xs={12}>

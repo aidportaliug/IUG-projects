@@ -12,14 +12,11 @@ const LoginComponent: React.FC = () => {
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
-    
+
     try {
       const data = new FormData(event.currentTarget);
-      const success = await logIn(
-        data.get('email') as string,
-        data.get('password') as string
-      );
-      
+      const success = await logIn(data.get('email') as string, data.get('password') as string);
+
       if (success) {
         await refreshUser();
         navigate('/User');
@@ -42,7 +39,7 @@ const LoginComponent: React.FC = () => {
         <Typography className="loginHeader" component="h1" variant="h5">
           Log in to Projects Without Borders
         </Typography>
-        
+
         {error && (
           <Typography color="error" sx={{ mt: 2 }}>
             {error}

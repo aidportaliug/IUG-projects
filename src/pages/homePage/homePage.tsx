@@ -26,11 +26,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const fetchedProjects = await getProjects(
-        orderBy,
-        filterLocation,
-        filterStudyField
-      );
+      const fetchedProjects = await getProjects(orderBy, filterLocation, filterStudyField);
       if (fetchedProjects.length === 0) {
         setNoProject(true);
       } else {
@@ -53,20 +49,20 @@ const Home: React.FC = () => {
               <FilterDropdown value={orderBy} setValue={setOrderBy} sortBy={true} />
               <FilterDropdown value={filterLocation} setValue={setFilterLocation} location={true} />
               <FilterDropdown value={filterStudyField} setValue={setFilterStudyField} studyField={true} />
-              <Button 
-                onClick={() => navigate('/uploadProject')} 
+              <Button
+                onClick={() => navigate('/uploadProject')}
                 style={{
-                  marginLeft: 'auto', 
-                  color: 'black', 
-                  textTransform: "none", 
+                  marginLeft: 'auto',
+                  color: 'black',
+                  textTransform: 'none',
                   border: '1px solid grey',
-                  backgroundColor: '#e0e0e0'
+                  backgroundColor: '#e0e0e0',
                 }}
               >
                 Upload your project
               </Button>
             </div>
-            
+
             {loading ? (
               <div style={{ textAlign: 'center', marginTop: '50px' }}>
                 <CircularProgress />

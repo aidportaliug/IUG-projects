@@ -18,13 +18,13 @@ const ReportDetailsPage: React.FC = () => {
     const fetchedReport = await getReport(reportId);
     setReport(fetchedReport);
   }
-  
+
   useEffect(() => {
     if (id) {
       getReportData(id);
     }
   }, [id]);
-  
+
   if (report != null) {
     return (
       <>
@@ -34,10 +34,7 @@ const ReportDetailsPage: React.FC = () => {
             <div className="Title">{report?.title}</div>
             <ProjectImageBox source={imageIcon} altText={'Report Image'} />
             <hr />
-            <ReportInformationBox
-              deadline={report.deadline.toDate()}
-              studyField={report.studyField}
-            />
+            <ReportInformationBox deadline={report.deadline.toDate()} studyField={report.studyField} />
             <hr />
             <div className="projectDetails" style={{ fontSize: '15px' }}>
               {report.description}
@@ -58,7 +55,7 @@ const ReportDetailsPage: React.FC = () => {
       </>
     );
   }
-  
+
   return <div>404: Report not found</div>;
 };
 

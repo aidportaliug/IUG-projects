@@ -39,12 +39,8 @@ export default async function logIn(email: string, password: string): Promise<bo
   }
 
   try {
-    const response = await apiClient.post<LoginResponse>(
-      '/login',
-      { email, password },
-      false
-    );
-    
+    const response = await apiClient.post<LoginResponse>('/login', { email, password }, false);
+
     localStorage.setItem('token', response.token);
     console.log('Logged in successfully');
     return true;
@@ -85,11 +81,11 @@ export async function signUp(
         phoneNumber: additionalData?.phoneNumber,
         institute: additionalData?.institute,
         university: additionalData?.university,
-        isProfessor: additionalData?.isProfessor || false
+        isProfessor: additionalData?.isProfessor || false,
       },
       false
     );
-    
+
     console.log('Registration successful');
     return true;
   } catch (error: any) {
