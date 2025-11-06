@@ -23,20 +23,8 @@ class ApiClient {
 
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
+      ...(fetchOptions.headers as Record<string, string>),
     };
-
-    const originalHeaders = fetchOptions.headers;
-    if (originalHeaders instanceof Headers) {
-      originalHeaders.forEach((value, key) => {
-        headers[key] = value;
-      });
-    } else if (Array.isArray(originalHeaders)) {
-      for (const [k, v] of originalHeaders) {
-        headers[k] = v;
-      }
-    } else if (originalHeaders && typeof originalHeaders === 'object') {
-      Object.assign(headers, originalHeaders as Record<string, string>);
-    }
 
     if (requiresAuth) {
       const token = this.getToken();
@@ -51,15 +39,21 @@ class ApiClient {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText || `Request failed with status ${response.status}`);
+      const text = await response.text();
+      throw new Error(text || `Request failed with status ${response.status}`);
     }
 
     if (response.status === 204) {
       return {} as T;
     }
 
-    return response.json();
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      return response.json();
+    } else {
+      const text = await response.text();
+      return { message: text } as T;
+    }
   }
 
   async get<T>(endpoint: string, requiresAuth = true): Promise<T> {
