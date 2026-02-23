@@ -25,7 +25,7 @@ const ButtonForNavbar: React.FC<ButtonProps> = ({ page, location }) => {
     navigate('/');
   } else if (page === 'Experience Reports') {
     navigate('/experienceReports');
-  } else if (page === 'Plastic Database') {
+  } else if (page === 'Plastic Project') {
     navigate('/plasticProjects');
   }
 };
@@ -50,7 +50,7 @@ const ButtonForNavbar: React.FC<ButtonProps> = ({ page, location }) => {
       return location === '/';
     } else if (page === 'Experience Reports') {
       return location === '/experienceReports';
-    } else if (page === 'Plastic Database') {
+    } else if (page === 'Plastic Project') {
       return location === '/plasticProjects';
     }
     return false;
