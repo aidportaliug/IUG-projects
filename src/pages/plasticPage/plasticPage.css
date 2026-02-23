@@ -20,7 +20,7 @@
   margin-bottom: 20px;
 }
 
-/* Search Row */
+/* Search*/
 .plasticSearchRow {
   display: flex;
   justify-content: center;
@@ -34,7 +34,7 @@
   max-width: 600px;
 }
 
-/* Filter Panel */
+/* Filter Panel*/
 .plasticFilterPanel {
   display: flex;
   gap: 10px;
@@ -47,6 +47,7 @@
 .plasticCardGrid {
   display: grid;
   margin-top: 20px;
+  margin-bottom: 40px;
   gap: 2em;
   grid-template-columns: repeat(3, 1fr);
 }
@@ -57,7 +58,7 @@
 }
 
 .plasticCardOutline {
-  border-radius: 4px;
+  border-radius: 2px;
   overflow: hidden;
   background-color: var(--mainBackground);
   border: 3px solid var(--mainGreen);
@@ -135,7 +136,7 @@
   color: #666;
 }
 
-/* Responsive Design */
+/* Responsive Design if that matters*/
 @media screen and (min-width: 750px) and (max-width: 1200px) {
   .plasticCardGrid {
     grid-template-columns: 1fr 1fr;
@@ -184,7 +185,7 @@
   }
 }
 
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 700px) {
   .plasticCardGrid {
     grid-template-columns: 1fr;
   }
