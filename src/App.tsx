@@ -10,6 +10,7 @@ import UploadProject from './pages/uploadProject/UploadProject';
 import UploadExperienceReport from './pages/uploadExperienceReport/UploadExperienceReport';
 import ExperienceReports from './pages/experienceReports/experienceReports';
 import Error from './pages/404Page/404Page';
+import Temporary from './pages/temporary/temporary';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -41,6 +42,7 @@ const App: React.FC = () => {
               <Route path="/uploadexperienceReport" element={<UploadExperienceReport />} />
               <Route path='/experienceReports' element={<ExperienceReports/>} />
               <Route path="/404" element={<Error />} />
+              <Route path='/machineTemporary' element={<Temporary/>} />
             </Routes>
           </BrowserRouter>
         </AuthProvider>
