@@ -139,6 +139,8 @@ const PlasticProject: React.FC = () => {
       <div className="plasticProjectBackground">
         <Layout>
           <div className="plasticProjectContainer">
+            
+            
             <div className="plasticProjectTitle">PLASTIC DATABASE</div>
 
             <div className="plasticSearchRow">
