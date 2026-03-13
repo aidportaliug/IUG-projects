@@ -21,18 +21,14 @@ const ButtonForNavbar: React.FC<ButtonProps> = ({ page, location }) => {
   //const path = '/' + page.toLowerCase().replace(/\s+g,'-');
 
   const handleClick = () => {
-  if (page === 'Masterprojects') {
-    navigate('/');
-  } else if (page === 'Experience Reports') {
-    navigate('/experienceReports');
-  } else if (page === 'Plastic Project') {
-    navigate('/plasticProjects');
-  }
-};
-
-
-
-
+    if (page === 'Masterprojects') {
+      navigate('/');
+    } else if (page === 'Experience Reports') {
+      navigate('/experienceReports');
+    } else if (page === 'Plastic Project') {
+      navigate('/plasticProjects');
+    }
+  };
 
   /*
    const handleClick = () = > {
@@ -56,21 +52,17 @@ const ButtonForNavbar: React.FC<ButtonProps> = ({ page, location }) => {
     return false;
   };
 
-
-
   return (
-    <Button onClick = {handleClick}sx={{ my: 2, color: '#3D7844', display: 'block' }}>
+    <Button onClick={handleClick} sx={{ my: 2, color: '#3D7844', display: 'block' }}>
       {checkPage() ? (
         <Typography className="bold">{page}</Typography>
       ) : (
         <Typography className="notBold">{page}</Typography>
       )}
-
     </Button>
-  )
+  );
 
-
-/*
+  /*
   return (
     <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: '#3D7844', display: 'block' }}>
       {checkPage() ? (
@@ -81,7 +73,6 @@ const ButtonForNavbar: React.FC<ButtonProps> = ({ page, location }) => {
     </Button>
   );
   */
-
 };
 
 export default ButtonForNavbar;

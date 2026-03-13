@@ -41,10 +41,10 @@ const App: React.FC = () => {
               <Route path="/report/:id" element={<ReportDetailsPage />} />
               <Route path="/uploadProject" element={<UploadProject />} />
               <Route path="/uploadexperienceReport" element={<UploadExperienceReport />} />
-              <Route path='/experienceReports' element={<ExperienceReports/>} />
-              <Route path='/plasticProjects' element={<PlasticProject/>} />
+              <Route path="/experienceReports" element={<ExperienceReports />} />
+              <Route path="/plasticProjects" element={<PlasticProject />} />
               <Route path="/404" element={<Error />} />
-              <Route path='/machineTemporary' element={<Temporary/>} />
+              <Route path="/machineTemporary" element={<Temporary />} />
             </Routes>
           </BrowserRouter>
         </AuthProvider>

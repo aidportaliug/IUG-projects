@@ -19,6 +19,26 @@ const BackendConfig = {
     createReport: '/reports',
     updateReport: '/reports/',
     deleteReport: '/reports/',
+
+    // Plastic endpoints
+    getAllPlastics: '/plastics',
+    getPlasticById: '/plastics/',
+    createPlastic: '/plastics',
+    updatePlastic: '/plastics/',
+    deletePlastic: '/plastics/',
+
+    getAllPlasticProjects: '/plastic-projects',
+    getPlasticProjectById: '/plastic-projects/',
+    createPlasticProject: '/plastic-projects',
+    updatePlasticProject: '/plastic-projects/',
+    deletePlasticProject: '/plastic-projects/',
+
+    // Machine endpoints
+    getAllMachines: '/machines',
+    getMachineById: '/machines/',
+    createMachine: '/machines',
+    updateMachine: '/machines/',
+    deleteMachine: '/machines/',
   },
 };
 

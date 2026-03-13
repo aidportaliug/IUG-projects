@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './plasticPage.css';
 import Layout from '../../components/Navbar/Layout';
 import Footer from '../../components/Footer/Footer';
@@ -7,12 +7,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { TextField, InputAdornment, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import imageProjectCard from '../../images/plasticProject.png';
+import { title } from 'process';
 import polyfloss from '../../images/polyfloss.png';
 import melter from '../../images/melter.png';
 import shredder from '../../images/shredder.png';
 import ventilation from '../../images/ventilation.jpg';
-import { getMachines, MachineResponse } from '../../services/machineService';
-import { getPlasticProjects, PlasticProjectResponse } from '../../services/plasticService';
 
 interface PlasticProjectData {
   project_id: string;
@@ -44,103 +43,247 @@ interface MachineData {
   inUseEWB: string;
 }
 
-const machineImageByName: Record<string, string> = {
-  polyfloss,
-  'oven/melter': melter,
-  'grinder/shredder': shredder,
-  ventilation,
-};
+//MOCK DATA needs to be replaced with gradle r something later
+const MOCK_PROJECTS: PlasticProjectData[] = [
+  {
+    project_id: '1',
+    project_name: 'Community Recycling Initiative',
+    start_date: '2023-01-15',
+    end_date: '2023-12-31',
+    country: 'Kenya',
+    project_use: 'Waste management and product creation',
+    electricity: true,
+    summary: 'Transforming plastic waste into useful products for local communities',
+    plastics: ['HDPE', 'PP'],
+    machines: ['Shredder', 'Compression Press'],
+    product: 'product 1',
+    financing: 'Money',
+    businessModel: 'Niche',
+    partnershipOwnership: 'adadaddad',
+    wasteCollected: 43,
+  },
+  {
+    project_id: '2',
+    project_name: 'School Building Blocks',
+    start_date: '2023-03-20',
+    country: 'Tanzania',
+    project_use: 'Educational infrastructure',
+    electricity: false,
+    summary: 'Creating building materials for schools from recycled plastic',
+    plastics: ['PET', 'LDPE'],
+    machines: ['Shredder', 'Extruder'],
+    product: 'product 1',
+    financing: 'Money',
+    businessModel: 'Niche',
+    partnershipOwnership: 'adadaddad',
+    wasteCollected: 43,
+  },
+  {
+    project_id: '3',
+    project_name: 'Roof Tile Production',
+    start_date: '2023-05-10',
+    end_date: '2024-05-10',
+    country: 'Uganda',
+    project_use: 'Housing improvement',
+    electricity: true,
+    summary: 'Producing durable roof tiles from plastic waste',
+    plastics: ['HDPE', 'PP', 'PS'],
+    machines: ['Shredder', 'Compression Press', 'Molder'],
+    product: 'product 1',
+    financing: 'Money',
+    businessModel: 'Niche',
+    partnershipOwnership: 'adadaddad',
+    wasteCollected: 43,
+  },
+  {
+    project_id: '4',
+    project_name: 'Furniture Workshop',
+    start_date: '2023-07-01',
+    country: 'Rwanda',
+    project_use: 'Furniture production',
+    electricity: true,
+    summary: 'Making chairs and tables from recycled plastic',
+    plastics: ['PP', 'HDPE'],
+    machines: ['Shredder', 'Extruder'],
+    product: 'product 1',
+    financing: 'Money',
+    businessModel: 'Niche',
+    partnershipOwnership: 'adadaddad',
+    wasteCollected: 43,
+  },
+  {
+    project_id: '5',
+    project_name: 'Paving Stones',
+    start_date: '2023-09-15',
+    country: 'Kenya',
+    project_use: 'Construction materials',
+    electricity: false,
+    summary: 'Creating paving stones for pathways',
+    plastics: ['LDPE', 'PET'],
+    machines: ['Shredder', 'Compression Press'],
+    product: 'product 1',
+    financing: 'Money',
+    businessModel: 'Niche',
+    partnershipOwnership: 'adadaddad',
+    wasteCollected: 43,
+  },
+];
 
-const getMachineImage = (name: string): string | undefined => {
-  const key = name.trim().toLowerCase();
-  return machineImageByName[key];
-};
+const MOCK_MACHINES: MachineData[] = [
+  {
+    id: '1',
+    title: 'Polyfloss',
+    image: polyfloss,
+    whatDoes: 'Goes around and around',
+    howWork: 'pull the switch to make it work',
+    plastics: ['LDPE', 'PET'],
+    howDoes: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    complicLesson: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    inUseEWB: 'Waste for warmth',
+  },
+  {
+    id: '2',
+    title: 'Oven/melter',
+    image: melter,
+    whatDoes: 'Goes around and around',
+    howWork: 'pull the switch to make it work',
+    plastics: ['LDPE', 'PET'],
+    howDoes: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    complicLesson: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    inUseEWB: 'Waste for warmth',
+  },
+  {
+    id: '3',
+    title: 'Grinder/shredder',
+    image: shredder,
+    whatDoes: 'Goes around and around',
+    howWork: 'pull the switch to make it work',
+    plastics: ['LDPE', 'PET'],
+    howDoes: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    complicLesson: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    inUseEWB: 'Waste for warmth',
+  },
+  {
+    id: '4',
+    title: 'Ventilation',
+    image: ventilation,
+    whatDoes: 'Goes around and around',
+    howWork: 'pull the switch to make it work',
+    plastics: ['LDPE', 'PET'],
+    howDoes: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    complicLesson: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    inUseEWB: 'Waste for warmth',
+  },
+  {
+    id: '5',
+    title: 'Extruder',
+    whatDoes: 'Goes around and around',
+    howWork: 'pull the switch to make it work',
+    plastics: ['LDPE', 'PET'],
+    howDoes: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    complicLesson: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    inUseEWB: 'Waste for warmth',
+  },
+  {
+    id: '6',
+    title: 'Injection mold',
+    whatDoes: 'Goes around and around',
+    howWork: 'pull the switch to make it work',
+    plastics: ['LDPE', 'PET'],
+    howDoes: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    complicLesson: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    inUseEWB: 'Waste for warmth',
+  },
+  {
+    id: '7',
+    title: 'Baler',
+    whatDoes: 'Goes around and around',
+    howWork: 'pull the switch to make it work',
+    plastics: ['LDPE', 'PET'],
+    howDoes: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    complicLesson: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    inUseEWB: 'Waste for warmth',
+  },
+  {
+    id: '8',
+    title: 'Bottle preparation tool',
+    whatDoes: 'Goes around and around',
+    howWork: 'pull the switch to make it work',
+    plastics: ['LDPE', 'PET'],
+    howDoes: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    complicLesson: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    inUseEWB: 'Waste for warmth',
+  },
+  {
+    id: '9',
+    title: 'Heat gun',
+    whatDoes: 'Goes around and around',
+    howWork: 'pull the switch to make it work',
+    plastics: ['LDPE', 'PET'],
+    howDoes: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    complicLesson: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    inUseEWB: 'Waste for warmth',
+  },
+  {
+    id: '10',
+    title: 'NIR (Near infrared detection)',
+    whatDoes: 'Goes around and around',
+    howWork: 'pull the switch to make it work',
+    plastics: ['LDPE', 'PET'],
+    howDoes: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    complicLesson: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    inUseEWB: 'Waste for warmth',
+  },
+  {
+    id: '11',
+    title: 'Washing',
+    whatDoes: 'Goes around and around',
+    howWork: 'pull the switch to make it work',
+    plastics: ['LDPE', 'PET'],
+    howDoes: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    complicLesson: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    inUseEWB: 'Waste for warmth',
+  },
+  {
+    id: '12',
+    title: 'Other',
+    whatDoes: 'Goes around and around',
+    howWork: 'pull the switch to make it work',
+    plastics: ['LDPE', 'PET'],
+    howDoes: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    complicLesson: 'oanefnofiaffnafnoindnoisNFPSinfoanurwknvryceNQISRGNBVENUMRBTDNBVE',
+    inUseEWB: 'Waste for warmth',
+  },
+];
 
 const PlasticProject: React.FC = () => {
+  // Top tab state
   const [activeTab, setActiveTab] = useState<'projects' | 'machines'>('projects');
+
+  // View mode state
   const [projectViewMode, setProjectViewMode] = useState<'small' | 'detailed'>('small');
   const [machineViewMode, setMachineViewMode] = useState<'small' | 'detailed'>('small');
 
-  const [machines, setMachines] = useState<MachineData[]>([]);
+  const [machines, setMachines] = useState<MachineData[]>(MOCK_MACHINES);
+
   const [projects, setProjects] = useState<PlasticProjectData[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<PlasticProjectData[]>([]);
-
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCountry, setFilterCountry] = useState('country');
   const [filterPlastic, setFilterPlastic] = useState('plastic');
   const [filterMachine, setFilterMachine] = useState('machine');
-
   const [loading, setLoading] = useState(false);
   const [noProject, setNoProject] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    const fetchPlasticDatabase = async () => {
-      setLoading(true);
-      try {
-        const [machineResponse, projectResponse] = await Promise.all([
-          getMachines(undefined, 1, 200),
-          getPlasticProjects(),
-        ]);
-
-        const machineByProjectId = machineResponse.machines.reduce<Record<number, string[]>>((acc, machine) => {
-          machine.plasticProjectsInUse.forEach((project) => {
-            if (!acc[project.id]) {
-              acc[project.id] = [];
-            }
-            acc[project.id].push(machine.name);
-          });
-          return acc;
-        }, {});
-
-        const mappedMachines: MachineData[] = machineResponse.machines.map((machine: MachineResponse) => ({
-          id: machine.id.toString(),
-          title: machine.name,
-          image: getMachineImage(machine.name),
-          whatDoes: machine.whatItDoes,
-          howWork: machine.howItWorksAndAcquired,
-          plastics: machine.plastics.map((plastic) => plastic.name),
-          howDoes: machine.howItWorksAndAcquired,
-          complicLesson: machine.operationComplicationsAndLessons,
-          inUseEWB: machine.plasticProjectsInUse.map((project) => project.name).join(', '),
-        }));
-
-        const mappedProjects: PlasticProjectData[] = projectResponse.projects.map(
-          (project: PlasticProjectResponse) => ({
-            project_id: project.id.toString(),
-            project_name: project.name,
-            start_date: project.startDate,
-            end_date: project.endDate || undefined,
-            country: project.country,
-            project_use: '',
-            electricity: false,
-            product: project.product,
-            summary: project.summary || '',
-            plastics: project.plastics.map((plastic) => plastic.name),
-            machines: machineByProjectId[project.id] || [],
-            financing: project.financing,
-            businessModel: project.businessModel,
-            partnershipOwnership: '',
-            wasteCollected: project.wasteCollected,
-          })
-        );
-
-        setMachines(mappedMachines);
-        setProjects(mappedProjects);
-        setFilteredProjects(mappedProjects);
-        setNoProject(mappedProjects.length === 0);
-      } catch (error) {
-        console.error('Failed to fetch plastic database data:', error);
-        setMachines([]);
-        setProjects([]);
-        setFilteredProjects([]);
-        setNoProject(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPlasticDatabase();
+    setLoading(true);
+    setTimeout(() => {
+      setProjects(MOCK_PROJECTS);
+      setFilteredProjects(MOCK_PROJECTS);
+      setNoProject(MOCK_PROJECTS.length === 0);
+      setLoading(false);
+    }, 500);
   }, []);
 
   useEffect(() => {
@@ -195,6 +338,7 @@ const PlasticProject: React.FC = () => {
               </Button>
             </div>
 
+            {/* Small / Detailed toggle */}
             <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginBottom: 20 }}>
               {activeTab === 'projects' ? (
                 <>
@@ -309,6 +453,7 @@ const PlasticProject: React.FC = () => {
                 {activeTab === 'projects'
                   ? filteredProjects.map((project) =>
                       projectViewMode === 'small' ? (
+                        // SMALL PROJECT CARD
                         <div key={project.project_id} className="plasticCard">
                           <div className="plasticCardOutline">
                             <img className="plasticCardImage" src={imageProjectCard} alt={project.project_name} />
@@ -342,6 +487,7 @@ const PlasticProject: React.FC = () => {
                           </div>
                         </div>
                       ) : (
+                        // DETAILED PROJECT CARD
                         <div key={project.project_id} className="plasticCard">
                           <div className="plasticCardOutline">
                             <img className="plasticCardImage" src={imageProjectCard} alt={project.project_name} />
@@ -387,15 +533,12 @@ const PlasticProject: React.FC = () => {
                     )
                   : machines.map((machine) =>
                       machineViewMode === 'small' ? (
+                        // SMALL MACHINE CARD
                         <div key={machine.id} className="plasticCard">
                           <div className="plasticCardOutline">
                             <div className="plasticCardBody">
                               <div className="machineCardTitle">{machine.title}</div>
-                              <img
-                                className="machineCardImage"
-                                src={machine.image || imageProjectCard}
-                                alt={machine.title}
-                              />
+                              <img className="machineCardImage" src={machine.image} />
                               <div className="plasticCardTags">
                                 <b>Plastic types: </b>
                                 {machine.plastics?.map((p) => (
@@ -412,15 +555,12 @@ const PlasticProject: React.FC = () => {
                           </div>
                         </div>
                       ) : (
+                        // DETAILED MACHINE CARD
                         <div key={machine.id} className="plasticCard">
                           <div className="plasticCardOutline">
                             <div className="plasticCardBody">
                               <div className="machineCardTitle">{machine.title}</div>
-                              <img
-                                className="machineCardImage"
-                                src={machine.image || imageProjectCard}
-                                alt={machine.title}
-                              />
+                              <img className="machineCardImage" src={machine.image} />
                               <div className="plasticCardTags">
                                 <b>Plastic types: </b>
                                 {machine.plastics?.map((p) => (
