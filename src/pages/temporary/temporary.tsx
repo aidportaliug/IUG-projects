@@ -16,12 +16,12 @@ import SmallMachineCard from '../../components/MachineCards/machineSmallCard';
 import DetailedMachineCard from '../../components/MachineCards/machineDetailCard';
 import SmallPlasticProjectCard from '../../components/PlasticProjectCards/smallPlasticProjectCard';
 import DetailPlasticProjectCard from '../../components/PlasticProjectCards/detailPlasticProjectCard';
-import {PlasticProject} from '../../models/plastic';
+// import {PlasticProject} from '../../models/plastic';
 
 const machineTemporary: React.FC = () => {
   const imagePath = './../../images/machineEx.png';
   const imagePath2 = './../../images/plasticProject.png';
-  
+
   // demo projects for design preview
   const demoMachines: Project[] = [
     {
@@ -68,8 +68,7 @@ const machineTemporary: React.FC = () => {
       financing: 'geka',
       businessModel: 'subscription',
       partnershipOwnership: 'dadadadda',
-      wasteCollected: 45
-
+      wasteCollected: 45,
     } as unknown as Project,
     {
       id: 'demo-2',
@@ -82,8 +81,7 @@ const machineTemporary: React.FC = () => {
       financing: 'geka',
       businessModel: 'subscription',
       partnershipOwnership: 'dadadadda',
-      wasteCollected: 45
-
+      wasteCollected: 45,
     } as unknown as Project,
     {
       id: 'demo-3',
@@ -96,8 +94,7 @@ const machineTemporary: React.FC = () => {
       financing: 'geka',
       businessModel: 'subscription',
       partnershipOwnership: 'dadadadda',
-      wasteCollected: 45
-
+      wasteCollected: 45,
     } as unknown as Project,
     {
       id: 'demo-4',
@@ -110,8 +107,7 @@ const machineTemporary: React.FC = () => {
       financing: 'geka',
       businessModel: 'subscription',
       partnershipOwnership: 'dadadadda',
-      wasteCollected: 45
-
+      wasteCollected: 45,
     } as unknown as Project,
     {
       id: 'demo-5',
@@ -124,18 +120,18 @@ const machineTemporary: React.FC = () => {
       financing: 'geka',
       businessModel: 'subscription',
       partnershipOwnership: 'dadadadda',
-      wasteCollected: 45
+      wasteCollected: 45,
     } as unknown as Project,
   ];
 
-    // local state for both lists
+  // local state for both lists
   const [machineItems, setMachineItems] = useState<Project[]>(demoMachines);
   const [projectItems, setProjectItems] = useState<Project[]>(demoProjects);
-  
+
   const [orderBy, setOrderBy] = useState<string>('deadline');
   const [filterLocation, setFilterLocation] = useState<string>('location');
   const [filterStudyField, setFilterStudyField] = useState<string>('study_field');
-  
+
   // view control
   const [activeTab, setActiveTab] = useState<'machines' | 'projects'>('machines'); // top tabs
   const [machineViewMode, setMachineViewMode] = useState<'small' | 'detailed'>('small');
@@ -193,8 +189,10 @@ const machineTemporary: React.FC = () => {
               </Button>
             </div>
 
-            <div className="homeTitle">{activeTab === 'machines' ? 'Machines (TEMPORARY)' : 'Projects (TEMPORARY)'}</div>
-            
+            <div className="homeTitle">
+              {activeTab === 'machines' ? 'Machines (TEMPORARY)' : 'Projects (TEMPORARY)'}
+            </div>
+
             <div style={{ display: 'flex', gap: '10px' }}>
               <FilterDropdown value={orderBy} setValue={setOrderBy} sortBy={true} />
               <FilterDropdown value={filterLocation} setValue={setFilterLocation} location={true} />
@@ -217,15 +215,38 @@ const machineTemporary: React.FC = () => {
             <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginTop: 16, marginBottom: 8 }}>
               {activeTab === 'machines' ? (
                 <>
-                  <Button variant={machineViewMode === 'small' ? 'contained' : 'outlined'} onClick={() => setMachineViewMode('small')} size="small">Small</Button>
-                  <Button variant={machineViewMode === 'detailed' ? 'contained' : 'outlined'} onClick={() => setMachineViewMode('detailed')} size="small">Detailed</Button>
+                  <Button
+                    variant={machineViewMode === 'small' ? 'contained' : 'outlined'}
+                    onClick={() => setMachineViewMode('small')}
+                    size="small"
+                  >
+                    Small
+                  </Button>
+                  <Button
+                    variant={machineViewMode === 'detailed' ? 'contained' : 'outlined'}
+                    onClick={() => setMachineViewMode('detailed')}
+                    size="small"
+                  >
+                    Detailed
+                  </Button>
                 </>
               ) : (
                 <>
-                  <Button variant={projectViewMode === 'small' ? 'contained' : 'outlined'} onClick={() => setProjectViewMode('small')} size="small">Small</Button>
-                  <Button variant={projectViewMode === 'detailed' ? 'contained' : 'outlined'} onClick={() => setProjectViewMode('detailed')} size="small">Detailed</Button>
+                  <Button
+                    variant={projectViewMode === 'small' ? 'contained' : 'outlined'}
+                    onClick={() => setProjectViewMode('small')}
+                    size="small"
+                  >
+                    Small
+                  </Button>
+                  <Button
+                    variant={projectViewMode === 'detailed' ? 'contained' : 'outlined'}
+                    onClick={() => setProjectViewMode('detailed')}
+                    size="small"
+                  >
+                    Detailed
+                  </Button>
                 </>
-
               )}
             </div>
             {loading ? (
@@ -240,31 +261,30 @@ const machineTemporary: React.FC = () => {
                   // render the selected tab's items
                   (activeTab === 'machines' ? machineItems : projectItems).map((item) =>
                     activeTab === 'machines' ? (
-                    machineViewMode === 'small' ? (
-                      <SmallMachineCard
-                        key={item.id}
-                        id={item.id}
-                        title={item.title}
-                        picturePath={imagePath}
-                        whatDoes={item.description}
-                        howWork={item.description}
-                      />
-                    ) : (
-                      <DetailedMachineCard
-                        key={item.id}
-                        id={item.id}
-                        title={item.title}
-                        plasticType={item.description}
-                        picturePath={imagePath}
-                        whatDoes={item.description}
-                        howWork={item.description}
-                        howDoes={item.description}
-                        complicLesson={item.description}
-                        inUseEWB={item.description}
-
-                      />
-                    )
-                  ): projectViewMode === 'small' ? (
+                      machineViewMode === 'small' ? (
+                        <SmallMachineCard
+                          key={item.id}
+                          id={item.id}
+                          title={item.title}
+                          picturePath={imagePath}
+                          whatDoes={item.description}
+                          howWork={item.description}
+                        />
+                      ) : (
+                        <DetailedMachineCard
+                          key={item.id}
+                          id={item.id}
+                          title={item.title}
+                          plasticType={item.description}
+                          picturePath={imagePath}
+                          whatDoes={item.description}
+                          howWork={item.description}
+                          howDoes={item.description}
+                          complicLesson={item.description}
+                          inUseEWB={item.description}
+                        />
+                      )
+                    ) : projectViewMode === 'small' ? (
                       <SmallPlasticProjectCard
                         key={item.id}
                         id={item.id}
