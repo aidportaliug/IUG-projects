@@ -3,7 +3,7 @@ import './plasticPage.css';
 import Layout from '../../components/Navbar/Layout';
 import Footer from '../../components/Footer/Footer';
 import CircularProgress from '@mui/material/CircularProgress';
-// import PlasticFilterDropdown from '../../components/PlasticFilterDropdown/PlasticFilterDropdown';
+import PlasticFilterDropdown from '../../components/PlasticFilterDropdown/PlasticFilterDropdown';
 import { TextField, InputAdornment, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import imageProjectCard from '../../images/plasticProject.png';
@@ -288,13 +288,13 @@ const PlasticProject: React.FC = () => {
               </Button>
             </div>
 
-            {/*showFilters && (
+            {showFilters && (
               <div className="plasticFilterPanel">
                 <PlasticFilterDropdown value={filterCountry} setValue={setFilterCountry} country={true} />
                 <PlasticFilterDropdown value={filterPlastic} setValue={setFilterPlastic} plastic={true} />
                 <PlasticFilterDropdown value={filterMachine} setValue={setFilterMachine} machine={true} />
               </div>
-            )*/}
+            )}
 
             {loading ? (
               <div style={{ textAlign: 'center', marginTop: '50px' }}>
