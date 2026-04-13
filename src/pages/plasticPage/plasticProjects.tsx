@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import './plasticPage.css';
+import './plasticPage.css'
 import Layout from '../../components/Navbar/Layout';
 import Footer from '../../components/Footer/Footer';
 import CircularProgress from '@mui/material/CircularProgress';
-// import PlasticFilterDropdown from '../../components/PlasticFilterDropdown/PlasticFilterDropdown';
+import PlasticFilterDropdown from '../../components/PlasticFilterDropdown/PlasticFilterDropdown';
 import { TextField, InputAdornment, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import imageProjectCard from '../../images/plasticProject.png';
@@ -13,6 +13,7 @@ import shredder from '../../images/shredder.png';
 import ventilation from '../../images/ventilation.jpg';
 import { getMachines, MachineResponse } from '../../services/machineService';
 import { getPlasticProjects, PlasticProjectResponse } from '../../services/plasticService';
+import { useNavigate } from 'react-router-dom';
 
 interface PlasticProjectData {
   project_id: string;
@@ -56,7 +57,7 @@ const getMachineImage = (name: string): string | undefined => {
   return machineImageByName[key];
 };
 
-const PlasticProject: React.FC = () => {
+const PlasticProjects: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'projects' | 'machines'>('projects');
   const [projectViewMode, setProjectViewMode] = useState<'small' | 'detailed'>('small');
   const [machineViewMode, setMachineViewMode] = useState<'small' | 'detailed'>('small');
@@ -73,6 +74,9 @@ const PlasticProject: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [noProject, setNoProject] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const navigate = useNavigate();
+  const uploadButtonLabel = activeTab === 'machines' ? 'Upload machine' : 'Upload your project';
+  const uploadButtonRoute = activeTab === 'machines' ? '/uploadMachine' : '/UploadPlasticProject';
 
   useEffect(() => {
     const fetchPlasticDatabase = async () => {
@@ -259,7 +263,8 @@ const PlasticProject: React.FC = () => {
               )}
             </div>
 
-            <div className="plasticSearchRow">
+            <div className="plasticSearchContainer">
+              <div className="plasticSearchRow">
               <TextField
                 placeholder="Search projects..."
                 value={searchTerm}
@@ -275,6 +280,7 @@ const PlasticProject: React.FC = () => {
                 }}
                 className="plasticSearchField"
               />
+              
               <Button
                 variant="outlined"
                 onClick={() => setShowFilters(!showFilters)}
@@ -286,15 +292,30 @@ const PlasticProject: React.FC = () => {
               >
                 Filters
               </Button>
+              </div>
+
+              <div className="plasticUploadRow">
+                <Button
+                  onClick={() => navigate(uploadButtonRoute)}
+                  style={{
+                    color: 'black',
+                    textTransform: 'none',
+                    border: '1px solid grey',
+                    backgroundColor: '#e0e0e0',
+                  }}
+                >
+                  {uploadButtonLabel}
+                </Button>
+              </div>
             </div>
 
-            {/*showFilters && (
+            {showFilters && (
               <div className="plasticFilterPanel">
                 <PlasticFilterDropdown value={filterCountry} setValue={setFilterCountry} country={true} />
                 <PlasticFilterDropdown value={filterPlastic} setValue={setFilterPlastic} plastic={true} />
                 <PlasticFilterDropdown value={filterMachine} setValue={setFilterMachine} machine={true} />
               </div>
-            )*/}
+            )}
 
             {loading ? (
               <div style={{ textAlign: 'center', marginTop: '50px' }}>
@@ -309,7 +330,11 @@ const PlasticProject: React.FC = () => {
                 {activeTab === 'projects'
                   ? filteredProjects.map((project) =>
                       projectViewMode === 'small' ? (
-                        <div key={project.project_id} className="plasticCard">
+                        <div  key={project.project_id} 
+                          className="plasticCard"
+                          onClick={() => navigate(`/plastic-project/${project.project_id}`)}
+                          style={{ cursor: 'pointer' }}
+                        >
                           <div className="plasticCardOutline">
                             <img className="plasticCardImage" src={imageProjectCard} alt={project.project_name} />
                             <div className="plasticCardBody">
@@ -342,7 +367,11 @@ const PlasticProject: React.FC = () => {
                           </div>
                         </div>
                       ) : (
-                        <div key={project.project_id} className="plasticCard">
+                        <div key={project.project_id} 
+                          className="plasticCard"
+                          onClick={() => navigate(`/plastic-project/${project.project_id}`)}
+                          style={{ cursor: 'pointer' }}
+                        >
                           <div className="plasticCardOutline">
                             <img className="plasticCardImage" src={imageProjectCard} alt={project.project_name} />
                             <div className="plasticCardBody">
@@ -387,7 +416,11 @@ const PlasticProject: React.FC = () => {
                     )
                   : machines.map((machine) =>
                       machineViewMode === 'small' ? (
-                        <div key={machine.id} className="plasticCard">
+                        <div key={machine.id} 
+                            className="plasticCard"
+                            onClick={() => navigate(`/machine/${machine.id}`)}
+                            style={{ cursor: 'pointer' }}
+                        >
                           <div className="plasticCardOutline">
                             <div className="plasticCardBody">
                               <div className="machineCardTitle">{machine.title}</div>
@@ -467,4 +500,4 @@ const PlasticProject: React.FC = () => {
   );
 };
 
-export default PlasticProject;
+export default PlasticProjects;

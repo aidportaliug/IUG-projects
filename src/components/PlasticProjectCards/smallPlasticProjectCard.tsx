@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import imageProjectCard from './../../images/plasticProject.png';
+import './../ProjectCard/projectCard.css';
 
 interface SmallPlasticProjectProps {
   id: string;
@@ -24,7 +25,7 @@ const SmallPlasticProjectCard: React.FC<SmallPlasticProjectProps> = ({
   const navigate = useNavigate();
 
   const sendToPlasticProjectPage = () => {
-    navigate(`/signUp/}`);
+    navigate(`/login`);
   };
 
   return (

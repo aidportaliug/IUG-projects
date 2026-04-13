@@ -1,0 +1,56 @@
+.Title {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 4em;
+  color: #3d7844;
+  margin-bottom: 5%;
+}
+
+.machineDetailoutline {
+  margin-right: 25%;
+  margin-left: 25%;
+  margin-top: 40px;
+}
+.row {
+  display: flex;
+}
+
+.columLeft {
+  flex: 70%;
+}
+.columRight {
+  flex: 30%;
+}
+
+.machineDetailImage {
+  border-radius: 20px;
+  width: 100%;
+}
+
+.machineDetails {
+  font-family: var(--mainFontFamily), serif;
+  font-style: normal;
+  font-weight: var(--mainFontWeight);
+  display: flex;
+  align-items: center;
+  color: #3d7844;
+  margin: 5px;
+}
+
+hr {
+  border-top: 2px solid #3d7844;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.plasticTag {
+  font-family: var(--mainFontFamily), serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  background: var(--secondaryGreen);
+  border-radius: 8px;
+  color: var(--mainBackground);
+  padding: 4px 12px;
+  text-align: center;
+}
