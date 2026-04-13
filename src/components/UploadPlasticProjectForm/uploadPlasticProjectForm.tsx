@@ -1,19 +1,46 @@
-import React, { SetStateAction, useState, useRef } from 'react';
+import React, { SetStateAction, useState, useRef, useEffect } from 'react';
 import './uploadPlasticProjectForm.css';
-import { Box, Button, MenuItem, Select, TextField, TextFieldProps } from '@mui/material';
+import { Box, Button, MenuItem, Select, SelectChangeEvent, TextField, TextFieldProps } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import { createProject } from '../../services/projectService';
-import { countries, allowedStudyFields, country, plastics, plastic } from '../../models/allowedValues';
+import { createPlasticProject, getPlastics, PlasticResponse } from '../../services/plasticService';
+import { countries } from '../../models/allowedValues';
 import { useNavigate } from 'react-router-dom';
 
 const UploadPlasticProjectForm: React.FC = () => {
-  const [value, setValue] = useState<string | null>(Date());
-  const [studyField, setStudyField] = useState('plastic');
-  const [location, setLocation] = useState('country');
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+  const [country, setCountry] = useState('country');
+  const [selectedPlastics, setSelectedPlastics] = useState<number[]>([]);
+  const [plastics, setPlastics] = useState<PlasticResponse[]>([]);
+  const [financing, setFinancing] = useState('');
+  const [businessModel, setBusinessModel] = useState('');
+  const [wasteCollected, setWasteCollected] = useState<number>(0);
   const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  // Fetch plastics on component mount
+  useEffect(() => {
+    const fetchPlastics = async () => {
+      try {
+        const response = await getPlastics();
+        setPlastics(response.plastics);
+      } catch (error) {
+        console.error('Failed to fetch plastics:', error);
+      }
+    };
+    fetchPlastics();
+  }, []);
+
+  // Helper function to format country names
+  const formatCountryName = (countryName: string): string => {
+    return countryName
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+      .replace(/\bAnd\b/g, '&');
+  };
 
   const handleButtonClick = () => {
     fileInputRef.current?.click();
@@ -27,12 +54,27 @@ const UploadPlasticProjectForm: React.FC = () => {
     }
   };
 
-  const handleStudyFieldChange = (event: { target: { value: SetStateAction<string> } }) => {
-    setStudyField(event.target.value);
+  const handleCountryChange = (event: { target: { value: SetStateAction<string> } }) => {
+    setCountry(event.target.value);
   };
 
-  const handleLocationChange = (event: { target: { value: SetStateAction<string> } }) => {
-    setLocation(event.target.value);
+  const handlePlasticsChange = (event: SelectChangeEvent<typeof selectedPlastics>) => {
+    const value = event.target.value;
+    const values = Array.isArray(value) ? value : [value];
+    setSelectedPlastics(values.map((id) => (typeof id === 'string' ? Number(id) : id)));
+  };
+
+  const handleFinancingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFinancing(event.target.value);
+  };
+
+  const handleBusinessModelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBusinessModel(event.target.value);
+  };
+
+  const handleWasteCollectedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(event.target.value, 10);
+    setWasteCollected(isNaN(value) ? 0 : value);
   };
 
   const handleUpload = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined }) => {
@@ -47,62 +89,65 @@ const UploadPlasticProjectForm: React.FC = () => {
 
     if (emptyFields.length > 0) {
       const fieldNames = emptyFields.slice(0, emptyFields.length / 2).map((element) => `"${element.name}"`);
-      console.log('navn', fieldNames);
       alert(`Please fill in the following required fields: ${fieldNames.join(', ')}`);
       return;
     }
 
     const data = new FormData(event.currentTarget);
-    const duration = parseInt(data.get('duration') as string);
-    if (Number.isNaN(duration)) {
-      alert(`Duration must be a number`);
+
+    // Validate required fields
+    const name = data.get('projectTitle') as string;
+    const product = data.get('product') as string;
+    const summary = data.get('summary') as string;
+
+    if (!name || !product || !country || country === 'country') {
+      alert('Please fill in all required fields');
       return;
     }
 
-    const location = data.get('location') as string;
-    const studyField = data.get('studyField') as string;
-    if (!countries.includes(location)) {
-      alert('You must choose a location from the list.');
+    if (!countries.includes(country)) {
+      alert('You must choose a country from the list.');
       return;
     }
-    if (!allowedStudyFields.includes(studyField)) {
-      alert('You must choose a studyfield from the list.');
+
+    if (wasteCollected < 0) {
+      alert('Waste collected must be a positive number');
       return;
     }
 
     try {
-      const shortTitle = data.get('shortTitle') as string;
-      const projectTitle = data.get('projectTitle') as string;
+      // Format dates
+      let startDateISO: string | undefined;
+      let endDateISO: string | undefined;
 
-      const dateStr = data.get('date') as string;
-      const dateParts = dateStr.split('/');
-      const year = parseInt(dateParts[2], 10);
-      const month = parseInt(dateParts[1], 10) - 1;
-      const day = parseInt(dateParts[0], 10);
+      if (startDate) {
+        const startDateObj = new Date(startDate);
+        startDateISO = startDateObj.toISOString().split('T')[0];
+      }
 
-      const deadline = new Date(year, month, day);
-      const description = data.get('description') as string;
-      const summaryDescription = data.get('summaryDescription') as string;
+      if (endDate) {
+        const endDateObj = new Date(endDate);
+        endDateISO = endDateObj.toISOString().split('T')[0];
+      }
 
-      // Format deadline as ISO date string (YYYY-MM-DD)
-      const deadlineISO = deadline.toISOString().split('T')[0];
-
-      await createProject({
-        name: projectTitle,
-        shortTitle: shortTitle || undefined,
-        description: description || undefined,
-        summaryDescription: summaryDescription || undefined,
-        studyField: studyField,
-        location: location,
-        deadline: deadlineISO,
-        duration: duration,
+      await createPlasticProject({
+        name: name,
+        startDate: startDateISO || new Date().toISOString().split('T')[0],
+        endDate: endDateISO,
+        country: country,
+        product: product,
+        financing: financing,
+        businessModel: businessModel,
+        wasteCollected: wasteCollected,
+        summary: summary || undefined,
+        plasticIds: selectedPlastics.length > 0 ? selectedPlastics : undefined,
       });
 
-      alert('Successfully uploaded project');
-      navigate('/');
+      alert('Successfully uploaded plastic project');
+      navigate('/plasticProjects');
     } catch (error: any) {
       console.error('Upload error:', error);
-      alert(error.message || 'Failed to upload project');
+      alert(error.message || 'Failed to upload plastic project');
     }
   };
 
@@ -112,126 +157,23 @@ const UploadPlasticProjectForm: React.FC = () => {
         required
         fullWidth
         id="projectTitle"
-        label="Project Title"
+        label="Project Name"
         name="projectTitle"
         sx={{
+          marginBottom: '1em',
           backgroundColor: '#e0e0e0',
           '&:focus-within': {
             backgroundColor: 'white',
           },
         }}
       />
-      <Box display={'flex'} sx={{ marginBottom: '1em', marginTop: '1em' }}>
-        <TextField
-          fullWidth
-          id="shortTitle"
-          label="Product"
-          name="product"
-          sx={{
-            marginRight: '1em',
-            backgroundColor: '#e0e0e0',
-            '&:focus-within': {
-              backgroundColor: 'white',
-            },
-          }}
-        />
-        <Select
-          labelId="studyField"
-          id="studyField"
-          label="Study field"
-          value={studyField}
-          name="studyField"
-          onChange={handleStudyFieldChange}
-          sx={{
-            width: '100%',
-            marginLeft: '1em',
-            '& .MuiSelect-select': {
-              backgroundColor: '#e0e0e0',
-            },
-            '&.Mui-focused .MuiSelect-select': {
-              backgroundColor: 'white',
-            },
-            '& fieldset': {
-              legend: { display: 'none' },
-            },
-          }}
-        >
-          <MenuItem value="plastic">Plastics</MenuItem>
-            {plastics.map((c) => (
-              <MenuItem key={c} value={c}>
-                {plastic[c as keyof typeof plastic] ?? c}
-              </MenuItem>
-          ))}
-        </Select>
-      </Box>
-      <Box display={'flex'} sx={{ marginBottom: '1em' }}>
-        <Select
-          id="location"
-          label="Country"
-          value={location}
-          name="location"
-          onChange={handleLocationChange}
-          sx={{
-            width: '100%',
-            marginRight: '1em',
-            '& .MuiSelect-select': {
-              backgroundColor: '#e0e0e0',
-            },
-            '&.Mui-focused .MuiSelect-select': {
-              backgroundColor: 'white',
-            },
-            '& fieldset': {
-              legend: { display: 'none' },
-            },
-          }}
-        >
-          <MenuItem value='country'>Country</MenuItem>
-          {countries.map((c) => (
-            <MenuItem key={c} value={c}>
-              {country[c as keyof typeof country] ?? c}
-            </MenuItem>
-          ))}
-          
-        </Select>
-        <TextField
-          required
-          fullWidth
-          id="duration"
-          label="Financing"
-          name="duration"
-          sx={{
-            marginLeft: '1em',
-            backgroundColor: '#e0e0e0',
-            '&:focus-within': {
-              backgroundColor: 'white',
-            },
-          }}
-        />
-      </Box>
 
       <TextField
         required
         fullWidth
-        id="description"
-        label="Description"
-        name="description"
-        multiline
-        minRows={6}
-        sx={{
-          marginBottom: '1em',
-          backgroundColor: '#e0e0e0',
-          '&:focus-within': {
-            backgroundColor: 'white',
-          },
-        }}
-      />
-      <TextField
-        fullWidth
-        id="summaryDescription"
-        label="Summary description"
-        name="summaryDescription"
-        multiline
-        minRows={4}
+        id="product"
+        label="Product"
+        name="product"
         sx={{
           marginBottom: '1em',
           backgroundColor: '#e0e0e0',
@@ -241,50 +183,130 @@ const UploadPlasticProjectForm: React.FC = () => {
         }}
       />
 
-      <Box display={'flex'} sx={{ marginBottom: '1em'}}>
+      <Box display={'flex'} sx={{ marginBottom: '1em' }}>
+        <Select
+          id="country"
+          label="Country"
+          value={country}
+          name="country"
+          onChange={handleCountryChange}
+          sx={{
+            width: '100%',
+            marginRight: '1em',
+            '& .MuiSelect-select': {
+              backgroundColor: '#e0e0e0',
+            },
+            '&.Mui-focused .MuiSelect-select': {
+              backgroundColor: 'white',
+            },
+            '& fieldset': {
+              legend: { display: 'none' },
+            },
+          }}
+        >
+          <MenuItem value='country'>Select Country</MenuItem>
+          {countries.map((c) => (
+            <MenuItem key={c} value={c}>
+              {formatCountryName(c)}
+            </MenuItem>
+          ))}
+        </Select>
+
+        <TextField
+          type="number"
+          fullWidth
+          id="wasteCollected"
+          label="Waste Collected (tons)"
+          name="wasteCollected"
+          value={wasteCollected}
+          onChange={handleWasteCollectedChange}
+          sx={{
+            backgroundColor: '#e0e0e0',
+            '&:focus-within': {
+              backgroundColor: 'white',
+            },
+          }}
+        />
+      </Box>
+
+      <Select
+        multiple
+        displayEmpty
+        id="plastics"
+        value={selectedPlastics}
+        onChange={handlePlasticsChange}
+        renderValue={(selected) => {
+          if (selected.length === 0) {
+            return <span style={{ color: '#666' }}>Select plastics...</span>;
+          }
+          return selected.map(id => plastics.find(p => p.id === id)?.name).join(', ');
+        }}
+        sx={{
+          width: '100%',
+          marginBottom: '1em',
+          '& .MuiSelect-select': {
+            backgroundColor: '#e0e0e0',
+            padding: '16px',
+            minHeight: '1.4375em',
+          },
+          '&.Mui-focused .MuiSelect-select': {
+            backgroundColor: 'white',
+          },
+          '& fieldset': {
+            legend: { display: 'none' },
+          },
+        }}
+      >
+        <MenuItem disabled>
+          <em>Select plastics used in this project</em>
+        </MenuItem>
+        {plastics.map((plastic) => (
+          <MenuItem key={plastic.id} value={plastic.id}>
+            {plastic.name}
+          </MenuItem>
+        ))}
+      </Select>
+
+      <Box display={'flex'} sx={{ marginBottom: '1em' }}>
+        <TextField
+          fullWidth
+          id="financing"
+          label="Financing"
+          name="financing"
+          value={financing}
+          onChange={handleFinancingChange}
+          sx={{
+            marginRight: '1em',
+            backgroundColor: '#e0e0e0',
+            '&:focus-within': {
+              backgroundColor: 'white',
+            },
+          }}
+        />
+
         <TextField
           fullWidth
           id="businessModel"
-          label="Business model"
+          label="Business Model"
           name="businessModel"
+          value={businessModel}
+          onChange={handleBusinessModelChange}
           sx={{
-            marginRight: '1em',
             backgroundColor: '#e0e0e0',
             '&:focus-within': {
               backgroundColor: 'white',
             },
           }}
         />
-        <TextField
-          fullWidth
-          id="wasteCollected"
-          label="Waste collected"
-          name="wasteCollected"
-          sx={{
-            marginRight: '1em',
-            backgroundColor: '#e0e0e0',
-            '&:focus-within': {
-              backgroundColor: 'white',
-            },
-          }}
-        />
-
       </Box>
-
-      <div style={{ textAlign: 'left', paddingBottom: 7, fontWeight: 'bold' }}>Application deadline</div>
 
       <Box display={'flex'} sx={{ marginBottom: '1em' }}>
         <DatePicker
-          disablePast
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
+          label="Start Date"
+          value={startDate}
+          onChange={(newValue) => setStartDate(newValue)}
           renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
             <TextField
-              id="date"
-              name="date"
-              InputLabelProps={{ shrink: false }}
               {...params}
               sx={{
                 width: '100%',
@@ -296,41 +318,74 @@ const UploadPlasticProjectForm: React.FC = () => {
               }}
             />
           )}
-          inputFormat="DD/MM/YYYY"
-        ></DatePicker>
-
-        <input
-          type="file"
-          accept="image/*"
-          style={{ display: 'none' }}
-          ref={fileInputRef}
-          onChange={handleFileChange}
         />
-        <Button
-          size="large"
-          variant="contained"
-          onClick={handleButtonClick}
-          style={{
-            width: '300px',
-            color: 'black',
-            textTransform: 'none',
-            border: '1px solid grey',
-            marginLeft: '1em',
-            backgroundColor: '#e0e0e0',
-          }}
-          onFocus={(e) => (e.target.style.backgroundColor = 'white')}
-          onBlur={(e) => (e.target.style.backgroundColor = '#e0e0e0')}
-        >
-          Upload Picture
-        </Button>
+
+        <DatePicker
+          label="End Date (Optional)"
+          value={endDate}
+          onChange={(newValue) => setEndDate(newValue)}
+          renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+            <TextField
+              {...params}
+              sx={{
+                width: '100%',
+                backgroundColor: '#e0e0e0',
+                '&:focus-within': {
+                  backgroundColor: 'white',
+                },
+              }}
+            />
+          )}
+        />
       </Box>
+
+      <TextField
+        fullWidth
+        id="summary"
+        label="Summary"
+        name="summary"
+        multiline
+        minRows={4}
+        sx={{
+          marginBottom: '1em',
+          backgroundColor: '#e0e0e0',
+          '&:focus-within': {
+            backgroundColor: 'white',
+          },
+        }}
+      />
+
+      <input
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        ref={fileInputRef}
+        onChange={handleFileChange}
+      />
+      <Button
+        size="large"
+        variant="outlined"
+        onClick={handleButtonClick}
+        style={{
+          width: '100%',
+          color: 'black',
+          textTransform: 'none',
+          border: '1px solid grey',
+          marginBottom: '1em',
+          backgroundColor: '#e0e0e0',
+        }}
+      >
+        Upload Picture (Optional)
+      </Button>
+
       {imageUrl && (
-        <div style={{ marginTop: '1em' }}>
-          <img src={imageUrl} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: 300 }} />
+        <div style={{ marginBottom: '1em' }}>
+          <img src={imageUrl} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: 200 }} />
         </div>
       )}
+
       <Button type="submit" variant="contained" style={{ width: 200, height: 50, margin: '1em' }}>
-        Upload Form
+        Upload Plastic Project
       </Button>
     </Box>
   );

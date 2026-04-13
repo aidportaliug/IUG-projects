@@ -76,6 +76,25 @@
   height: 175px;
 }
 
+.plasticSearchContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.plasticSearchRow {
+  display: flex;
+  gap: 10px;
+}
+
+/* Button positioned to the right */
+.plasticUploadRow {
+  position: absolute;
+  right: 0;
+}
+
 .machineCardImage {
   width: 100%;
   object-fit: cover;
