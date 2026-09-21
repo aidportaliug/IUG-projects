@@ -70,40 +70,42 @@ const MachineDetailsPage: React.FC = () => {
     );
   }
 
-    return (
-      <>
-        <Meta title={machine.name}></Meta>
-        <Layout>
-          <div className="machineDetailoutline">
-            <div className="Title">{machine.name}</div>
-            <ProjectImageBox source={imageIcon} altText={'Machine Image'} />
-            <hr />
-            <div className="machineInformation">
-              <div className="infoRow">
-                <b>What it does:</b> {machine?.whatItDoes}
-              </div>
-              <div className="infoRow">
-                <b>How it works and is required:</b> {machine?.howItWorksAndAcquired}
-              </div>
-              <div className="infoRow">
-                <b>Operation complications and important lessons from projects:</b> {machine?.operationComplicationsAndLessons}
-              </div>
-              {machine.plastics && machine.plastics.length > 0 && (
-                <div className="infoRow">
-                  <b>Plastic types:</b> {machine.plastics.map((p, index) => (
-                    <span key={p.id}>
-                        {index > 0 && ' '}
-                        <span className='plasticTag'>{p.name}</span>
-                    </span>
-                    ))}
-                </div>
-              )}
+  return (
+    <>
+      <Meta title={machine.name}></Meta>
+      <Layout>
+        <div className="machineDetailoutline">
+          <div className="Title">{machine.name}</div>
+          <ProjectImageBox source={imageIcon} altText={'Machine Image'} />
+          <hr />
+          <div className="machineInformation">
+            <div className="infoRow">
+              <b>What it does:</b> {machine?.whatItDoes}
             </div>
-            <hr />
+            <div className="infoRow">
+              <b>How it works and is required:</b> {machine?.howItWorksAndAcquired}
+            </div>
+            <div className="infoRow">
+              <b>Operation complications and important lessons from projects:</b>{' '}
+              {machine?.operationComplicationsAndLessons}
+            </div>
+            {machine.plastics && machine.plastics.length > 0 && (
+              <div className="infoRow">
+                <b>Plastic types:</b>{' '}
+                {machine.plastics.map((p, index) => (
+                  <span key={p.id}>
+                    {index > 0 && ' '}
+                    <span className="plasticTag">{p.name}</span>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
-        </Layout>
-      </>
-    );
-  };
+          <hr />
+        </div>
+      </Layout>
+    </>
+  );
+};
 
 export default MachineDetailsPage;

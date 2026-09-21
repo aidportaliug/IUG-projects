@@ -63,8 +63,6 @@ const UploadMachine: React.FC = () => {
           <p>This is the upload machine page. Add your machine upload form here...................................</p>
         </div>
         <UploadMachineForm />
-
-
       </div>
       <Footer
         nameLink1="Demo_1"

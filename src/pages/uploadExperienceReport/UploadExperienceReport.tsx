@@ -25,6 +25,7 @@ const UploadExperienceReport: React.FC = () => {
   }, [customUser, user, userUpdated]);
 
   //if (customUser !== null && customUser?.professor === false) {
+  // eslint-disable-next-line no-constant-condition
   if (true) {
     return (
       <>

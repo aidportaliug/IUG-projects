@@ -37,7 +37,7 @@ const UploadPlasticProjectForm: React.FC = () => {
   const formatCountryName = (countryName: string): string => {
     return countryName
       .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ')
       .replace(/\bAnd\b/g, '&');
   };
@@ -204,7 +204,7 @@ const UploadPlasticProjectForm: React.FC = () => {
             },
           }}
         >
-          <MenuItem value='country'>Select Country</MenuItem>
+          <MenuItem value="country">Select Country</MenuItem>
           {countries.map((c) => (
             <MenuItem key={c} value={c}>
               {formatCountryName(c)}
@@ -239,7 +239,7 @@ const UploadPlasticProjectForm: React.FC = () => {
           if (selected.length === 0) {
             return <span style={{ color: '#666' }}>Select plastics...</span>;
           }
-          return selected.map(id => plastics.find(p => p.id === id)?.name).join(', ');
+          return selected.map((id) => plastics.find((p) => p.id === id)?.name).join(', ');
         }}
         sx={{
           width: '100%',
@@ -355,13 +355,7 @@ const UploadPlasticProjectForm: React.FC = () => {
         }}
       />
 
-      <input
-        type="file"
-        accept="image/*"
-        style={{ display: 'none' }}
-        ref={fileInputRef}
-        onChange={handleFileChange}
-      />
+      <input type="file" accept="image/*" style={{ display: 'none' }} ref={fileInputRef} onChange={handleFileChange} />
       <Button
         size="large"
         variant="outlined"

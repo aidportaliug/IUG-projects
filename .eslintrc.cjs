@@ -4,6 +4,7 @@ module.exports = {
     'eslint:recommended',
     'prettier',
     'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended', // must be placed last

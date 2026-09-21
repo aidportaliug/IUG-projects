@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './plasticPage.css'
+import './plasticPage.css';
 import Layout from '../../components/Navbar/Layout';
 import Footer from '../../components/Footer/Footer';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -265,33 +265,33 @@ const PlasticProjects: React.FC = () => {
 
             <div className="plasticSearchContainer">
               <div className="plasticSearchRow">
-              <TextField
-                placeholder="Search projects..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                variant="outlined"
-                size="small"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                className="plasticSearchField"
-              />
-              
-              <Button
-                variant="outlined"
-                onClick={() => setShowFilters(!showFilters)}
-                style={{
-                  color: '#3d7844',
-                  borderColor: '#3d7844',
-                  textTransform: 'none',
-                }}
-              >
-                Filters
-              </Button>
+                <TextField
+                  placeholder="Search projects..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  className="plasticSearchField"
+                />
+
+                <Button
+                  variant="outlined"
+                  onClick={() => setShowFilters(!showFilters)}
+                  style={{
+                    color: '#3d7844',
+                    borderColor: '#3d7844',
+                    textTransform: 'none',
+                  }}
+                >
+                  Filters
+                </Button>
               </div>
 
               <div className="plasticUploadRow">
@@ -330,7 +330,8 @@ const PlasticProjects: React.FC = () => {
                 {activeTab === 'projects'
                   ? filteredProjects.map((project) =>
                       projectViewMode === 'small' ? (
-                        <div  key={project.project_id} 
+                        <div
+                          key={project.project_id}
                           className="plasticCard"
                           onClick={() => navigate(`/plastic-project/${project.project_id}`)}
                           style={{ cursor: 'pointer' }}
@@ -367,7 +368,8 @@ const PlasticProjects: React.FC = () => {
                           </div>
                         </div>
                       ) : (
-                        <div key={project.project_id} 
+                        <div
+                          key={project.project_id}
                           className="plasticCard"
                           onClick={() => navigate(`/plastic-project/${project.project_id}`)}
                           style={{ cursor: 'pointer' }}
@@ -416,10 +418,11 @@ const PlasticProjects: React.FC = () => {
                     )
                   : machines.map((machine) =>
                       machineViewMode === 'small' ? (
-                        <div key={machine.id} 
-                            className="plasticCard"
-                            onClick={() => navigate(`/machine/${machine.id}`)}
-                            style={{ cursor: 'pointer' }}
+                        <div
+                          key={machine.id}
+                          className="plasticCard"
+                          onClick={() => navigate(`/machine/${machine.id}`)}
+                          style={{ cursor: 'pointer' }}
                         >
                           <div className="plasticCardOutline">
                             <div className="plasticCardBody">
