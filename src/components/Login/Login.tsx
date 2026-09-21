@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Box, Typography, TextField, FormControlLabel, Checkbox, Button, Divider } from '@mui/material';
+import { Container, Box, Typography, TextField, FormControlLabel, Checkbox, Button } from '@mui/material';
 import logIn from '../../services/auth';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/AuthContext';

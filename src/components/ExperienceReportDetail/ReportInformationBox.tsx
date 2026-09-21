@@ -1,10 +1,8 @@
 import React from 'react';
 import { Stack } from '@mui/material';
-import { locations, studyFields } from '../../models/allowedValues';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import { studyFields } from '../../models/allowedValues';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import '../../pages/ProjectDetailsPage/projectDetailPage.css';
 
 interface ReportInformationBoxProps {

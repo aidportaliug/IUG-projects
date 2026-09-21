@@ -12,5 +12,7 @@ module.exports = {
   plugins: ['prettier', 'react', 'react-hooks', '@typescript-eslint'],
   rules: {
     'prettier/prettier': ['error'],
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
   },
 };

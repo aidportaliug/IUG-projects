@@ -1,12 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import imageProjectCard from './../../images/plasticProject.png';
 import './../ProjectCard/projectCard.css';
 
 interface SmallPlasticProjectProps {
   id: string;
   title: string;
-  country: String;
+  country: string;
   year: number;
   plasticType: string;
   product: string;

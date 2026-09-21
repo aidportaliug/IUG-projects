@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import ProjectCard from '../../components/ProjectCard/ProjectCard';
 import './temporary.css';
 import { getProjects } from '../../services/getProjects';
 import { Project } from '../../models/project';
-import { studyFields, locations } from '../../models/allowedValues';
+
 import FilterDropdown from '../../components/FilterDropdown/FilterDropdown';
 import Layout from '../../components/Navbar/Layout';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -18,7 +17,7 @@ import SmallPlasticProjectCard from '../../components/PlasticProjectCards/smallP
 import DetailPlasticProjectCard from '../../components/PlasticProjectCards/detailPlasticProjectCard';
 // import {PlasticProject} from '../../models/plastic';
 
-const machineTemporary: React.FC = () => {
+const MachineTemporary: React.FC = () => {
   const imagePath = './../../images/machineEx.png';
   const imagePath2 = './../../images/plasticProject.png';
 
@@ -170,7 +169,7 @@ const machineTemporary: React.FC = () => {
 
   return (
     <>
-      <Meta title="machineTemporary"></Meta>
+      <Meta title="MachineTemporary"></Meta>
       <div className="homeBackground">
         <Layout>
           <div className="homeOutline">
@@ -335,4 +334,4 @@ const machineTemporary: React.FC = () => {
   );
 };
 
-export default machineTemporary;
+export default MachineTemporary;

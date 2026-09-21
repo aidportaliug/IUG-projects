@@ -7,7 +7,7 @@ interface SmallPlasticProjectProps {
   id: string;
   title: string;
   picturePath: string;
-  country: String;
+  country: string;
   year: number;
   plasticType: string;
   product: string;

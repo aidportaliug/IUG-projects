@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 type FormatDataWithOptions = {
   className: string;
@@ -17,18 +17,11 @@ type FormatDataWithout = {
 
 type formatData = FormatDataWithOptions | FormatDataWithValue | FormatDataWithout;
 
-interface CustomToolbarProps {
-  onFontSizeChange: (fontSize: string) => void;
-}
-
 const renderOptions = (formatData: FormatDataWithOptions): JSX.Element => {
   const { className, options } = formatData;
   const defaultSelectedValue = 'Normal';
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value;
-  };
   return (
-    <select className={className} onChange={handleChange} value={defaultSelectedValue}>
+    <select className={className} defaultValue={defaultSelectedValue}>
       <option value=""></option>
       {options.map((label, index) => {
         return (
