@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Select, MenuItem, FormControl, InputLabel, SelectChangeEvent } from '@mui/material';
 
 interface PlasticFilterDropdownProps {
@@ -15,10 +15,6 @@ interface FilterOption {
 }
 
 class PlasticFilterDropdown extends Component<PlasticFilterDropdownProps> {
-  constructor(props: PlasticFilterDropdownProps) {
-    super(props);
-  }
-
   private handleChange = (event: SelectChangeEvent<string>): void => {
     this.props.setValue(event.target.value);
   };

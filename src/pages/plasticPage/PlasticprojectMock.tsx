@@ -7,7 +7,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { TextField, InputAdornment, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import imageProjectCard from '../../images/plasticProject.png';
-import { title } from 'process';
 import polyfloss from '../../images/polyfloss.png';
 import melter from '../../images/melter.png';
 import shredder from '../../images/shredder.png';
@@ -264,14 +263,14 @@ const PlasticProject: React.FC = () => {
   const [projectViewMode, setProjectViewMode] = useState<'small' | 'detailed'>('small');
   const [machineViewMode, setMachineViewMode] = useState<'small' | 'detailed'>('small');
 
-  const [machines, setMachines] = useState<MachineData[]>(MOCK_MACHINES);
+  const [machines] = useState<MachineData[]>(MOCK_MACHINES);
 
   const [projects, setProjects] = useState<PlasticProjectData[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<PlasticProjectData[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterCountry, setFilterCountry] = useState('country');
-  const [filterPlastic, setFilterPlastic] = useState('plastic');
-  const [filterMachine, setFilterMachine] = useState('machine');
+  const [filterCountry] = useState('country');
+  const [filterPlastic] = useState('plastic');
+  const [filterMachine] = useState('machine');
   const [loading, setLoading] = useState(false);
   const [noProject, setNoProject] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -538,7 +537,7 @@ const PlasticProject: React.FC = () => {
                           <div className="plasticCardOutline">
                             <div className="plasticCardBody">
                               <div className="machineCardTitle">{machine.title}</div>
-                              <img className="machineCardImage" src={machine.image} />
+                              <img className="machineCardImage" src={machine.image} alt="" />
                               <div className="plasticCardTags">
                                 <b>Plastic types: </b>
                                 {machine.plastics?.map((p) => (
@@ -560,7 +559,7 @@ const PlasticProject: React.FC = () => {
                           <div className="plasticCardOutline">
                             <div className="plasticCardBody">
                               <div className="machineCardTitle">{machine.title}</div>
-                              <img className="machineCardImage" src={machine.image} />
+                              <img className="machineCardImage" src={machine.image} alt="" />
                               <div className="plasticCardTags">
                                 <b>Plastic types: </b>
                                 {machine.plastics?.map((p) => (

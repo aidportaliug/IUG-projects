@@ -103,12 +103,13 @@ const PlasticProjectDetailsPage: React.FC = () => {
               </div>
               {project.plastics && project.plastics.length > 0 && (
                 <div className="infoRow">
-                  <b>Plastics Used:</b> {project.plastics.map((p, index) => (
-                    <span>
+                  <b>Plastics Used:</b>{' '}
+                  {project.plastics.map((p, index) => (
+                    <span key={index}>
                       {index > 0 && ' '}
                       <span className="plasticTag">{p.name}</span>
                     </span>
-                    ))}
+                  ))}
                 </div>
               )}
             </div>

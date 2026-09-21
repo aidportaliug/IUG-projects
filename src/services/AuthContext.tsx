@@ -10,7 +10,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
-  refreshUser: async () => {},
+  refreshUser: async () => undefined,
 });
 
 export const useAuth = () => {

@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { Container, Box, Typography, Grid, TextField, FormControl, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { signUp } from '../../services/auth';
-import { useAuth } from '../../services/AuthContext';
 
 const SignUpComponent: React.FC = () => {
   const navigate = useNavigate();
-  const { refreshUser } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
