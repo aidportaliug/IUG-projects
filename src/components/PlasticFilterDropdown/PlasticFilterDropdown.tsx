@@ -7,6 +7,7 @@ interface PlasticFilterDropdownProps {
   country?: boolean;
   plastic?: boolean;
   machine?: boolean;
+  machineOptions?: FilterOption[];
 }
 
 interface FilterOption {
@@ -50,6 +51,9 @@ class PlasticFilterDropdown extends Component<PlasticFilterDropdownProps> {
     }
 
     if (machine) {
+      // Use provided machineOptions when available, otherwise fall back to a small static list
+      const opts = (this.props as PlasticFilterDropdownProps).machineOptions;
+      if (opts && opts.length > 0) return [{ value: 'machine', label: 'All machines' }, ...opts];
       return [
         { value: 'machine', label: 'All machines' },
         { value: 'Shredder', label: 'Shredder' },

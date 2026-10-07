@@ -175,6 +175,15 @@ const UploadMachineForm: React.FC = () => {
             <Select
                 multiple
                 displayEmpty
+                MenuProps={{
+                    PaperProps: {
+                        sx: {
+                        '& .MuiMenuItem-root.Mui-selected': {
+                            backgroundColor: '#84f098',
+                        },
+                        },
+                    },
+                    }}
                 id="plastics"
                 value={selectedPlastics}
                 onChange={handlePlasticsChange}

@@ -31,10 +31,12 @@
   font-family: var(--mainFontFamily), serif;
   font-style: normal;
   font-weight: var(--mainFontWeight);
-  display: flex;
-  align-items: center;
+  display: block;
   color: #3d7844;
   margin: 5px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 hr {

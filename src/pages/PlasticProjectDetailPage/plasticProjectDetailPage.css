@@ -4,6 +4,7 @@
   font-size: 4em;
   color: #3d7844;
   margin-bottom: 5%;
+  text-align: center;
 }
 
 .projectDetailoutline {
@@ -53,4 +54,11 @@ hr {
   color: var(--mainBackground);
   padding: 4px 12px;
   text-align: center;
+}
+
+.infoRow p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  margin: 0;
 }

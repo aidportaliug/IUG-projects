@@ -54,3 +54,16 @@ hr {
   padding: 4px 12px;
   text-align: center;
 }
+
+.machineDetailoutline .plasticTag {
+  display: inline-block;
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
+
+.infoRow p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  margin: 0;
+}

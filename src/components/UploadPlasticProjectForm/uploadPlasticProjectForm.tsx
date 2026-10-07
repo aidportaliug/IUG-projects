@@ -3,6 +3,7 @@ import './uploadPlasticProjectForm.css';
 import { Box, Button, MenuItem, Select, SelectChangeEvent, TextField, TextFieldProps } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { createPlasticProject, getPlastics, PlasticResponse } from '../../services/plasticService';
+import { getMachines, MachineResponse } from '../../services/machineService';
 import { countries } from '../../models/allowedValues';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,6 +13,8 @@ const UploadPlasticProjectForm: React.FC = () => {
   const [country, setCountry] = useState('country');
   const [selectedPlastics, setSelectedPlastics] = useState<number[]>([]);
   const [plastics, setPlastics] = useState<PlasticResponse[]>([]);
+  const [selectedMachines, setSelectedMachines] = useState<number[]>([]);
+  const [machines, setMachines] = useState<MachineResponse[]>([]);
   const [financing, setFinancing] = useState('');
   const [businessModel, setBusinessModel] = useState('');
   const [wasteCollected, setWasteCollected] = useState<number>(0);
@@ -31,6 +34,19 @@ const UploadPlasticProjectForm: React.FC = () => {
       }
     };
     fetchPlastics();
+  }, []);
+
+  // Fetch machines on component mount
+  useEffect(() => {
+    const fetchMachines = async () => {
+      try {
+        const response = await getMachines(undefined, 1, 200);
+        setMachines(response.machines);
+      } catch (error) {
+        console.error('Failed to fetch machines:', error);
+      }
+    };
+    fetchMachines();
   }, []);
 
   // Helper function to format country names
@@ -62,6 +78,12 @@ const UploadPlasticProjectForm: React.FC = () => {
     const value = event.target.value;
     const values = Array.isArray(value) ? value : [value];
     setSelectedPlastics(values.map((id) => (typeof id === 'string' ? Number(id) : id)));
+  };
+
+  const handleMachinesChange = (event: SelectChangeEvent<typeof selectedMachines>) => {
+    const value = event.target.value;
+    const values = Array.isArray(value) ? value : [value];
+    setSelectedMachines(values.map((id) => (typeof id === 'string' ? Number(id) : id)));
   };
 
   const handleFinancingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,6 +163,7 @@ const UploadPlasticProjectForm: React.FC = () => {
         wasteCollected: wasteCollected,
         summary: summary || undefined,
         plasticIds: selectedPlastics.length > 0 ? selectedPlastics : undefined,
+        machineIds: selectedMachines.length > 0 ? selectedMachines : undefined,
       });
 
       alert('Successfully uploaded plastic project');
@@ -232,6 +255,15 @@ const UploadPlasticProjectForm: React.FC = () => {
       <Select
         multiple
         displayEmpty
+        MenuProps={{
+          PaperProps: {
+            sx: {
+              '& .MuiMenuItem-root.Mui-selected': {
+                backgroundColor: '#84f098',
+              },
+            },
+          },
+        }}
         id="plastics"
         value={selectedPlastics}
         onChange={handlePlasticsChange}
@@ -266,6 +298,53 @@ const UploadPlasticProjectForm: React.FC = () => {
           </MenuItem>
         ))}
       </Select>
+
+        <Select
+          multiple
+          displayEmpty
+          MenuProps={{
+            PaperProps: {
+              sx: {
+                '& .MuiMenuItem-root.Mui-selected': {
+                  backgroundColor: '#84f098',
+                },
+              },
+            },
+          }}
+          id="machines"
+          value={selectedMachines}
+          onChange={handleMachinesChange}
+          renderValue={(selected) => {
+            if (selected.length === 0) {
+              return <span style={{ color: '#666' }}>Select machines...</span>;
+            }
+            return selected.map((id) => machines.find((m) => m.id === id)?.name).join(', ');
+          }}
+          sx={{
+            width: '100%',
+            marginBottom: '1em',
+            '& .MuiSelect-select': {
+              backgroundColor: '#e0e0e0',
+              padding: '16px',
+              minHeight: '1.4375em',
+            },
+            '&.Mui-focused .MuiSelect-select': {
+              backgroundColor: 'white',
+            },
+            '& fieldset': {
+              legend: { display: 'none' },
+            },
+          }}
+        >
+          <MenuItem disabled>
+            <em>Select machines used in this project</em>
+          </MenuItem>
+          {machines.map((machine) => (
+            <MenuItem key={machine.id} value={machine.id}>
+              {machine.name}
+            </MenuItem>
+          ))}
+        </Select>
 
       <Box display={'flex'} sx={{ marginBottom: '1em' }}>
         <TextField

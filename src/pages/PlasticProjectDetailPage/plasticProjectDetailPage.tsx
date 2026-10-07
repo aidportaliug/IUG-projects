@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getPlasticProject, PlasticProjectResponse } from '../../services/plasticService';
 import './plasticProjectDetailPage.css';
 import Trax_Ghana from '../../images/Trax_Ghana.png';
@@ -10,6 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 const PlasticProjectDetailsPage: React.FC = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [project, setProject] = useState<PlasticProjectResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -102,19 +103,52 @@ const PlasticProjectDetailsPage: React.FC = () => {
                 <b>Waste Collected:</b> {project.wasteCollected} tons
               </div>
               {project.plastics && project.plastics.length > 0 && (
-                <div className="infoRow">
-                  <b>Plastics Used:</b> {project.plastics.map((p, index) => (
-                    <span>
+                <div className="infoRow" style={{ marginTop: '5px', marginBottom: '10px' }}>
+                  <b>Plastics Used:</b>{' '}
+                  {project.plastics.map((p, index) => (
+                    <span key={p.id ?? `${p.name}-${index}`}>
                       {index > 0 && ' '}
                       <span className="plasticTag">{p.name}</span>
                     </span>
-                    ))}
+                  ))}
+                </div>
+              )}
+              {project.machines && project.machines.length > 0 && (
+                <div className="infoRow" style={{ marginTop: '10px', marginBottom: '5px' }}>
+                  <b>Machines Used:</b>{' '}
+                  {project.machines.map((machine, index) => (
+                    <span key={machine.id ?? `${machine.name}-${index}`}>
+                      {index > 0 && ' '}
+                      <button
+                        type="button"
+                        className="plasticTag"
+                        onClick={() => navigate(`/machine/${machine.id}`)}
+                        style={{
+                          cursor: 'pointer',
+                          border: 'none',
+                          background: 'var(--secondaryGreen)',
+                          color: 'var(--mainBackground)',
+                          fontFamily: 'var(--mainFontFamily), serif',
+                          fontStyle: 'normal',
+                          fontWeight: 400,
+                          fontSize: '15px',
+                          borderRadius: '8px',
+                          padding: '4px 12px',
+                          textAlign: 'center',
+                          display: 'inline-block',
+                          margin: '2px 0',
+                        }}
+                      >
+                        {machine.name}
+                      </button>
+                    </span>
+                  ))}
                 </div>
               )}
             </div>
             <hr />
             {project.summary && (
-              <div className="projectDetails" style={{ fontSize: '15px' }}>
+              <div className="infoRow" style={{ fontSize: '15px', marginTop: '15px' }}>
                 <b>Summary: </b>
                 <b></b>
                 <p>{project.summary}</p>

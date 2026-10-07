@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './plasticPage.css'
+import './plasticPage.css';
 import Layout from '../../components/Navbar/Layout';
 import Footer from '../../components/Footer/Footer';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -65,6 +65,7 @@ const PlasticProjects: React.FC = () => {
   const [machines, setMachines] = useState<MachineData[]>([]);
   const [projects, setProjects] = useState<PlasticProjectData[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<PlasticProjectData[]>([]);
+  const [filteredMachines, setFilteredMachines] = useState<MachineData[]>([]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCountry, setFilterCountry] = useState('country');
@@ -75,6 +76,7 @@ const PlasticProjects: React.FC = () => {
   const [noProject, setNoProject] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
+
   const uploadButtonLabel = activeTab === 'machines' ? 'Upload machine' : 'Upload your project';
   const uploadButtonRoute = activeTab === 'machines' ? '/uploadMachine' : '/UploadPlasticProject';
 
@@ -92,7 +94,10 @@ const PlasticProjects: React.FC = () => {
             if (!acc[project.id]) {
               acc[project.id] = [];
             }
-            acc[project.id].push(machine.name);
+            // prevent duplicate machine names for the same project
+            if (!acc[project.id].includes(machine.name)) {
+              acc[project.id].push(machine.name);
+            }
           });
           return acc;
         }, {});
@@ -132,12 +137,14 @@ const PlasticProjects: React.FC = () => {
         setMachines(mappedMachines);
         setProjects(mappedProjects);
         setFilteredProjects(mappedProjects);
+        setFilteredMachines(mappedMachines);
         setNoProject(mappedProjects.length === 0);
       } catch (error) {
         console.error('Failed to fetch plastic database data:', error);
         setMachines([]);
         setProjects([]);
         setFilteredProjects([]);
+        setFilteredMachines([]);
         setNoProject(true);
       } finally {
         setLoading(false);
@@ -148,33 +155,76 @@ const PlasticProjects: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    let filtered = [...projects];
+    const searchLower = searchTerm.trim().toLowerCase();
 
-    if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (project) =>
-          project.project_name.toLowerCase().includes(searchLower) ||
-          project.project_use?.toLowerCase().includes(searchLower) ||
-          project.summary?.toLowerCase().includes(searchLower)
-      );
+    let filteredProjectsResult = [...projects];
+
+    if (searchLower) {
+      filteredProjectsResult = filteredProjectsResult.filter((project) => {
+        const searchableText = [
+          project.project_name,
+          project.project_use,
+          project.summary,
+          project.country,
+          project.product,
+          ...(project.plastics || []),
+          ...(project.machines || []),
+        ]
+          .join(' ')
+          .toLowerCase();
+
+        return searchableText.includes(searchLower);
+      });
     }
 
     if (filterCountry !== 'country') {
-      filtered = filtered.filter((project) => project.country === filterCountry);
+      filteredProjectsResult = filteredProjectsResult.filter((project) => project.country === filterCountry);
     }
 
     if (filterPlastic !== 'plastic') {
-      filtered = filtered.filter((project) => project.plastics?.includes(filterPlastic));
+      filteredProjectsResult = filteredProjectsResult.filter((project) => project.plastics?.includes(filterPlastic));
     }
 
     if (filterMachine !== 'machine') {
-      filtered = filtered.filter((project) => project.machines?.some((m) => m.includes(filterMachine)));
+      filteredProjectsResult = filteredProjectsResult.filter((project) =>
+        project.machines?.some((m) => m.includes(filterMachine))
+      );
     }
 
-    setFilteredProjects(filtered);
-    setNoProject(filtered.length === 0);
-  }, [searchTerm, filterCountry, filterPlastic, filterMachine, projects]);
+    let filteredMachinesResult = [...machines];
+
+    if (searchLower) {
+      filteredMachinesResult = filteredMachinesResult.filter((machine) => {
+        const searchableText = [
+          machine.title,
+          machine.whatDoes,
+          machine.howWork,
+          machine.howDoes,
+          machine.complicLesson,
+          machine.inUseEWB,
+          ...(machine.plastics || []),
+        ]
+          .join(' ')
+          .toLowerCase();
+
+        return searchableText.includes(searchLower);
+      });
+    }
+
+    if (filterPlastic !== 'plastic') {
+      filteredMachinesResult = filteredMachinesResult.filter((machine) => machine.plastics?.includes(filterPlastic));
+    }
+
+    if (filterMachine !== 'machine') {
+      filteredMachinesResult = filteredMachinesResult.filter((machine) =>
+        machine.title.toLowerCase().includes(filterMachine.toLowerCase())
+      );
+    }
+
+    setFilteredProjects(filteredProjectsResult);
+    setFilteredMachines(filteredMachinesResult);
+    setNoProject((activeTab === 'projects' ? filteredProjectsResult.length : filteredMachinesResult.length) === 0);
+  }, [activeTab, searchTerm, filterCountry, filterPlastic, filterMachine, projects, machines]);
 
   return (
     <>
@@ -265,33 +315,33 @@ const PlasticProjects: React.FC = () => {
 
             <div className="plasticSearchContainer">
               <div className="plasticSearchRow">
-              <TextField
-                placeholder="Search projects..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                variant="outlined"
-                size="small"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                className="plasticSearchField"
-              />
-              
-              <Button
-                variant="outlined"
-                onClick={() => setShowFilters(!showFilters)}
-                style={{
-                  color: '#3d7844',
-                  borderColor: '#3d7844',
-                  textTransform: 'none',
-                }}
-              >
-                Filters
-              </Button>
+                <TextField
+                  placeholder={activeTab === 'projects' ? 'Search projects...' : 'Search machines...'}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  className="plasticSearchField"
+                />
+
+                <Button
+                  variant="outlined"
+                  onClick={() => setShowFilters(!showFilters)}
+                  style={{
+                    color: '#3d7844',
+                    borderColor: '#3d7844',
+                    textTransform: 'none',
+                  }}
+                >
+                  Filters
+                </Button>
               </div>
 
               <div className="plasticUploadRow">
@@ -309,11 +359,18 @@ const PlasticProjects: React.FC = () => {
               </div>
             </div>
 
-            {showFilters && (
+                {showFilters && (
               <div className="plasticFilterPanel">
-                <PlasticFilterDropdown value={filterCountry} setValue={setFilterCountry} country={true} />
+                {activeTab === 'projects' && (
+                  <PlasticFilterDropdown value={filterCountry} setValue={setFilterCountry} country={true} />
+                )}
                 <PlasticFilterDropdown value={filterPlastic} setValue={setFilterPlastic} plastic={true} />
-                <PlasticFilterDropdown value={filterMachine} setValue={setFilterMachine} machine={true} />
+                <PlasticFilterDropdown
+                  value={filterMachine}
+                  setValue={setFilterMachine}
+                  machine={true}
+                  machineOptions={machines.map((m) => ({ value: m.title, label: m.title }))}
+                />
               </div>
             )}
 
@@ -323,14 +380,15 @@ const PlasticProjects: React.FC = () => {
               </div>
             ) : noProject ? (
               <div className="no-projects-message">
-                <h4>No projects found</h4>
+                <h4>No {activeTab} found</h4>
               </div>
             ) : (
               <div className="plasticCardGrid">
                 {activeTab === 'projects'
                   ? filteredProjects.map((project) =>
                       projectViewMode === 'small' ? (
-                        <div  key={project.project_id} 
+                        <div
+                          key={project.project_id}
                           className="plasticCard"
                           onClick={() => navigate(`/plastic-project/${project.project_id}`)}
                           style={{ cursor: 'pointer' }}
@@ -359,15 +417,23 @@ const PlasticProjects: React.FC = () => {
                                 ))}
                               </div>
                               <div className="plasticCardTags">
-                                <b>Product: </b>
-                                {project.product}
+                                <b>Machines: </b>
+                                {project.machines?.map((m) => (
+                                  <span key={m} className="plasticTag">
+                                    {m}
+                                  </span>
+                                ))}
+                              </div>
+                              <div className="plasticCardTags">
+                                <b>Product: </b> {project.product}
                               </div>
                               <div className="plasticCardLink">View project &rarr;</div>
                             </div>
                           </div>
                         </div>
                       ) : (
-                        <div key={project.project_id} 
+                        <div
+                          key={project.project_id}
                           className="plasticCard"
                           onClick={() => navigate(`/plastic-project/${project.project_id}`)}
                           style={{ cursor: 'pointer' }}
@@ -396,6 +462,14 @@ const PlasticProjects: React.FC = () => {
                                 ))}
                               </div>
                               <div className="plasticCardTags">
+                                <b>Machines: </b>
+                                {project.machines?.map((p) => (
+                                  <span key={p} className="plasticTag">
+                                    {p}
+                                  </span>
+                                ))}
+                              </div>
+                              <div className="plasticCardTags">
                                 <b>Product:</b> {project.product}
                               </div>
                               <div className="plasticCardTags">
@@ -414,12 +488,13 @@ const PlasticProjects: React.FC = () => {
                         </div>
                       )
                     )
-                  : machines.map((machine) =>
+                  : filteredMachines.map((machine) =>
                       machineViewMode === 'small' ? (
-                        <div key={machine.id} 
-                            className="plasticCard"
-                            onClick={() => navigate(`/machine/${machine.id}`)}
-                            style={{ cursor: 'pointer' }}
+                        <div
+                          key={machine.id}
+                          className="plasticCard"
+                          onClick={() => navigate(`/machine/${machine.id}`)}
+                          style={{ cursor: 'pointer' }}
                         >
                           <div className="plasticCardOutline">
                             <div className="plasticCardBody">

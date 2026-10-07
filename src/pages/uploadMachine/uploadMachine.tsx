@@ -59,9 +59,6 @@ const UploadMachine: React.FC = () => {
           </Button>
         </Box>
 
-        <div style={{ padding: '20px', fontFamily: 'var(--mainFontFamily), serif' }}>
-          <p>This is the upload machine page. Add your machine upload form here...................................</p>
-        </div>
         <UploadMachineForm />
 
 

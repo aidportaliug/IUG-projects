@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import imageProjectCard from './../../images/plasticProject.png';
 import './../ProjectCard/projectCard.css';
 
-interface SmallPlasticProjectProps {
+interface DetailPlasticProjectProps {
   id: string;
   title: string;
   country: String;
@@ -17,7 +17,7 @@ interface SmallPlasticProjectProps {
   wasteCollected: number;
 }
 
-const SmallPlasticProjectCard: React.FC<SmallPlasticProjectProps> = ({
+const DetailPlasticProjectCard: React.FC<DetailPlasticProjectProps> = ({
   id,
   title,
   country,
@@ -82,4 +82,4 @@ const SmallPlasticProjectCard: React.FC<SmallPlasticProjectProps> = ({
   );
 };
 
-export default SmallPlasticProjectCard;
+export default DetailPlasticProjectCard;

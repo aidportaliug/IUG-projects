@@ -1,5 +1,6 @@
 import { apiClient } from './apiClient';
 import BackendConfig from './BackendConfig';
+import { MachineResponse } from './machineService';
 
 export interface PlasticResponse {
   id: number;
@@ -27,6 +28,7 @@ export interface PlasticProjectResponse {
   wasteCollected: number;
   summary: string | null;
   plastics: PlasticResponse[];
+  machines?: MachineResponse[];
 }
 
 export interface PlasticProjectListResponse {
@@ -41,10 +43,6 @@ export interface PlasticCreateRequest {
   name: string;
 }
 
-export interface PlasticUpdateRequest {
-  name?: string;
-}
-
 export interface PlasticProjectCreateRequest {
   name: string;
   startDate: string;
@@ -56,6 +54,7 @@ export interface PlasticProjectCreateRequest {
   wasteCollected: number;
   summary?: string;
   plasticIds?: number[];
+  machineIds?: number[];
 }
 
 export interface PlasticProjectUpdateRequest {
@@ -69,6 +68,7 @@ export interface PlasticProjectUpdateRequest {
   wasteCollected?: number;
   summary?: string;
   plasticIds?: number[];
+  machineIds?: number[];
 }
 
 export async function getPlastics(search?: string, page = 1, pageSize = 100): Promise<PlasticListResponse> {
@@ -92,7 +92,7 @@ export async function createPlastic(data: PlasticCreateRequest): Promise<Plastic
   return apiClient.post<PlasticResponse>(BackendConfig.endpoint.createPlastic, data);
 }
 
-export async function updatePlastic(id: number, data: PlasticUpdateRequest): Promise<PlasticResponse> {
+export async function updatePlastic(id: number, data: PlasticCreateRequest): Promise<PlasticResponse> {
   return apiClient.put<PlasticResponse>(`${BackendConfig.endpoint.updatePlastic}${id}`, data);
 }
 
