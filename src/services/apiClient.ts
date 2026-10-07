@@ -18,8 +18,10 @@ class ApiClient {
   private async request<T>(endpoint: string, options: ApiRequestOptions = {}): Promise<T> {
     const { requiresAuth = true, ...fetchOptions } = options;
 
+    // FormData bodies (file uploads) need the browser to set the multipart Content-Type with its boundary.
+    const isFormData = fetchOptions.body instanceof FormData;
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
+      ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
       ...(fetchOptions.headers as Record<string, string>),
     };
 
@@ -61,6 +63,14 @@ class ApiClient {
     return this.request<T>(endpoint, {
       method: 'POST',
       body: JSON.stringify(data),
+      requiresAuth,
+    });
+  }
+
+  async postForm<T>(endpoint: string, formData: FormData, requiresAuth = true): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'POST',
+      body: formData,
       requiresAuth,
     });
   }

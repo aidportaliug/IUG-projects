@@ -7,6 +7,8 @@ interface PlasticFilterDropdownProps {
   country?: boolean;
   plastic?: boolean;
   machine?: boolean;
+  // Values to offer, e.g. built from the loaded data. Overrides the built-in lists.
+  options?: string[];
 }
 
 interface FilterOption {
@@ -19,8 +21,23 @@ class PlasticFilterDropdown extends Component<PlasticFilterDropdownProps> {
     this.props.setValue(event.target.value);
   };
 
+  private getAllLabel(): string {
+    const { country, plastic } = this.props;
+    if (country) return 'All countries';
+    if (plastic) return 'All plastics';
+    return 'All machines';
+  }
+
   private getOptions(): FilterOption[] {
-    const { country, plastic, machine } = this.props;
+    const { country, plastic, machine, options } = this.props;
+
+    if (options) {
+      const allValue = country ? 'country' : plastic ? 'plastic' : 'machine';
+      return [
+        { value: allValue, label: this.getAllLabel() },
+        ...options.map((option) => ({ value: option, label: option })),
+      ];
+    }
 
     if (country) {
       return [

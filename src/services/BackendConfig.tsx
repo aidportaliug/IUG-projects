@@ -1,5 +1,6 @@
 const BackendConfig = {
-  baseURL: 'http://localhost:8080',
+  // Set per environment via REACT_APP_API_URL (see .env.production); falls back to the local backend.
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8080',
   endpoint: {
     // Auth endpoints
     login: '/login',
@@ -32,6 +33,7 @@ const BackendConfig = {
     createPlasticProject: '/plastic-projects',
     updatePlasticProject: '/plastic-projects/',
     deletePlasticProject: '/plastic-projects/',
+    plasticProjectDocuments: '/documents',
 
     // Machine endpoints
     getAllMachines: '/machines',

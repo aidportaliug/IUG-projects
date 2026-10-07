@@ -2,9 +2,19 @@ import React, { SetStateAction, useState, useRef, useEffect } from 'react';
 import './uploadPlasticProjectForm.css';
 import { Box, Button, MenuItem, Select, SelectChangeEvent, TextField, TextFieldProps } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import { createPlasticProject, getPlastics, PlasticResponse } from '../../services/plasticService';
-import { countries } from '../../models/allowedValues';
+import {
+  createPlasticProject,
+  DocumentLinkRequest,
+  getPlastics,
+  PlasticResponse,
+  uploadPlasticProjectPdf,
+} from '../../services/plasticService';
+import { countries, country as countryLabels } from '../../models/allowedValues';
 import { useNavigate } from 'react-router-dom';
+
+// Must match MAX_UPLOAD_MB on the backend.
+const MAX_PDF_MB = 25;
+const isHttpUrl = (value: string) => /^https?:\/\/\S+$/i.test(value.trim());
 
 const UploadPlasticProjectForm: React.FC = () => {
   const [startDate, setStartDate] = useState<string | null>(null);
@@ -15,7 +25,10 @@ const UploadPlasticProjectForm: React.FC = () => {
   const [financing, setFinancing] = useState('');
   const [businessModel, setBusinessModel] = useState('');
   const [wasteCollected, setWasteCollected] = useState<number>(0);
+  const [pdfFiles, setPdfFiles] = useState<File[]>([]);
+  const [links, setLinks] = useState<DocumentLinkRequest[]>([]);
   const navigate = useNavigate();
+  const pdfInputRef = useRef<HTMLInputElement>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -54,6 +67,29 @@ const UploadPlasticProjectForm: React.FC = () => {
     }
   };
 
+  const handlePdfChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = Array.from(event.target.files ?? []);
+    const tooLarge = selected.filter((file) => file.size > MAX_PDF_MB * 1024 * 1024);
+    const notPdf = selected.filter((file) => file.type !== 'application/pdf');
+    if (tooLarge.length > 0) {
+      alert(`These files are larger than ${MAX_PDF_MB} MB: ${tooLarge.map((file) => file.name).join(', ')}`);
+    }
+    if (notPdf.length > 0) {
+      alert(`Only PDF files can be uploaded: ${notPdf.map((file) => file.name).join(', ')}`);
+    }
+    const accepted = selected.filter((file) => !tooLarge.includes(file) && !notPdf.includes(file));
+    setPdfFiles((current) => [...current, ...accepted]);
+    event.target.value = '';
+  };
+
+  const removePdf = (index: number) => {
+    setPdfFiles((current) => current.filter((_, i) => i !== index));
+  };
+
+  const updateLink = (index: number, field: keyof DocumentLinkRequest, value: string) => {
+    setLinks((current) => current.map((link, i) => (i === index ? { ...link, [field]: value } : link)));
+  };
+
   const handleCountryChange = (event: { target: { value: SetStateAction<string> } }) => {
     setCountry(event.target.value);
   };
@@ -73,7 +109,7 @@ const UploadPlasticProjectForm: React.FC = () => {
   };
 
   const handleWasteCollectedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(event.target.value, 10);
+    const value = parseFloat(event.target.value);
     setWasteCollected(isNaN(value) ? 0 : value);
   };
 
@@ -115,6 +151,14 @@ const UploadPlasticProjectForm: React.FC = () => {
       return;
     }
 
+    const filledLinks = links
+      .map((link) => ({ title: link.title.trim(), url: link.url.trim() }))
+      .filter((link) => link.title || link.url);
+    if (filledLinks.some((link) => !link.title || !isHttpUrl(link.url))) {
+      alert('Each link needs a title and a URL starting with http:// or https://');
+      return;
+    }
+
     try {
       // Format dates
       let startDateISO: string | undefined;
@@ -130,20 +174,40 @@ const UploadPlasticProjectForm: React.FC = () => {
         endDateISO = endDateObj.toISOString().split('T')[0];
       }
 
-      await createPlasticProject({
+      const createdProject = await createPlasticProject({
         name: name,
         startDate: startDateISO || new Date().toISOString().split('T')[0],
         endDate: endDateISO,
-        country: country,
+        // Store the display name (e.g. "Kenya") like the rest of the platform data, not the form key.
+        country: countryLabels[country as keyof typeof countryLabels] || formatCountryName(country),
         product: product,
         financing: financing,
         businessModel: businessModel,
         wasteCollected: wasteCollected,
         summary: summary || undefined,
         plasticIds: selectedPlastics.length > 0 ? selectedPlastics : undefined,
+        links: filledLinks.length > 0 ? filledLinks : undefined,
       });
 
-      alert('Successfully uploaded plastic project');
+      // PDFs are attached after the project exists; one failing file should not hide the others.
+      const failedPdfs: string[] = [];
+      for (const file of pdfFiles) {
+        try {
+          await uploadPlasticProjectPdf(createdProject.id, file);
+        } catch (uploadError) {
+          console.error(`Failed to upload ${file.name}:`, uploadError);
+          failedPdfs.push(file.name);
+        }
+      }
+
+      if (failedPdfs.length > 0) {
+        alert(
+          `The project was created, but these reports could not be uploaded: ${failedPdfs.join(', ')}. ` +
+            'You can try again from the project later.'
+        );
+      } else {
+        alert('Successfully uploaded plastic project');
+      }
       navigate('/plasticProjects');
     } catch (error: any) {
       console.error('Upload error:', error);
@@ -354,6 +418,79 @@ const UploadPlasticProjectForm: React.FC = () => {
           },
         }}
       />
+
+      <input
+        type="file"
+        accept="application/pdf"
+        multiple
+        style={{ display: 'none' }}
+        ref={pdfInputRef}
+        onChange={handlePdfChange}
+      />
+      <Button
+        size="large"
+        variant="outlined"
+        onClick={() => pdfInputRef.current?.click()}
+        style={{
+          width: '100%',
+          color: 'black',
+          textTransform: 'none',
+          border: '1px solid grey',
+          marginBottom: '0.5em',
+          backgroundColor: '#e0e0e0',
+        }}
+      >
+        Add reports (PDF, max {MAX_PDF_MB} MB each)
+      </Button>
+      {pdfFiles.length > 0 && (
+        <Box sx={{ marginBottom: '1em' }}>
+          {pdfFiles.map((file, index) => (
+            <Box key={`${file.name}-${index}`} display="flex" alignItems="center" justifyContent="space-between">
+              <span>
+                {file.name} ({(file.size / 1024 / 1024).toFixed(1)} MB)
+              </span>
+              <Button size="small" onClick={() => removePdf(index)}>
+                Remove
+              </Button>
+            </Box>
+          ))}
+        </Box>
+      )}
+
+      {links.map((link, index) => (
+        <Box key={index} display="flex" alignItems="center" sx={{ marginBottom: '0.5em' }}>
+          <TextField
+            label="Link title"
+            value={link.title}
+            onChange={(event) => updateLink(index, 'title', event.target.value)}
+            sx={{ width: '40%', marginRight: '0.5em', backgroundColor: '#e0e0e0' }}
+          />
+          <TextField
+            label="URL (https://...)"
+            value={link.url}
+            onChange={(event) => updateLink(index, 'url', event.target.value)}
+            sx={{ flex: 1, backgroundColor: '#e0e0e0' }}
+          />
+          <Button size="small" onClick={() => setLinks((current) => current.filter((_, i) => i !== index))}>
+            Remove
+          </Button>
+        </Box>
+      ))}
+      <Button
+        size="large"
+        variant="outlined"
+        onClick={() => setLinks((current) => [...current, { title: '', url: '' }])}
+        style={{
+          width: '100%',
+          color: 'black',
+          textTransform: 'none',
+          border: '1px solid grey',
+          marginBottom: '1em',
+          backgroundColor: '#e0e0e0',
+        }}
+      >
+        Add link to report or project page
+      </Button>
 
       <input type="file" accept="image/*" style={{ display: 'none' }} ref={fileInputRef} onChange={handleFileChange} />
       <Button

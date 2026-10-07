@@ -14,6 +14,23 @@ export interface PlasticListResponse {
   totalPages: number;
 }
 
+export interface PlasticProjectDocument {
+  id: number;
+  projectId: number;
+  kind: 'FILE' | 'LINK';
+  title: string;
+  // LINK: external URL. FILE: API path that serves the PDF (see documentHref).
+  url: string;
+  fileName: string | null;
+  sizeBytes: number | null;
+  createdAt: string;
+}
+
+export interface DocumentLinkRequest {
+  title: string;
+  url: string;
+}
+
 export interface PlasticProjectResponse {
   id: number;
   name: string;
@@ -27,6 +44,7 @@ export interface PlasticProjectResponse {
   wasteCollected: number;
   summary: string | null;
   plastics: PlasticResponse[];
+  documents: PlasticProjectDocument[];
 }
 
 export interface PlasticProjectListResponse {
@@ -56,6 +74,7 @@ export interface PlasticProjectCreateRequest {
   wasteCollected: number;
   summary?: string;
   plasticIds?: number[];
+  links?: DocumentLinkRequest[];
 }
 
 export interface PlasticProjectUpdateRequest {
@@ -121,4 +140,36 @@ export async function updatePlasticProject(
 
 export async function deletePlasticProject(id: number): Promise<void> {
   await apiClient.delete(`${BackendConfig.endpoint.deletePlasticProject}${id}`);
+}
+
+const projectDocumentsPath = (projectId: number) =>
+  `${BackendConfig.endpoint.getPlasticProjectById}${projectId}${BackendConfig.endpoint.plasticProjectDocuments}`;
+
+export async function uploadPlasticProjectPdf(
+  projectId: number,
+  file: File,
+  title?: string
+): Promise<PlasticProjectDocument> {
+  const formData = new FormData();
+  if (title?.trim()) {
+    formData.append('title', title.trim());
+  }
+  formData.append('file', file, file.name);
+  return apiClient.postForm<PlasticProjectDocument>(projectDocumentsPath(projectId), formData);
+}
+
+export async function addPlasticProjectLink(
+  projectId: number,
+  link: DocumentLinkRequest
+): Promise<PlasticProjectDocument> {
+  return apiClient.post<PlasticProjectDocument>(projectDocumentsPath(projectId), link);
+}
+
+export async function deletePlasticProjectDocument(projectId: number, documentId: number): Promise<void> {
+  await apiClient.delete(`${projectDocumentsPath(projectId)}/${documentId}`);
+}
+
+// Where to open a document: the external URL for links, the backend file endpoint for uploaded PDFs.
+export function documentHref(document: PlasticProjectDocument): string {
+  return document.kind === 'FILE' ? `${BackendConfig.baseURL}${document.url}` : document.url;
 }
