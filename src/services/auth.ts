@@ -31,6 +31,15 @@ export interface UserResponse {
   institute?: string;
   university?: string;
   isProfessor: boolean;
+  isAdmin?: boolean;
+  userType?: 'admin' | 'professor' | 'student';
+}
+
+const userTypeLabels = { admin: 'Admin', professor: 'Professor', student: 'Student' };
+
+// Display name of the user's type; falls back to isProfessor for backends without userType.
+export function userTypeLabel(user: UserResponse): string {
+  return userTypeLabels[user.userType ?? (user.isProfessor ? 'professor' : 'student')];
 }
 
 export default async function logIn(email: string, password: string): Promise<boolean> {
