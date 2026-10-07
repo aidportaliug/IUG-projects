@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Avatar, Button, TextField, Grid, Box } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { logOut } from '../../services/auth';
+import { logOut, userTypeLabel } from '../../services/auth';
 import { useAuth } from '../../services/AuthContext';
 import { apiClient } from '../../services/apiClient';
 
@@ -84,7 +84,7 @@ const UserProfileComponent: React.FC = () => {
                   </p>
                 )}
                 <p>
-                  <strong>User Type:</strong> {user.isProfessor ? 'Professor' : 'Student'}
+                  <strong>User Type:</strong> {userTypeLabel(user)}
                 </p>
               </div>
             </div>
