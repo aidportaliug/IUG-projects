@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getPlasticProject, PlasticProjectResponse } from '../../services/plasticService';
+import { documentHref, getPlasticProject, PlasticProjectResponse } from '../../services/plasticService';
 import './plasticProjectDetailPage.css';
 import Trax_Ghana from '../../images/Trax_Ghana.png';
 import ProjectImageBox from '../../components/ProjectImageBox/ProjectImageBox';
@@ -99,7 +99,7 @@ const PlasticProjectDetailsPage: React.FC = () => {
                 <b>Business Model:</b> {project.businessModel}
               </div>
               <div className="infoRow">
-                <b>Waste Collected:</b> {project.wasteCollected} tons
+                <b>Waste Collected:</b> {project.wasteCollected > 0 ? `${project.wasteCollected} tons` : 'Not reported'}
               </div>
               {project.plastics && project.plastics.length > 0 && (
                 <div className="infoRow">
@@ -120,6 +120,31 @@ const PlasticProjectDetailsPage: React.FC = () => {
                 <b></b>
                 <p>{project.summary}</p>
               </div>
+            )}
+            {project.documents && project.documents.length > 0 && (
+              <>
+                <hr />
+                <div className="projectDocuments">
+                  <b>Reports and links</b>
+                  <ul>
+                    {project.documents.map((document) => (
+                      <li key={document.id}>
+                        <a href={documentHref(document)} target="_blank" rel="noopener noreferrer">
+                          {document.title}
+                        </a>
+                        {document.kind === 'FILE' ? (
+                          <span className="documentMeta">
+                            {' '}
+                            (PDF{document.sizeBytes ? `, ${(document.sizeBytes / 1024 / 1024).toFixed(1)} MB` : ''})
+                          </span>
+                        ) : (
+                          <span className="documentMeta"> (link)</span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </>
             )}
           </div>
         </Layout>

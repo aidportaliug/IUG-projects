@@ -54,3 +54,29 @@ hr {
   padding: 4px 12px;
   text-align: center;
 }
+
+.projectDocuments {
+  font-family: var(--mainFontFamily), serif;
+  color: #3d7844;
+  margin: 5px;
+  font-size: 15px;
+}
+
+.projectDocuments ul {
+  margin-top: 8px;
+  padding-left: 20px;
+}
+
+.projectDocuments li {
+  margin-bottom: 6px;
+}
+
+.projectDocuments a {
+  color: #3d7844;
+  font-weight: 600;
+}
+
+.documentMeta {
+  color: #555;
+  font-size: 13px;
+}

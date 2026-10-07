@@ -49,8 +49,15 @@ const machineImageByName: Record<string, string> = {
   polyfloss,
   'oven/melter': melter,
   'grinder/shredder': shredder,
+  shredder,
+  'twig grinder': shredder,
   ventilation,
+  'ventilation system': ventilation,
 };
+
+// Sorted, de-duplicated filter values taken from the loaded data.
+const uniqueSorted = (values: string[]): string[] =>
+  Array.from(new Set(values.filter((value) => value.trim() !== ''))).sort((a, b) => a.localeCompare(b));
 
 const getMachineImage = (name: string): string | undefined => {
   const key = name.trim().toLowerCase();
@@ -169,7 +176,7 @@ const PlasticProjects: React.FC = () => {
     }
 
     if (filterMachine !== 'machine') {
-      filtered = filtered.filter((project) => project.machines?.some((m) => m.includes(filterMachine)));
+      filtered = filtered.filter((project) => project.machines?.includes(filterMachine));
     }
 
     setFilteredProjects(filtered);
@@ -311,9 +318,24 @@ const PlasticProjects: React.FC = () => {
 
             {showFilters && (
               <div className="plasticFilterPanel">
-                <PlasticFilterDropdown value={filterCountry} setValue={setFilterCountry} country={true} />
-                <PlasticFilterDropdown value={filterPlastic} setValue={setFilterPlastic} plastic={true} />
-                <PlasticFilterDropdown value={filterMachine} setValue={setFilterMachine} machine={true} />
+                <PlasticFilterDropdown
+                  value={filterCountry}
+                  setValue={setFilterCountry}
+                  country={true}
+                  options={uniqueSorted(projects.map((project) => project.country))}
+                />
+                <PlasticFilterDropdown
+                  value={filterPlastic}
+                  setValue={setFilterPlastic}
+                  plastic={true}
+                  options={uniqueSorted(projects.flatMap((project) => project.plastics ?? []))}
+                />
+                <PlasticFilterDropdown
+                  value={filterMachine}
+                  setValue={setFilterMachine}
+                  machine={true}
+                  options={uniqueSorted(machines.map((machine) => machine.title))}
+                />
               </div>
             )}
 
