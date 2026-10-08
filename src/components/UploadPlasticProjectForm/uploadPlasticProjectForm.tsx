@@ -16,6 +16,7 @@ import {
 } from '../../services/plasticService';
 import { countries, country as countryLabels } from '../../models/allowedValues';
 import { useNavigate } from 'react-router-dom';
+import { useI18n } from '../../i18n/I18nContext';
 
 // Must match MAX_UPLOAD_MB on the backend.
 const MAX_PDF_MB = 25;
@@ -37,13 +38,14 @@ interface UploadPlasticProjectFormProps {
 
 const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ projectId }) => {
   const isEdit = projectId !== undefined;
+  const { t } = useI18n();
   const [name, setName] = useState('');
   const [product, setProduct] = useState('');
   const [summary, setSummary] = useState('');
   const [customCountry, setCustomCountry] = useState('');
   const [existingDocuments, setExistingDocuments] = useState<PlasticProjectDocument[]>([]);
   const [loadingProject, setLoadingProject] = useState(isEdit);
-  const [loadError, setLoadError] = useState('');
+  const [loadError, setLoadError] = useState<string | null>(null);
   // Shown next to the submit button and the reports section instead of popups.
   const [formError, setFormError] = useState('');
   const [filesError, setFilesError] = useState('');
@@ -102,7 +104,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
           setCountry(CURRENT_COUNTRY);
         }
       } catch (error: any) {
-        setLoadError(error.message || 'Could not load the project');
+        setLoadError(error.message || '');
       } finally {
         setLoadingProject(false);
       }
@@ -111,13 +113,13 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
   }, [projectId]);
 
   const removeExistingDocument = async (document: PlasticProjectDocument) => {
-    if (projectId === undefined || !window.confirm(`Remove "${document.title}" from the project?`)) return;
+    if (projectId === undefined || !window.confirm(t.projectForm.confirmRemoveDocument(document.title))) return;
     setFilesError('');
     try {
       await deletePlasticProjectDocument(projectId, document.id);
       setExistingDocuments((current) => current.filter((d) => d.id !== document.id));
     } catch (error: any) {
-      setFilesError(error.message || 'Could not remove the document');
+      setFilesError(error.message || t.projectForm.removeFailed);
     }
   };
 
@@ -148,10 +150,10 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
     const notPdf = selected.filter((file) => file.type !== 'application/pdf');
     const problems: string[] = [];
     if (tooLarge.length > 0) {
-      problems.push(`These files are larger than ${MAX_PDF_MB} MB: ${tooLarge.map((file) => file.name).join(', ')}`);
+      problems.push(t.projectForm.tooLarge(MAX_PDF_MB, tooLarge.map((file) => file.name).join(', ')));
     }
     if (notPdf.length > 0) {
-      problems.push(`Only PDF files can be uploaded: ${notPdf.map((file) => file.name).join(', ')}`);
+      problems.push(t.projectForm.notPdf(notPdf.map((file) => file.name).join(', ')));
     }
     setFilesError(problems.join('. '));
     const accepted = selected.filter((file) => !tooLarge.includes(file) && !notPdf.includes(file));
@@ -203,23 +205,23 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
 
     if (emptyFields.length > 0) {
       const fieldNames = emptyFields.slice(0, emptyFields.length / 2).map((element) => `"${element.name}"`);
-      setFormError(`Please fill in the following required fields: ${fieldNames.join(', ')}`);
+      setFormError(t.common.requiredFields(fieldNames.join(', ')));
       return;
     }
 
     // Validate required fields
     if (!name.trim() || !product.trim() || !country || country === 'country') {
-      setFormError('Please fill in all required fields');
+      setFormError(t.projectForm.fillRequired);
       return;
     }
 
     if (!countries.includes(country) && country !== CURRENT_COUNTRY) {
-      setFormError('You must choose a country from the list.');
+      setFormError(t.projectForm.chooseCountry);
       return;
     }
 
     if (wasteCollected < 0) {
-      setFormError('Waste collected must be a positive number');
+      setFormError(t.projectForm.wasteNegative);
       return;
     }
 
@@ -227,7 +229,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
       .map((link) => ({ title: link.title.trim(), url: link.url.trim() }))
       .filter((link) => link.title || link.url);
     if (filledLinks.some((link) => !link.title || !isHttpUrl(link.url))) {
-      setFormError('Each link needs a title and a URL starting with http:// or https://');
+      setFormError(t.projectForm.invalidLinks);
       return;
     }
 
@@ -297,25 +299,21 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
       }
 
       // The detail page shows this warning once (see plasticProjectDetailPage).
-      const uploadWarning =
-        failedPdfs.length > 0
-          ? `The project was ${isEdit ? 'saved' : 'created'}, but these reports could not be uploaded: ` +
-            `${failedPdfs.join(', ')}. You can try again by editing the project.`
-          : undefined;
+      const uploadWarning = failedPdfs.length > 0 ? t.projectForm.pdfsFailed(isEdit, failedPdfs.join(', ')) : undefined;
       navigate(`/plastic-project/${savedProjectId}`, { state: uploadWarning ? { uploadWarning } : undefined });
     } catch (error: any) {
       console.error('Upload error:', error);
-      setFormError(error.message || 'Failed to upload plastic project');
+      setFormError(error.message || t.projectForm.uploadFailed);
     }
   };
 
   if (loadingProject) {
-    return <p style={{ textAlign: 'center' }}>Loading project…</p>;
+    return <p style={{ textAlign: 'center' }}>{t.projectForm.loadingProject}</p>;
   }
-  if (loadError) {
+  if (loadError !== null) {
     return (
       <Typography color="error" textAlign="center">
-        {loadError}
+        {loadError || t.projectForm.loadFailed}
       </Typography>
     );
   }
@@ -326,7 +324,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
         required
         fullWidth
         id="projectTitle"
-        label="Project Name"
+        label={t.projectForm.name}
         name="projectTitle"
         value={name}
         onChange={(event) => setName(event.target.value)}
@@ -343,7 +341,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
         required
         fullWidth
         id="product"
-        label="Product"
+        label={t.projectForm.product}
         name="product"
         value={product}
         onChange={(event) => setProduct(event.target.value)}
@@ -359,7 +357,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
       <Box display={'flex'} sx={{ marginBottom: '1em' }}>
         <Select
           id="country"
-          label="Country"
+          label={t.filters.country}
           value={country}
           name="country"
           onChange={handleCountryChange}
@@ -377,7 +375,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
             },
           }}
         >
-          <MenuItem value="country">Select Country</MenuItem>
+          <MenuItem value="country">{t.projectForm.selectCountry}</MenuItem>
           {customCountry && <MenuItem value={CURRENT_COUNTRY}>{customCountry}</MenuItem>}
           {countries.map((c) => (
             <MenuItem key={c} value={c}>
@@ -390,7 +388,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
           type="number"
           fullWidth
           id="wasteCollected"
-          label="Waste Collected (tons)"
+          label={t.projectForm.wasteCollected}
           name="wasteCollected"
           value={wasteCollected}
           onChange={handleWasteCollectedChange}
@@ -411,7 +409,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
         onChange={handlePlasticsChange}
         renderValue={(selected) => {
           if (selected.length === 0) {
-            return <span style={{ color: '#666' }}>Select plastics...</span>;
+            return <span style={{ color: '#666' }}>{t.common.selectPlastics}</span>;
           }
           return selected.map((id) => plastics.find((p) => p.id === id)?.name).join(', ');
         }}
@@ -432,7 +430,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
         }}
       >
         <MenuItem disabled>
-          <em>Select plastics used in this project</em>
+          <em>{t.projectForm.selectPlasticsHint}</em>
         </MenuItem>
         {plastics.map((plastic) => (
           <MenuItem key={plastic.id} value={plastic.id}>
@@ -445,7 +443,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
         <TextField
           fullWidth
           id="financing"
-          label="Financing"
+          label={t.projectForm.financing}
           name="financing"
           value={financing}
           onChange={handleFinancingChange}
@@ -461,7 +459,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
         <TextField
           fullWidth
           id="businessModel"
-          label="Business Model"
+          label={t.projectForm.businessModel}
           name="businessModel"
           value={businessModel}
           onChange={handleBusinessModelChange}
@@ -476,7 +474,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
 
       <Box display={'flex'} sx={{ marginBottom: '1em' }}>
         <DatePicker
-          label="Start Date"
+          label={t.projectForm.startDate}
           value={startDate}
           onChange={(newValue) => setStartDate(newValue)}
           renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
@@ -495,7 +493,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
         />
 
         <DatePicker
-          label="End Date (Optional)"
+          label={t.projectForm.endDate}
           value={endDate}
           onChange={(newValue) => setEndDate(newValue)}
           renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
@@ -516,7 +514,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
       <TextField
         fullWidth
         id="summary"
-        label="Summary"
+        label={t.projectForm.summary}
         name="summary"
         value={summary}
         onChange={(event) => setSummary(event.target.value)}
@@ -533,14 +531,14 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
 
       {isEdit && existingDocuments.length > 0 && (
         <Box sx={{ marginBottom: '1em' }}>
-          <b>Current reports and links</b>
+          <b>{t.projectForm.currentDocuments}</b>
           {existingDocuments.map((document) => (
             <Box key={document.id} display="flex" alignItems="center" justifyContent="space-between">
               <span>
-                {document.title} ({document.kind === 'FILE' ? 'PDF' : 'link'})
+                {document.title} ({document.kind === 'FILE' ? t.projectForm.pdf : t.projectForm.link})
               </span>
               <Button size="small" color="error" onClick={() => removeExistingDocument(document)}>
-                Remove
+                {t.common.remove}
               </Button>
             </Box>
           ))}
@@ -568,7 +566,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
           backgroundColor: '#e0e0e0',
         }}
       >
-        Add reports (PDF, max {MAX_PDF_MB} MB each)
+        {t.projectForm.addReports(MAX_PDF_MB)}
       </Button>
       {filesError && (
         <Typography color="error" sx={{ mb: 1 }}>
@@ -583,7 +581,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
                 {file.name} ({(file.size / 1024 / 1024).toFixed(1)} MB)
               </span>
               <Button size="small" onClick={() => removePdf(index)}>
-                Remove
+                {t.common.remove}
               </Button>
             </Box>
           ))}
@@ -593,19 +591,19 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
       {links.map((link, index) => (
         <Box key={index} display="flex" alignItems="center" sx={{ marginBottom: '0.5em' }}>
           <TextField
-            label="Link title"
+            label={t.projectForm.linkTitle}
             value={link.title}
             onChange={(event) => updateLink(index, 'title', event.target.value)}
             sx={{ width: '40%', marginRight: '0.5em', backgroundColor: '#e0e0e0' }}
           />
           <TextField
-            label="URL (https://...)"
+            label={t.projectForm.linkUrl}
             value={link.url}
             onChange={(event) => updateLink(index, 'url', event.target.value)}
             sx={{ flex: 1, backgroundColor: '#e0e0e0' }}
           />
           <Button size="small" onClick={() => setLinks((current) => current.filter((_, i) => i !== index))}>
-            Remove
+            {t.common.remove}
           </Button>
         </Box>
       ))}
@@ -622,7 +620,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
           backgroundColor: '#e0e0e0',
         }}
       >
-        Add link to report or project page
+        {t.projectForm.addLink}
       </Button>
 
       <input type="file" accept="image/*" style={{ display: 'none' }} ref={fileInputRef} onChange={handleFileChange} />
@@ -639,7 +637,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
           backgroundColor: '#e0e0e0',
         }}
       >
-        Upload Picture (Optional)
+        {t.common.uploadPicture}
       </Button>
 
       {imageUrl && (
@@ -654,7 +652,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
         </Typography>
       )}
       <Button type="submit" variant="contained" style={{ width: 200, height: 50, margin: '1em' }}>
-        {isEdit ? 'Save changes' : 'Upload Plastic Project'}
+        {isEdit ? t.projectForm.submitEdit : t.projectForm.submitCreate}
       </Button>
     </Box>
   );

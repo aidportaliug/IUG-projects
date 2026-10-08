@@ -9,6 +9,9 @@ interface PlasticFilterDropdownProps {
   machine?: boolean;
   // Values to offer, e.g. built from the loaded data. Overrides the built-in lists.
   options?: string[];
+  // Translated texts: the field label and the "all" entry.
+  label?: string;
+  allLabel?: string;
 }
 
 interface FilterOption {
@@ -22,7 +25,8 @@ class PlasticFilterDropdown extends Component<PlasticFilterDropdownProps> {
   };
 
   private getAllLabel(): string {
-    const { country, plastic } = this.props;
+    const { country, plastic, allLabel } = this.props;
+    if (allLabel) return allLabel;
     if (country) return 'All countries';
     if (plastic) return 'All plastics';
     return 'All machines';
@@ -76,7 +80,8 @@ class PlasticFilterDropdown extends Component<PlasticFilterDropdownProps> {
   }
 
   private getLabel(): string {
-    const { country, plastic, machine } = this.props;
+    const { country, plastic, machine, label } = this.props;
+    if (label) return label;
 
     if (country) return 'Country';
     if (plastic) return 'Plastic Type';

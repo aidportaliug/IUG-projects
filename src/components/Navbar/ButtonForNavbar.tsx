@@ -2,77 +2,30 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
+import { useI18n } from '../../i18n/I18nContext';
+
+// Header pages: the route and the paths where the button is shown as active.
+export const navPages = {
+  plasticProjects: { route: '/plasticProjects', activeOn: ['/', '/plasticProjects'] },
+};
+
+export type NavPageKey = keyof typeof navPages;
 
 interface ButtonProps {
   location: string;
-  page: string;
+  page: NavPageKey;
 }
 
 const ButtonForNavbar: React.FC<ButtonProps> = ({ page, location }) => {
   const navigate = useNavigate();
-
-  //const [, setAnchorElNav] = useState<null | HTMLElement>(null);
-
-  /*const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-  */
-
-  //const path = '/' + page.toLowerCase().replace(/\s+g,'-');
-
-  const handleClick = () => {
-    if (page === 'Masterprojects') {
-      navigate('/');
-    } else if (page === 'Experience Reports') {
-      navigate('/experienceReports');
-    } else if (page === 'Plastic Project') {
-      navigate('/plasticProjects');
-    }
-  };
-
-  /*
-   const handleClick = () = > {
-    navigate(path);
-
-  };
-  */
-
-  //const checkPage = () => location === '/' && page === 'Masterprojects';
-
-  //const checkPage = () => location === path;
-
-  const checkPage = () => {
-    if (page === 'Masterprojects') {
-      return location === '/';
-    } else if (page === 'Experience Reports') {
-      return location === '/experienceReports';
-    } else if (page === 'Plastic Project') {
-      return location === '/' || location === '/plasticProjects';
-    }
-    return false;
-  };
+  const { t } = useI18n();
+  const { route, activeOn } = navPages[page];
 
   return (
-    <Button onClick={handleClick} sx={{ my: 2, color: '#3D7844', display: 'block' }}>
-      {checkPage() ? (
-        <Typography className="bold">{page}</Typography>
-      ) : (
-        <Typography className="notBold">{page}</Typography>
-      )}
+    <Button onClick={() => navigate(route)} sx={{ my: 2, color: '#3D7844', display: 'block' }}>
+      <Typography className={activeOn.includes(location) ? 'bold' : 'notBold'}>{t.nav[page]}</Typography>
     </Button>
   );
-
-  /*
-  return (
-    <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: '#3D7844', display: 'block' }}>
-      {checkPage() ? (
-        <Typography className="bold">{page}</Typography>
-      ) : (
-        <Typography className="notBold">{page}</Typography>
-      )}
-    </Button>
-  );
-  */
 };
 
 export default ButtonForNavbar;

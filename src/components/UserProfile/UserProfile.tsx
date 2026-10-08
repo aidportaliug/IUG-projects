@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Button, TextField, Grid, Box, Typography } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { canUploadProjects, logOut, userTypeLabel } from '../../services/auth';
+import { canUploadProjects, logOut, userTypeKey } from '../../services/auth';
 import { useAuth } from '../../services/AuthContext';
 import { apiClient } from '../../services/apiClient';
 import MyUploads from './MyUploads';
+import { useI18n } from '../../i18n/I18nContext';
 
 const UserProfileComponent: React.FC = () => {
   const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
   const [formError, setFormError] = useState('');
+  const { t, formatDate } = useI18n();
   const [formData, setFormData] = useState({
     username: user?.username || '',
     firstName: user?.firstName || '',
@@ -35,7 +37,7 @@ const UserProfileComponent: React.FC = () => {
       setEditing(false);
     } catch (error: any) {
       console.error('Update error:', error);
-      setFormError(error.message || 'Failed to update profile');
+      setFormError(error.message || t.profile.updateFailed);
     }
   };
 
@@ -43,25 +45,23 @@ const UserProfileComponent: React.FC = () => {
     // Each inner list is one row; empty fields and rows are hidden.
     type Field = [string, string | null | undefined];
     const allRows: Field[][] = [
-      [['User type', userTypeLabel(user)]],
+      [[t.profile.userType, t.userType[userTypeKey(user)]]],
       [
-        ['Email', user.email],
-        ['Username', user.username],
+        [t.profile.email, user.email],
+        [t.profile.username, user.username],
       ],
       [
-        ['First name', user.firstName],
-        ['Last name', user.lastName],
+        [t.profile.firstName, user.firstName],
+        [t.profile.lastName, user.lastName],
       ],
-      [['Phone', user.phoneNumber]],
+      [[t.profile.phone, user.phoneNumber]],
       [
-        ['Institute', user.institute],
-        ['University', user.university],
+        [t.profile.institute, user.institute],
+        [t.profile.university, user.university],
       ],
     ];
     const detailRows = allRows.map((row) => row.filter(([, value]) => !!value)).filter((row) => row.length > 0);
-    const memberSince = user.createdAt
-      ? new Date(user.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long' })
-      : null;
+    const memberSince = user.createdAt ? formatDate(user.createdAt, { year: 'numeric', month: 'long' }) : null;
 
     return (
       <div className="profilePage">
@@ -69,9 +69,9 @@ const UserProfileComponent: React.FC = () => {
           <div>
             <h1>{user.username}</h1>
             <div className="profileBannerMeta">
-              <span className="profileBadge">{userTypeLabel(user)}</span>
+              <span className="profileBadge">{t.userType[userTypeKey(user)]}</span>
               <span>{user.email}</span>
-              {memberSince && <span>Member since {memberSince}</span>}
+              {memberSince && <span>{t.profile.memberSince(memberSince)}</span>}
             </div>
           </div>
           <div className="profileBannerActions">
@@ -80,21 +80,21 @@ const UserProfileComponent: React.FC = () => {
               onClick={logout}
               sx={{ color: '#fff', borderColor: 'rgba(255,255,255,0.7)', textTransform: 'none' }}
             >
-              Log out
+              {t.profile.logout}
             </Button>
           </div>
         </section>
 
         <section className="profileCard">
           <div className="profileCardHeader">
-            <h2>{editing ? 'Edit profile' : 'Account details'}</h2>
+            <h2>{editing ? t.profile.editProfile : t.profile.accountDetails}</h2>
             {!editing && (
               <Button
                 variant="outlined"
                 onClick={() => setEditing(true)}
                 sx={{ color: '#3D7844', borderColor: '#3D7844', textTransform: 'none' }}
               >
-                Edit profile
+                {t.profile.editProfile}
               </Button>
             )}
           </div>
@@ -118,7 +118,7 @@ const UserProfileComponent: React.FC = () => {
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label="Username"
+                    label={t.profile.username}
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                   />
@@ -126,7 +126,7 @@ const UserProfileComponent: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="First Name"
+                    label={t.profile.firstName}
                     value={formData.firstName}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                   />
@@ -134,7 +134,7 @@ const UserProfileComponent: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="Last Name"
+                    label={t.profile.lastName}
                     value={formData.lastName}
                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                   />
@@ -142,7 +142,7 @@ const UserProfileComponent: React.FC = () => {
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label="Phone Number"
+                    label={t.profile.phone}
                     value={formData.phoneNumber}
                     onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
                   />
@@ -150,7 +150,7 @@ const UserProfileComponent: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="Institute"
+                    label={t.profile.institute}
                     value={formData.institute}
                     onChange={(e) => setFormData({ ...formData, institute: e.target.value })}
                   />
@@ -158,7 +158,7 @@ const UserProfileComponent: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="University"
+                    label={t.profile.university}
                     value={formData.university}
                     onChange={(e) => setFormData({ ...formData, university: e.target.value })}
                   />
@@ -175,7 +175,7 @@ const UserProfileComponent: React.FC = () => {
                   onClick={handleUpdate}
                   sx={{ backgroundColor: '#3D7844', textTransform: 'none', '&:hover': { backgroundColor: '#2f5f35' } }}
                 >
-                  Save changes
+                  {t.profile.save}
                 </Button>
                 <Button
                   variant="text"
@@ -185,7 +185,7 @@ const UserProfileComponent: React.FC = () => {
                   }}
                   sx={{ color: '#3D7844', textTransform: 'none' }}
                 >
-                  Cancel
+                  {t.profile.cancel}
                 </Button>
               </Box>
             </Box>

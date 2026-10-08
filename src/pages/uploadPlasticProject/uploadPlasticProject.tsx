@@ -7,10 +7,7 @@ import Meta from '../../components/Meta';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Box, CircularProgress } from '@mui/material';
 import { Footer } from '../../components/Footer/Footer';
-
-const NOT_A_CONTRIBUTOR =
-  'Only students, professors and the administrator can upload projects. ' +
-  'Contact the administrator if your user type should be changed.';
+import { useI18n } from '../../i18n/I18nContext';
 
 // Upload a new plastic project (/UploadPlasticProject) or edit one (/plastic-project/:id/edit).
 // Students, professors and the admin may upload; editing is checked again by the backend (creator or admin).
@@ -20,7 +17,8 @@ const UploadPlasticProject: React.FC = () => {
   const projectId = id ? Number(id) : undefined;
   const isEdit = projectId !== undefined && !isNaN(projectId);
   const navigate = useNavigate();
-  const title = isEdit ? 'Edit project' : 'Upload Your Project';
+  const { t } = useI18n();
+  const title = isEdit ? t.uploadPage.editTitle : t.uploadPage.uploadTitle;
 
   let content: React.ReactNode;
   if (loading) {
@@ -28,14 +26,14 @@ const UploadPlasticProject: React.FC = () => {
   } else if (!user) {
     content = (
       <Box textAlign="center">
-        <p>Log in as a student or professor to upload a project.</p>
+        <p>{t.uploadPage.loginToUpload}</p>
         <Button variant="contained" onClick={() => navigate('/login')} style={{ backgroundColor: '#3D7844' }}>
-          Login
+          {t.uploadPage.login}
         </Button>
       </Box>
     );
   } else if (!canUploadProjects(user)) {
-    content = <p style={{ textAlign: 'center' }}>{NOT_A_CONTRIBUTOR}</p>;
+    content = <p style={{ textAlign: 'center' }}>{t.uploadPage.notContributor}</p>;
   } else {
     content = <UploadPlasticProjectForm projectId={isEdit ? projectId : undefined} />;
   }
@@ -57,7 +55,7 @@ const UploadPlasticProject: React.FC = () => {
               marginBottom: 20,
             }}
           >
-            Back
+            {t.common.back}
           </Button>
           <div className="title">{title}</div>
           <span style={{ width: 90 }} />
