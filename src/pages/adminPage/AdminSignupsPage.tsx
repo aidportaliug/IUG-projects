@@ -12,7 +12,7 @@ import {
 import Layout from '../../components/Navbar/Layout';
 import Meta from '../../components/Meta';
 import { useAuth } from '../../services/AuthContext';
-import { UserResponse, userTypeLabel } from '../../services/auth';
+import { UserResponse, userTypeKey } from '../../services/auth';
 import {
   approveUser,
   ApprovalStatus,
@@ -23,10 +23,9 @@ import {
   rejectUser,
 } from '../../services/adminService';
 import './adminSignupsPage.css';
+import { useI18n } from '../../i18n/I18nContext';
 
 const fullName = (user: UserResponse) => [user.firstName, user.lastName].filter(Boolean).join(' ');
-
-const formatDate = (value?: string | null) => (value ? new Date(value).toLocaleString() : '–');
 
 // Lets the admin approve or reject new sign-ups. Pending accounts cannot log in until approved.
 const AdminSignupsPage: React.FC = () => {
@@ -35,15 +34,18 @@ const AdminSignupsPage: React.FC = () => {
   const [users, setUsers] = useState<UserResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const [busyId, setBusyId] = useState<number | null>(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const { t, lang } = useI18n();
+  const formatDate = (value?: string | null) =>
+    value ? new Date(value).toLocaleString(lang === 'nb' ? 'nb-NO' : 'en-GB') : '–';
 
   const loadUsers = useCallback(async () => {
     setLoading(true);
-    setError('');
+    setError(null);
     try {
       setUsers(await getUsersByStatus(status));
     } catch (e: any) {
-      setError(e.message || 'Could not load sign-ups');
+      setError(e.message || '');
     } finally {
       setLoading(false);
     }
@@ -56,58 +58,58 @@ const AdminSignupsPage: React.FC = () => {
   }, [user, loadUsers]);
 
   const handleApprove = async (target: UserResponse) => {
+    setError(null);
     setBusyId(target.id);
     try {
       await approveUser(target.id);
       setUsers((current) => current.filter((u) => u.id !== target.id));
     } catch (e: any) {
-      alert(e.message || 'Could not approve the sign-up');
+      setError(e.message || t.admin.approveFailed);
     } finally {
       setBusyId(null);
     }
   };
 
   const handleReject = async (target: UserResponse) => {
-    if (!window.confirm(`Reject and delete the sign-up from ${target.username} (${target.email})?`)) {
+    if (!window.confirm(t.admin.confirmReject(target.username, target.email))) {
       return;
     }
+    setError(null);
     setBusyId(target.id);
     try {
       await rejectUser(target.id);
       setUsers((current) => current.filter((u) => u.id !== target.id));
     } catch (e: any) {
-      alert(e.message || 'Could not reject the sign-up');
+      setError(e.message || t.admin.rejectFailed);
     } finally {
       setBusyId(null);
     }
   };
 
   const handleDelete = async (target: UserResponse) => {
-    if (
-      !window.confirm(
-        `Delete the account of ${target.username} (${target.email})? Their master projects and reports are deleted too. This cannot be undone.`
-      )
-    ) {
+    if (!window.confirm(t.admin.confirmDelete(target.username, target.email))) {
       return;
     }
+    setError(null);
     setBusyId(target.id);
     try {
       await deleteUser(target.id);
       setUsers((current) => current.filter((u) => u.id !== target.id));
     } catch (e: any) {
-      alert(e.message || 'Could not delete the user');
+      setError(e.message || t.admin.deleteFailed);
     } finally {
       setBusyId(null);
     }
   };
 
   const handleTypeChange = async (target: UserResponse, userType: ChangeableUserType) => {
+    setError(null);
     setBusyId(target.id);
     try {
       const updated = await changeUserType(target.id, userType);
       setUsers((current) => current.map((u) => (u.id === updated.id ? updated : u)));
     } catch (e: any) {
-      alert(e.message || 'Could not change the user type');
+      setError(e.message || t.admin.typeFailed);
     } finally {
       setBusyId(null);
     }
@@ -117,7 +119,7 @@ const AdminSignupsPage: React.FC = () => {
   if (authLoading) {
     content = <CircularProgress />;
   } else if (!user?.isAdmin) {
-    content = <p>Only the administrator can see this page.</p>;
+    content = <p>{t.admin.onlyAdmin}</p>;
   } else {
     content = (
       <>
@@ -128,16 +130,16 @@ const AdminSignupsPage: React.FC = () => {
           onChange={(_, value: ApprovalStatus | null) => value && setStatus(value)}
           className="adminStatusToggle"
         >
-          <ToggleButton value="PENDING">Waiting for approval</ToggleButton>
-          <ToggleButton value="APPROVED">Approved</ToggleButton>
+          <ToggleButton value="PENDING">{t.admin.pending}</ToggleButton>
+          <ToggleButton value="APPROVED">{t.admin.approved}</ToggleButton>
         </ToggleButtonGroup>
 
-        {error && <p className="adminError">{error}</p>}
+        {error !== null && <p className="adminError">{error || t.admin.loadFailed}</p>}
 
         {loading ? (
           <CircularProgress />
         ) : users.length === 0 ? (
-          <p>{status === 'PENDING' ? 'No sign-ups are waiting for approval.' : 'No approved users yet.'}</p>
+          <p>{status === 'PENDING' ? t.admin.noPending : t.admin.noApproved}</p>
         ) : (
           <div className="adminUserList">
             {users.map((u) => (
@@ -152,29 +154,30 @@ const AdminSignupsPage: React.FC = () => {
                     {u.phoneNumber && <span> · {u.phoneNumber}</span>}
                   </div>
                   <div className="adminUserMeta">
-                    {u.isAdmin ? `${userTypeLabel(u)} · ` : ''}Signed up {formatDate(u.createdAt)}
+                    {u.isAdmin ? `${t.userType[userTypeKey(u)]} · ` : ''}
+                    {t.admin.signedUp(formatDate(u.createdAt))}
                   </div>
                 </div>
                 {!u.isAdmin && (
                   <FormControl size="small" className="adminUserType">
-                    <InputLabel id={`type-label-${u.id}`}>Type</InputLabel>
+                    <InputLabel id={`type-label-${u.id}`}>{t.admin.type}</InputLabel>
                     <Select
                       labelId={`type-label-${u.id}`}
-                      label="Type"
+                      label={t.admin.type}
                       value={(u.userType === 'admin' ? 'member' : u.userType) ?? 'member'}
                       disabled={busyId === u.id}
                       onChange={(e) => handleTypeChange(u, e.target.value as ChangeableUserType)}
                     >
-                      <MenuItem value="member">Member</MenuItem>
-                      <MenuItem value="student">Student</MenuItem>
-                      <MenuItem value="professor">Professor</MenuItem>
+                      <MenuItem value="member">{t.userType.member}</MenuItem>
+                      <MenuItem value="student">{t.userType.student}</MenuItem>
+                      <MenuItem value="professor">{t.userType.professor}</MenuItem>
                     </Select>
                   </FormControl>
                 )}
                 {status === 'APPROVED' && !u.isAdmin && (
                   <div className="adminUserActions">
                     <Button variant="outlined" color="error" disabled={busyId === u.id} onClick={() => handleDelete(u)}>
-                      Delete
+                      {t.admin.delete}
                     </Button>
                   </div>
                 )}
@@ -186,10 +189,10 @@ const AdminSignupsPage: React.FC = () => {
                       onClick={() => handleApprove(u)}
                       sx={{ backgroundColor: '#3D7844', '&:hover': { backgroundColor: '#2e5c34' } }}
                     >
-                      Approve
+                      {t.admin.approve}
                     </Button>
                     <Button variant="outlined" color="error" disabled={busyId === u.id} onClick={() => handleReject(u)}>
-                      Reject
+                      {t.admin.reject}
                     </Button>
                   </div>
                 )}
@@ -203,14 +206,11 @@ const AdminSignupsPage: React.FC = () => {
 
   return (
     <>
-      <Meta title="Approve sign-ups" />
+      <Meta title={t.admin.title} />
       <Layout>
         <div className="adminPage">
-          <h1 className="adminTitle">Approve sign-ups</h1>
-          <p className="adminIntro">
-            New accounts can log in only after you approve them. Rejecting deletes the sign-up; approved users can be
-            deleted from the Approved tab.
-          </p>
+          <h1 className="adminTitle">{t.admin.title}</h1>
+          <p className="adminIntro">{t.admin.intro}</p>
           {content}
         </div>
       </Layout>

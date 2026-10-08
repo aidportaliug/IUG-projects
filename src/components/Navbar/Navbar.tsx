@@ -10,18 +10,21 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import MenuItemIUG from './MenuItemIUG';
-import ButtonForNavbar from './ButtonForNavbar';
+import MenuItemIUG, { NavMenuKey } from './MenuItemIUG';
+import ButtonForNavbar, { NavPageKey } from './ButtonForNavbar';
+import LanguageSwitch from './LanguageSwitch';
+import { useI18n } from '../../i18n/I18nContext';
 import NavLogo from './Navlogo';
 import { useFirebaseAuth } from '../../services/AuthContext';
 import './navbar.css';
 
 // Master projects and experience reports are no longer shown; the plastic platform is the site's main page.
-const pages = ['Plastic Project'];
-const settings = ['Profile', 'Logout'];
+const pages: NavPageKey[] = ['plasticProjects'];
+const settings: NavMenuKey[] = ['profile', 'logout'];
 
 const Navbar: React.FC = () => {
   const { user } = useFirebaseAuth();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -51,7 +54,7 @@ const Navbar: React.FC = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
-              aria-label="open navigation menu"
+              aria-label={t.nav.openNavigationMenu}
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
@@ -88,11 +91,12 @@ const Navbar: React.FC = () => {
               <ButtonForNavbar page={page} location={location} key={page} />
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
+            <LanguageSwitch />
             {user ? (
               <>
-                <Tooltip title="Open profile menu">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} aria-label="open profile menu">
+                <Tooltip title={t.nav.openProfileMenu}>
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} aria-label={t.nav.openProfileMenu}>
                     <Avatar alt={user.username} sx={{ bgcolor: '#3D7844' }}>
                       {user.username.charAt(0).toUpperCase()}
                     </Avatar>
@@ -114,7 +118,7 @@ const Navbar: React.FC = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {(user.isAdmin ? ['Approve sign-ups', ...settings] : settings).map((setting) => (
+                  {(user.isAdmin ? (['approveSignups', ...settings] as NavMenuKey[]) : settings).map((setting) => (
                     <MenuItemIUG setting={setting} key={setting} />
                   ))}
                 </Menu>
@@ -126,7 +130,7 @@ const Navbar: React.FC = () => {
                 onClick={() => navigate('/login')}
                 sx={{ color: '#3D7844', borderColor: '#3D7844', textTransform: 'none', fontWeight: 600 }}
               >
-                Login
+                {t.nav.login}
               </Button>
             )}
           </Box>

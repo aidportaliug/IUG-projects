@@ -1,11 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Box, TextField, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { Button, Box, TextField, Select, MenuItem, SelectChangeEvent, Typography } from '@mui/material';
 import { getPlastics, PlasticResponse } from '../../services/plasticService';
 import { createMachine } from '../../services/machineService';
 import { useNavigate } from 'react-router-dom';
+import { useI18n } from '../../i18n/I18nContext';
 
 const UploadMachineForm: React.FC = () => {
   const [machineName, setMachineName] = useState('');
+  const [formError, setFormError] = useState('');
+  const { t } = useI18n();
   const [whatItDoes, setWhatItDoes] = useState('');
   const [howItWorksAndAcquired, setHowItWorksAndAcquired] = useState('');
   const [operationComplicationsAndLessons, setOperationComplicationsAndLessons] = useState('');
@@ -65,6 +68,7 @@ const UploadMachineForm: React.FC = () => {
 
   const handleUpload = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined }) => {
     event.preventDefault();
+    setFormError('');
     const form = event.currentTarget;
     const inputs = form?.elements as unknown as {
       [key: string]: HTMLInputElement & { required: boolean };
@@ -75,7 +79,7 @@ const UploadMachineForm: React.FC = () => {
 
     if (emptyFields.length > 0) {
       const fieldNames = emptyFields.slice(0, emptyFields.length / 2).map((element) => `"${element.name}"`);
-      alert(`Please fill in the following required fields: ${fieldNames.join(', ')}`);
+      setFormError(t.common.requiredFields(fieldNames.join(', ')));
       return;
     }
 
@@ -89,11 +93,10 @@ const UploadMachineForm: React.FC = () => {
         plasticIds: selectedPlastics.length > 0 ? selectedPlastics : undefined,
       });
 
-      alert('Successfully uploaded machine');
       navigate('/plasticProjects');
     } catch (error: any) {
       console.error('Upload error:', error);
-      alert(error.message || 'Failed to upload machine');
+      setFormError(error.message || t.machineForm.uploadFailed);
     }
   };
 
@@ -103,7 +106,7 @@ const UploadMachineForm: React.FC = () => {
         required
         fullWidth
         id="machineName"
-        label="Machine Name"
+        label={t.machineForm.name}
         name="machineName"
         value={machineName}
         onChange={handleMachineNameChange}
@@ -120,7 +123,7 @@ const UploadMachineForm: React.FC = () => {
         required
         fullWidth
         id="whatItDoes"
-        label="What it does"
+        label={t.machineForm.whatItDoes}
         name="whatItDoes"
         value={whatItDoes}
         onChange={handleWhatItDoesChange}
@@ -139,7 +142,7 @@ const UploadMachineForm: React.FC = () => {
         required
         fullWidth
         id="howItWorksAndAcquired"
-        label="How it works and how it was acquired"
+        label={t.machineForm.howItWorks}
         name="howItWorksAndAcquired"
         value={howItWorksAndAcquired}
         onChange={handleHowItWorksAndAcquiredChange}
@@ -157,7 +160,7 @@ const UploadMachineForm: React.FC = () => {
       <TextField
         fullWidth
         id="operationComplicationsAndLessons"
-        label="Operation complications and important lessons"
+        label={t.machineForm.lessons}
         name="operationComplicationsAndLessons"
         value={operationComplicationsAndLessons}
         onChange={handleOperationComplicationsAndLessonsChange}
@@ -180,7 +183,7 @@ const UploadMachineForm: React.FC = () => {
         onChange={handlePlasticsChange}
         renderValue={(selected) => {
           if (selected.length === 0) {
-            return <span style={{ color: '#666' }}>Select plastics...</span>;
+            return <span style={{ color: '#666' }}>{t.common.selectPlastics}</span>;
           }
           return selected.map((id) => plastics.find((p) => p.id === id)?.name).join(', ');
         }}
@@ -201,7 +204,7 @@ const UploadMachineForm: React.FC = () => {
         }}
       >
         <MenuItem disabled>
-          <em>Select plastics this machine processes</em>
+          <em>{t.machineForm.selectPlasticsHint}</em>
         </MenuItem>
         {plastics.map((plastic) => (
           <MenuItem key={plastic.id} value={plastic.id}>
@@ -224,7 +227,7 @@ const UploadMachineForm: React.FC = () => {
           backgroundColor: '#e0e0e0',
         }}
       >
-        Upload Picture (Optional)
+        {t.common.uploadPicture}
       </Button>
 
       {imageUrl && (
@@ -233,8 +236,13 @@ const UploadMachineForm: React.FC = () => {
         </div>
       )}
 
+      {formError && (
+        <Typography color="error" sx={{ mb: 2 }}>
+          {formError}
+        </Typography>
+      )}
       <Button type="submit" variant="contained" style={{ width: 200, height: 50, margin: '1em' }}>
-        Upload Machine
+        {t.machineForm.submit}
       </Button>
     </Box>
   );

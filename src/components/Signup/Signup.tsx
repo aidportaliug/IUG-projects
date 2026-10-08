@@ -12,12 +12,14 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { signUp } from '../../services/auth';
+import { useI18n } from '../../i18n/I18nContext';
 
 const SignUpComponent: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { t } = useI18n();
 
   const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -48,7 +50,7 @@ const SignUpComponent: React.FC = () => {
         }
       }
     } catch (error: any) {
-      setError(error.message || 'Registration failed');
+      setError(error.message || t.auth.registrationFailed);
       console.error(error);
     } finally {
       setLoading(false);
@@ -66,7 +68,7 @@ const SignUpComponent: React.FC = () => {
           }}
         >
           <Typography className="loginHeader" component="h1" variant="h5">
-            Sign up
+            {t.auth.signUpTitle}
           </Typography>
 
           {error && (
@@ -77,15 +79,13 @@ const SignUpComponent: React.FC = () => {
 
           {success ? (
             <Box sx={{ mt: 3, textAlign: 'center' }}>
-              <Typography sx={{ mb: 2 }}>
-                Thanks for signing up! An administrator needs to approve your account before you can log in.
-              </Typography>
+              <Typography sx={{ mb: 2 }}>{t.auth.awaitingApproval}</Typography>
               <Button
                 variant="contained"
                 onClick={() => navigate('/')}
                 style={{ backgroundColor: '#3D7844', color: '#FFFFFF' }}
               >
-                Back to the plastic projects
+                {t.auth.backToProjects}
               </Button>
             </Box>
           ) : (
@@ -98,22 +98,34 @@ const SignUpComponent: React.FC = () => {
                     required
                     fullWidth
                     id="username"
-                    label="Username"
+                    label={t.auth.username}
                     autoFocus
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth id="firstName" label="First Name" name="firstName" autoComplete="given-name" />
+                  <TextField
+                    fullWidth
+                    id="firstName"
+                    label={t.auth.firstName}
+                    name="firstName"
+                    autoComplete="given-name"
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth id="lastName" label="Last Name" name="lastName" autoComplete="family-name" />
+                  <TextField
+                    fullWidth
+                    id="lastName"
+                    label={t.auth.lastName}
+                    name="lastName"
+                    autoComplete="family-name"
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField required fullWidth id="email" label="Email Address" name="email" autoComplete="email" />
+                  <TextField required fullWidth id="email" label={t.auth.email} name="email" autoComplete="email" />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
-                    <TextField id="phoneNumber" label="Phone number" name="phoneNumber" autoComplete="tel" />
+                    <TextField id="phoneNumber" label={t.auth.phone} name="phoneNumber" autoComplete="tel" />
                   </FormControl>
                 </Grid>
 
@@ -122,7 +134,7 @@ const SignUpComponent: React.FC = () => {
                     required
                     fullWidth
                     name="password"
-                    label="Password"
+                    label={t.auth.password}
                     type="password"
                     id="password"
                     autoComplete="new-password"
@@ -133,7 +145,7 @@ const SignUpComponent: React.FC = () => {
                     control={
                       <Checkbox name="isStudent" id="isStudent" sx={{ '&.Mui-checked': { color: '#3D7844' } }} />
                     }
-                    label="I am a student (optional)"
+                    label={t.auth.isStudent}
                   />
                 </Grid>
               </Grid>
@@ -146,7 +158,7 @@ const SignUpComponent: React.FC = () => {
                 sx={{ mt: 3, mb: 2 }}
                 style={{ backgroundColor: '#3D7844', color: '#FFFFFF' }}
               >
-                {loading ? 'Signing up...' : 'Sign Up'}
+                {loading ? t.auth.signingUp : t.auth.signUpButton}
               </Button>
             </Box>
           )}

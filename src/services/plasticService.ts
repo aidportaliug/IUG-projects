@@ -45,6 +45,10 @@ export interface PlasticProjectResponse {
   summary: string | null;
   plastics: PlasticResponse[];
   documents: PlasticProjectDocument[];
+  // ID of the user who uploaded the project; null for the seeded projects (admin-only).
+  createdBy?: number | null;
+  // API path of the project's picture; null shows the default picture (see projectImageHref).
+  imageUrl?: string | null;
 }
 
 export interface PlasticProjectListResponse {
@@ -170,6 +174,24 @@ export async function deletePlasticProjectDocument(projectId: number, documentId
 }
 
 // Where to open a document: the external URL for links, the backend file endpoint for uploaded PDFs.
+const projectImagePath = (projectId: number) => `${BackendConfig.endpoint.getPlasticProjectById}${projectId}/image`;
+
+// Sets or replaces the project's picture (shrink it first with prepareImage).
+export async function uploadPlasticProjectImage(projectId: number, image: Blob): Promise<PlasticProjectResponse> {
+  const formData = new FormData();
+  formData.append('file', image, 'picture.jpg');
+  return apiClient.putForm<PlasticProjectResponse>(projectImagePath(projectId), formData);
+}
+
+export async function deletePlasticProjectImage(projectId: number): Promise<void> {
+  await apiClient.delete(projectImagePath(projectId));
+}
+
+// Full URL of the project's picture, or undefined when it has none.
+export function projectImageHref(project: { imageUrl?: string | null }): string | undefined {
+  return project.imageUrl ? `${BackendConfig.baseURL}${project.imageUrl}` : undefined;
+}
+
 export function documentHref(document: PlasticProjectDocument): string {
   return document.kind === 'FILE' ? `${BackendConfig.baseURL}${document.url}` : document.url;
 }

@@ -39,11 +39,11 @@ export interface UserResponse {
   createdAt?: string | null;
 }
 
-const userTypeLabels = { admin: 'Admin', professor: 'Professor', student: 'Student', member: 'Member' };
+export type UserType = NonNullable<UserResponse['userType']>;
 
-// Display name of the user's type; falls back to isProfessor for backends without userType.
-export function userTypeLabel(user: UserResponse): string {
-  return userTypeLabels[user.userType ?? (user.isProfessor ? 'professor' : 'student')];
+// The user's type, shown with t.userType[...]; falls back to isProfessor for backends without userType.
+export function userTypeKey(user: UserResponse): UserType {
+  return user.userType ?? (user.isProfessor ? 'professor' : 'student');
 }
 
 export default async function logIn(email: string, password: string): Promise<boolean> {
@@ -58,10 +58,7 @@ export default async function logIn(email: string, password: string): Promise<bo
     console.log('Logged in successfully');
     return true;
   } catch (error: any) {
-    const errorMessage = error.message || 'Login failed';
-    console.error(errorMessage);
-    alert(errorMessage);
-    return false;
+    throw new Error(error.message || 'Login failed');
   }
 }
 
@@ -98,10 +95,7 @@ export async function signUp(
     console.log('Registration successful');
     return true;
   } catch (error: any) {
-    const errorMessage = error.message || 'Registration failed';
-    console.error(errorMessage);
-    alert(errorMessage);
-    return false;
+    throw new Error(error.message || 'Registration failed');
   }
 }
 
@@ -122,4 +116,17 @@ export async function getCurrentUser(): Promise<UserResponse | null> {
 
 export function isAuthenticated(): boolean {
   return !!localStorage.getItem('token');
+}
+
+// Plastic projects: students and professors upload projects and edit their own; the admin edits and deletes any.
+export function canUploadProjects(user?: UserResponse | null): boolean {
+  return !!user && (!!user.isAdmin || !!user.isProfessor || !!user.isStudent);
+}
+
+export function canEditProject(user: UserResponse | null | undefined, project: { createdBy?: number | null }): boolean {
+  return !!user && (!!user.isAdmin || (canUploadProjects(user) && project.createdBy === user.id));
+}
+
+export function canDeleteProjects(user?: UserResponse | null): boolean {
+  return !!user?.isAdmin;
 }

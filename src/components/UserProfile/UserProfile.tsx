@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-import { Avatar, Button, TextField, Grid, Box } from '@mui/material';
+import { Button, TextField, Grid, Box, Typography } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { logOut, userTypeLabel } from '../../services/auth';
+import { canUploadProjects, logOut, userTypeKey } from '../../services/auth';
 import { useAuth } from '../../services/AuthContext';
 import { apiClient } from '../../services/apiClient';
+import MyUploads from './MyUploads';
+import { useI18n } from '../../i18n/I18nContext';
 
 const UserProfileComponent: React.FC = () => {
   const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
+  const [formError, setFormError] = useState('');
+  const { t, formatDate } = useI18n();
   const [formData, setFormData] = useState({
     username: user?.username || '',
     firstName: user?.firstName || '',
@@ -26,138 +30,169 @@ const UserProfileComponent: React.FC = () => {
   };
 
   const handleUpdate = async () => {
+    setFormError('');
     try {
       await apiClient.put('/me', formData);
       await refreshUser();
       setEditing(false);
-      alert('Profile updated successfully!');
     } catch (error: any) {
       console.error('Update error:', error);
-      alert(error.message || 'Failed to update profile');
+      setFormError(error.message || t.profile.updateFailed);
     }
   };
 
   if (user) {
-    return (
-      <div className="user">
-        <div className="top-part">
-          <h1 className="username">{user.username}</h1>
-        </div>
-        <div className="profileIcon">
-          <Avatar sx={{ width: 150, height: 150 }}>{user.username.charAt(0).toUpperCase()}</Avatar>
-        </div>
+    // Each inner list is one row; empty fields and rows are hidden.
+    type Field = [string, string | null | undefined];
+    const allRows: Field[][] = [
+      [[t.profile.userType, t.userType[userTypeKey(user)]]],
+      [
+        [t.profile.email, user.email],
+        [t.profile.username, user.username],
+      ],
+      [
+        [t.profile.firstName, user.firstName],
+        [t.profile.lastName, user.lastName],
+      ],
+      [[t.profile.phone, user.phoneNumber]],
+      [
+        [t.profile.institute, user.institute],
+        [t.profile.university, user.university],
+      ],
+    ];
+    const detailRows = allRows.map((row) => row.filter(([, value]) => !!value)).filter((row) => row.length > 0);
+    const memberSince = user.createdAt ? formatDate(user.createdAt, { year: 'numeric', month: 'long' }) : null;
 
-        {!editing ? (
-          <>
-            <div className="interests">
-              <h3>My information:</h3>
-              <div className="myInterests">
-                <p>
-                  <strong>Email:</strong> {user.email}
-                </p>
-                <p>
-                  <strong>Username:</strong> {user.username}
-                </p>
-                {user.firstName && (
-                  <p>
-                    <strong>First Name:</strong> {user.firstName}
-                  </p>
-                )}
-                {user.lastName && (
-                  <p>
-                    <strong>Last Name:</strong> {user.lastName}
-                  </p>
-                )}
-                {user.phoneNumber && (
-                  <p>
-                    <strong>Phone:</strong> {user.phoneNumber}
-                  </p>
-                )}
-                {user.institute && (
-                  <p>
-                    <strong>Institute:</strong> {user.institute}
-                  </p>
-                )}
-                {user.university && (
-                  <p>
-                    <strong>University:</strong> {user.university}
-                  </p>
-                )}
-                <p>
-                  <strong>User Type:</strong> {userTypeLabel(user)}
-                </p>
-              </div>
+    return (
+      <div className="profilePage">
+        <section className="profileBanner">
+          <div>
+            <h1>{user.username}</h1>
+            <div className="profileBannerMeta">
+              <span className="profileBadge">{t.userType[userTypeKey(user)]}</span>
+              <span>{user.email}</span>
+              {memberSince && <span>{t.profile.memberSince(memberSince)}</span>}
             </div>
-            <Button variant="contained" onClick={() => setEditing(true)} sx={{ mr: 2 }}>
-              Edit Profile
+          </div>
+          <div className="profileBannerActions">
+            <Button
+              variant="outlined"
+              onClick={logout}
+              sx={{ color: '#fff', borderColor: 'rgba(255,255,255,0.7)', textTransform: 'none' }}
+            >
+              {t.profile.logout}
             </Button>
-            <Button variant="contained" id="btnLogOut" onClick={logout}>
-              Log out
-            </Button>
-          </>
-        ) : (
-          <Box sx={{ width: '100%', maxWidth: 600, mt: 3, p: 3 }}>
-            <h3>Edit Profile</h3>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Username"
-                  value={formData.username}
-                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="First Name"
-                  value={formData.firstName}
-                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Last Name"
-                  value={formData.lastName}
-                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Phone Number"
-                  value={formData.phoneNumber}
-                  onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Institute"
-                  value={formData.institute}
-                  onChange={(e) => setFormData({ ...formData, institute: e.target.value })}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="University"
-                  value={formData.university}
-                  onChange={(e) => setFormData({ ...formData, university: e.target.value })}
-                />
-              </Grid>
-            </Grid>
-            <Box sx={{ mt: 2 }}>
-              <Button variant="contained" onClick={handleUpdate} sx={{ mr: 2 }}>
-                Save Changes
+          </div>
+        </section>
+
+        <section className="profileCard">
+          <div className="profileCardHeader">
+            <h2>{editing ? t.profile.editProfile : t.profile.accountDetails}</h2>
+            {!editing && (
+              <Button
+                variant="outlined"
+                onClick={() => setEditing(true)}
+                sx={{ color: '#3D7844', borderColor: '#3D7844', textTransform: 'none' }}
+              >
+                {t.profile.editProfile}
               </Button>
-              <Button variant="outlined" onClick={() => setEditing(false)}>
-                Cancel
-              </Button>
+            )}
+          </div>
+
+          {!editing ? (
+            <dl className="profileDetails">
+              {detailRows.map((row) => (
+                <div key={row[0][0]} className="profileDetailsRow">
+                  {row.map(([label, value]) => (
+                    <div key={label}>
+                      <dt>{label}</dt>
+                      <dd>{value}</dd>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </dl>
+          ) : (
+            <Box>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label={t.profile.username}
+                    value={formData.username}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label={t.profile.firstName}
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label={t.profile.lastName}
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label={t.profile.phone}
+                    value={formData.phoneNumber}
+                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label={t.profile.institute}
+                    value={formData.institute}
+                    onChange={(e) => setFormData({ ...formData, institute: e.target.value })}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label={t.profile.university}
+                    value={formData.university}
+                    onChange={(e) => setFormData({ ...formData, university: e.target.value })}
+                  />
+                </Grid>
+              </Grid>
+              {formError && (
+                <Typography color="error" sx={{ mt: 2 }}>
+                  {formError}
+                </Typography>
+              )}
+              <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
+                <Button
+                  variant="contained"
+                  onClick={handleUpdate}
+                  sx={{ backgroundColor: '#3D7844', textTransform: 'none', '&:hover': { backgroundColor: '#2f5f35' } }}
+                >
+                  {t.profile.save}
+                </Button>
+                <Button
+                  variant="text"
+                  onClick={() => {
+                    setEditing(false);
+                    setFormError('');
+                  }}
+                  sx={{ color: '#3D7844', textTransform: 'none' }}
+                >
+                  {t.profile.cancel}
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        )}
+          )}
+        </section>
+
+        {canUploadProjects(user) && <MyUploads user={user} />}
       </div>
     );
   } else {

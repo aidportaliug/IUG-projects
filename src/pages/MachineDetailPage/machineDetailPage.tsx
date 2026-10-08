@@ -7,13 +7,15 @@ import ProjectImageBox from '../../components/ProjectImageBox/ProjectImageBox';
 import Meta from '../../components/Meta';
 import Layout from '../../components/Navbar/Layout';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useI18n } from '../../i18n/I18nContext';
 
 const MachineDetailsPage: React.FC = () => {
   const { id } = useParams();
   const [machine, setMachine] = useState<MachineResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<'invalidId' | 'loadFailed' | null>(null);
   const imageIcon = Trax_Ghana;
+  const { t } = useI18n();
 
   async function getMachineData(machineId: string) {
     setLoading(true);
@@ -21,13 +23,13 @@ const MachineDetailsPage: React.FC = () => {
     try {
       const machineIdNumber = parseInt(machineId, 10);
       if (isNaN(machineIdNumber)) {
-        setError('Invalid machine ID');
+        setError('invalidId');
         return;
       }
       const fetchedMachine = await getMachine(machineIdNumber);
       setMachine(fetchedMachine);
     } catch (err) {
-      setError('Failed to load machine');
+      setError('loadFailed');
       console.error('Error fetching machine:', err);
     } finally {
       setLoading(false);
@@ -54,7 +56,7 @@ const MachineDetailsPage: React.FC = () => {
     return (
       <Layout>
         <div style={{ padding: '20px', textAlign: 'center' }}>
-          <h2>{error}</h2>
+          <h2>{t.machineDetail[error]}</h2>
         </div>
       </Layout>
     );
@@ -64,7 +66,7 @@ const MachineDetailsPage: React.FC = () => {
     return (
       <Layout>
         <div style={{ padding: '20px', textAlign: 'center' }}>
-          <h2>404: Machine not found</h2>
+          <h2>{t.machineDetail.notFound}</h2>
         </div>
       </Layout>
     );
@@ -76,22 +78,21 @@ const MachineDetailsPage: React.FC = () => {
       <Layout>
         <div className="machineDetailoutline">
           <div className="Title">{machine.name}</div>
-          <ProjectImageBox source={imageIcon} altText={'Machine Image'} />
+          <ProjectImageBox source={imageIcon} altText={t.machineDetail.imageAlt} />
           <hr />
           <div className="machineInformation">
             <div className="infoRow">
-              <b>What it does:</b> {machine?.whatItDoes}
+              <b>{t.machineDetail.whatItDoes}</b> {machine?.whatItDoes}
             </div>
             <div className="infoRow">
-              <b>How it works and is required:</b> {machine?.howItWorksAndAcquired}
+              <b>{t.machineDetail.howItWorks}</b> {machine?.howItWorksAndAcquired}
             </div>
             <div className="infoRow">
-              <b>Operation complications and important lessons from projects:</b>{' '}
-              {machine?.operationComplicationsAndLessons}
+              <b>{t.machineDetail.lessons}</b> {machine?.operationComplicationsAndLessons}
             </div>
             {machine.plastics && machine.plastics.length > 0 && (
               <div className="infoRow">
-                <b>Plastic types:</b>{' '}
+                <b>{t.machineDetail.plasticTypes}</b>{' '}
                 {machine.plastics.map((p, index) => (
                   <span key={p.id}>
                     {index > 0 && ' '}

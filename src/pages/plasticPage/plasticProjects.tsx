@@ -12,8 +12,12 @@ import melter from '../../images/melter.png';
 import shredder from '../../images/shredder.png';
 import ventilation from '../../images/ventilation.jpg';
 import { getMachines, MachineResponse } from '../../services/machineService';
-import { getPlasticProjects, PlasticProjectResponse } from '../../services/plasticService';
+import { getPlasticProjects, PlasticProjectResponse, projectImageHref } from '../../services/plasticService';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../services/AuthContext';
+import { canUploadProjects } from '../../services/auth';
+import { useI18n } from '../../i18n/I18nContext';
+import PlasticProjectCard, { uploadButtonSx } from '../../components/PlasticProjectCards/PlasticProjectCard';
 
 interface PlasticProjectData {
   project_id: string;
@@ -31,6 +35,7 @@ interface PlasticProjectData {
   businessModel: string;
   partnershipOwnership: string;
   wasteCollected: number;
+  image?: string;
 }
 
 interface MachineData {
@@ -53,14 +58,6 @@ const machineImageByName: Record<string, string> = {
   'twig grinder': shredder,
   ventilation,
   'ventilation system': ventilation,
-};
-
-// "2020–2024", "2024" for a single year, or "2022–ongoing" without an end date.
-const formatYears = (startDate: string, endDate?: string): string => {
-  const startYear = startDate.slice(0, 4);
-  if (!endDate) return `${startYear}–ongoing`;
-  const endYear = endDate.slice(0, 4);
-  return startYear === endYear ? startYear : `${startYear}–${endYear}`;
 };
 
 // Sorted, de-duplicated filter values taken from the loaded data.
@@ -90,8 +87,12 @@ const PlasticProjects: React.FC = () => {
   const [noProject, setNoProject] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
-  const uploadButtonLabel = activeTab === 'machines' ? 'Upload machine' : 'Upload your project';
+  const { t } = useI18n();
+  const uploadButtonLabel = activeTab === 'machines' ? t.plastic.uploadMachine : t.plastic.uploadProject;
   const uploadButtonRoute = activeTab === 'machines' ? '/uploadMachine' : '/UploadPlasticProject';
+  // Machines are added by the admin; projects by students, professors and the admin.
+  const { user } = useAuth();
+  const showUploadButton = activeTab === 'machines' ? !!user?.isAdmin : canUploadProjects(user);
 
   useEffect(() => {
     const fetchPlasticDatabase = async () => {
@@ -141,6 +142,7 @@ const PlasticProjects: React.FC = () => {
             businessModel: project.businessModel,
             partnershipOwnership: '',
             wasteCollected: project.wasteCollected,
+            image: projectImageHref(project),
           })
         );
 
@@ -196,21 +198,21 @@ const PlasticProjects: React.FC = () => {
       <div className="plasticProjectBackground">
         <Layout>
           <div className="plasticProjectContainer">
-            <div className="plasticProjectTitle">PLASTIC DATABASE</div>
+            <div className="plasticProjectTitle">{t.plastic.title}</div>
 
             <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginBottom: 12 }}>
               <Button
                 variant={activeTab === 'projects' ? 'contained' : 'outlined'}
                 onClick={() => setActiveTab('projects')}
               >
-                Projects
+                {t.plastic.projectsTab}
               </Button>
 
               <Button
                 variant={activeTab === 'machines' ? 'contained' : 'outlined'}
                 onClick={() => setActiveTab('machines')}
               >
-                Machines
+                {t.plastic.machinesTab}
               </Button>
             </div>
 
@@ -228,7 +230,7 @@ const PlasticProjects: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    Small
+                    {t.plastic.small}
                   </Button>
 
                   <Button
@@ -242,7 +244,7 @@ const PlasticProjects: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    Detailed
+                    {t.plastic.detailed}
                   </Button>
                 </>
               ) : (
@@ -258,7 +260,7 @@ const PlasticProjects: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    Small
+                    {t.plastic.small}
                   </Button>
 
                   <Button
@@ -272,7 +274,7 @@ const PlasticProjects: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    Detailed
+                    {t.plastic.detailed}
                   </Button>
                 </>
               )}
@@ -281,7 +283,7 @@ const PlasticProjects: React.FC = () => {
             <div className="plasticSearchContainer">
               <div className="plasticSearchRow">
                 <TextField
-                  placeholder="Search projects..."
+                  placeholder={t.plastic.search}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   variant="outlined"
@@ -305,23 +307,17 @@ const PlasticProjects: React.FC = () => {
                     textTransform: 'none',
                   }}
                 >
-                  Filters
+                  {t.plastic.filters}
                 </Button>
               </div>
 
-              <div className="plasticUploadRow">
-                <Button
-                  onClick={() => navigate(uploadButtonRoute)}
-                  style={{
-                    color: 'black',
-                    textTransform: 'none',
-                    border: '1px solid grey',
-                    backgroundColor: '#e0e0e0',
-                  }}
-                >
-                  {uploadButtonLabel}
-                </Button>
-              </div>
+              {showUploadButton && (
+                <div className="plasticUploadRow">
+                  <Button onClick={() => navigate(uploadButtonRoute)} sx={uploadButtonSx}>
+                    {uploadButtonLabel}
+                  </Button>
+                </div>
+              )}
             </div>
 
             {showFilters && (
@@ -330,18 +326,24 @@ const PlasticProjects: React.FC = () => {
                   value={filterCountry}
                   setValue={setFilterCountry}
                   country={true}
+                  label={t.filters.country}
+                  allLabel={t.filters.allCountries}
                   options={uniqueSorted(projects.map((project) => project.country))}
                 />
                 <PlasticFilterDropdown
                   value={filterPlastic}
                   setValue={setFilterPlastic}
                   plastic={true}
+                  label={t.filters.plastic}
+                  allLabel={t.filters.allPlastics}
                   options={uniqueSorted(projects.flatMap((project) => project.plastics ?? []))}
                 />
                 <PlasticFilterDropdown
                   value={filterMachine}
                   setValue={setFilterMachine}
                   machine={true}
+                  label={t.filters.machine}
+                  allLabel={t.filters.allMachines}
                   options={uniqueSorted(machines.map((machine) => machine.title))}
                 />
               </div>
@@ -353,84 +355,29 @@ const PlasticProjects: React.FC = () => {
               </div>
             ) : noProject ? (
               <div className="no-projects-message">
-                <h4>No projects found</h4>
+                <h4>{t.plastic.noProjects}</h4>
               </div>
             ) : (
               <div className="plasticCardGrid">
                 {activeTab === 'projects'
-                  ? filteredProjects.map((project) =>
-                      projectViewMode === 'small' ? (
-                        <div
-                          key={project.project_id}
-                          className="plasticCard"
-                          onClick={() => navigate(`/plastic-project/${project.project_id}`)}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          <div className="plasticCardOutline">
-                            <img className="plasticCardImage" src={imageProjectCard} alt={project.project_name} />
-                            {/* Small view: only the project info */}
-                            <div className="plasticCardBody">
-                              <div className="plasticCardTitle">{project.project_name}</div>
-                              <div className="plasticCardDescription plasticCardDescriptionClamped">
-                                {project.summary}
-                              </div>
-                              <div className="plasticCardLink">View project &rarr;</div>
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div
-                          key={project.project_id}
-                          className="plasticCard"
-                          onClick={() => navigate(`/plastic-project/${project.project_id}`)}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          <div className="plasticCardOutline">
-                            <img className="plasticCardImage" src={imageProjectCard} alt={project.project_name} />
-                            <div className="plasticCardBody">
-                              <div className="plasticCardTitle">{project.project_name}</div>
-                              <div className="plasticCardDescription plasticCardDescriptionClamped">
-                                {project.summary}
-                              </div>
-
-                              <div className="plasticCardTags">
-                                <b>Year(s): </b>
-                                {formatYears(project.start_date, project.end_date)}
-                              </div>
-
-                              <div className="plasticCardTags">
-                                <b>Country: </b>
-                                {project.country}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>Plastics: </b>
-                                {project.plastics?.map((p) => (
-                                  <span key={p} className="plasticTag">
-                                    {p}
-                                  </span>
-                                ))}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>Product:</b> {project.product}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>Financing:</b> {project.financing}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>Business Model:</b> {project.businessModel}
-                              </div>
-                              {project.wasteCollected > 0 && (
-                                <div className="plasticCardTags">
-                                  <b>Waste Collected:</b> {project.wasteCollected} tons
-                                </div>
-                              )}
-
-                              <div className="plasticCardLink">View project →</div>
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    )
+                  ? filteredProjects.map((project) => (
+                      <PlasticProjectCard
+                        key={project.project_id}
+                        variant={projectViewMode}
+                        name={project.project_name}
+                        summary={project.summary}
+                        startDate={project.start_date}
+                        endDate={project.end_date}
+                        country={project.country}
+                        plastics={project.plastics ?? []}
+                        product={project.product}
+                        financing={project.financing}
+                        businessModel={project.businessModel}
+                        wasteCollected={project.wasteCollected}
+                        image={project.image}
+                        onClick={() => navigate(`/plastic-project/${project.project_id}`)}
+                      />
+                    ))
                   : machines.map((machine) =>
                       machineViewMode === 'small' ? (
                         <div
@@ -448,7 +395,7 @@ const PlasticProjects: React.FC = () => {
                                 alt={machine.title}
                               />
                               <div className="plasticCardTags">
-                                <b>Plastic types: </b>
+                                <b>{t.plastic.plasticTypes} </b>
                                 {machine.plastics?.map((p) => (
                                   <span key={p} className="plasticTag">
                                     {p}
@@ -456,7 +403,7 @@ const PlasticProjects: React.FC = () => {
                                 ))}
                               </div>
                               <div className="plasticCardTags">
-                                <b>What it does: </b>
+                                <b>{t.plastic.whatItDoes} </b>
                                 {machine.whatDoes}
                               </div>
                             </div>
@@ -473,7 +420,7 @@ const PlasticProjects: React.FC = () => {
                                 alt={machine.title}
                               />
                               <div className="plasticCardTags">
-                                <b>Plastic types: </b>
+                                <b>{t.plastic.plasticTypes} </b>
                                 {machine.plastics?.map((p) => (
                                   <span key={p} className="plasticTag">
                                     {p}
@@ -481,15 +428,15 @@ const PlasticProjects: React.FC = () => {
                                 ))}
                               </div>
                               <div className="plasticCardTags">
-                                <b>How does it work and how is it aquired? </b>
+                                <b>{t.plastic.howItWorks} </b>
                                 {machine.howDoes}
                               </div>
                               <div className="plasticCardTags">
-                                <b>Operation complications and important lessons from projects: </b>
+                                <b>{t.plastic.lessons} </b>
                                 {machine.complicLesson}
                               </div>
                               <div className="plasticCardTags">
-                                <b>In use in EWB projects: </b>
+                                <b>{t.plastic.inUse} </b>
                                 {machine.inUseEWB}
                               </div>
                             </div>
