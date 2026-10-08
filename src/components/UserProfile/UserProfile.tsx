@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Avatar, Button, TextField, Grid, Box } from '@mui/material';
+import { Button, TextField, Grid, Box } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { logOut, userTypeLabel } from '../../services/auth';
 import { useAuth } from '../../services/AuthContext';
@@ -42,9 +42,6 @@ const UserProfileComponent: React.FC = () => {
       <div className="user">
         <div className="top-part">
           <h1 className="username">{user.username}</h1>
-        </div>
-        <div className="profileIcon">
-          <Avatar sx={{ width: 150, height: 150 }}>{user.username.charAt(0).toUpperCase()}</Avatar>
         </div>
 
         {!editing ? (
