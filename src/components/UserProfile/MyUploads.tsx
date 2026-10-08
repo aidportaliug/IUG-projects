@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserResponse } from '../../services/auth';
 import { getPlasticProjects, PlasticProjectResponse } from '../../services/plasticService';
 import { useI18n } from '../../i18n/I18nContext';
+import { uploadButtonSx } from '../PlasticProjectCards/PlasticProjectCard';
 
 // The plastic projects the logged-in user has uploaded, with links to view and edit them.
 const MyUploads: React.FC<{ user: UserResponse }> = ({ user }) => {
@@ -72,11 +73,7 @@ const MyUploads: React.FC<{ user: UserResponse }> = ({ user }) => {
     <section className="profileCard">
       <div className="profileCardHeader">
         <h2>{!loading && error === null ? t.profile.myUploadsCount(projects.length) : t.profile.myUploads}</h2>
-        <Button
-          variant="contained"
-          onClick={() => navigate('/UploadPlasticProject')}
-          sx={{ backgroundColor: '#3D7844', textTransform: 'none', '&:hover': { backgroundColor: '#2f5f35' } }}
-        >
+        <Button onClick={() => navigate('/UploadPlasticProject')} sx={uploadButtonSx}>
           {t.profile.uploadNew}
         </Button>
       </div>

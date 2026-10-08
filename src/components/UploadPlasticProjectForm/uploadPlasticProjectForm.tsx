@@ -1,6 +1,20 @@
-import React, { SetStateAction, useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './uploadPlasticProjectForm.css';
-import { Box, Button, MenuItem, Select, SelectChangeEvent, TextField, TextFieldProps, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Chip,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  SelectChangeEvent,
+  TextField,
+  TextFieldProps,
+  Typography,
+} from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import {
   addPlasticProjectLink,
@@ -17,19 +31,42 @@ import {
 import { countries, country as countryLabels } from '../../models/allowedValues';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext';
+import PlasticProjectCard from '../PlasticProjectCards/PlasticProjectCard';
 
 // Must match MAX_UPLOAD_MB on the backend.
 const MAX_PDF_MB = 25;
 const isHttpUrl = (value: string) => /^https?:\/\/\S+$/i.test(value.trim());
 // yyyy-mm-dd in local time; toISOString() would shift dates picked at local midnight to the day before.
-const toIsoDate = (value: string | Date) => {
+// Returns undefined for empty or half-typed dates.
+const toIsoDate = (value: unknown): string | undefined => {
+  if (!value) return undefined;
   if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
-  const date = new Date(value);
+  const date = new Date(value as string);
+  if (isNaN(date.getTime())) return undefined;
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 };
 // Select value for a stored country that is not in the country list (e.g. "Somaliland").
 const CURRENT_COUNTRY = '__current__';
+const NO_COUNTRY = 'country';
+
+// Fields that every project card shows, in the card's order.
+type RequiredField =
+  | 'name'
+  | 'summary'
+  | 'startDate'
+  | 'country'
+  | 'plastics'
+  | 'product'
+  | 'financing'
+  | 'businessModel';
+
+const formatCountryName = (countryName: string): string =>
+  countryName
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+    .replace(/\bAnd\b/g, '&');
 
 interface UploadPlasticProjectFormProps {
   // When set, the form edits this project instead of creating a new one.
@@ -49,9 +86,12 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
   // Shown next to the submit button and the reports section instead of popups.
   const [formError, setFormError] = useState('');
   const [filesError, setFilesError] = useState('');
+  // Missing fields are highlighted only after the first submit attempt.
+  const [showMissing, setShowMissing] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
-  const [country, setCountry] = useState('country');
+  const [country, setCountry] = useState(NO_COUNTRY);
   const [selectedPlastics, setSelectedPlastics] = useState<number[]>([]);
   const [plastics, setPlastics] = useState<PlasticResponse[]>([]);
   const [financing, setFinancing] = useState('');
@@ -61,9 +101,6 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
   const [links, setLinks] = useState<DocumentLinkRequest[]>([]);
   const navigate = useNavigate();
   const pdfInputRef = useRef<HTMLInputElement>(null);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   // Fetch plastics on component mount
   useEffect(() => {
@@ -112,6 +149,42 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
     loadProject();
   }, [projectId]);
 
+  // Store the display name (e.g. "Kenya") like the rest of the platform data, not the form key.
+  const countryName =
+    country === CURRENT_COUNTRY
+      ? customCountry
+      : country === NO_COUNTRY
+      ? ''
+      : countryLabels[country as keyof typeof countryLabels] || formatCountryName(country);
+  const plasticNames = selectedPlastics
+    .map((id) => plastics.find((plastic) => plastic.id === id)?.name)
+    .filter((plasticName): plasticName is string => !!plasticName);
+  const startDateIso = toIsoDate(startDate);
+  const endDateIso = toIsoDate(endDate);
+
+  const fieldLabels: Record<RequiredField, string> = {
+    name: t.projectForm.name,
+    summary: t.projectForm.summary,
+    startDate: t.projectForm.startDate,
+    country: t.filters.country,
+    plastics: t.projectForm.plastics,
+    product: t.projectForm.product,
+    financing: t.projectForm.financing,
+    businessModel: t.projectForm.businessModel,
+  };
+  const filled: Record<RequiredField, boolean> = {
+    name: !!name.trim(),
+    summary: !!summary.trim(),
+    startDate: !!startDateIso,
+    country: !!countryName,
+    plastics: selectedPlastics.length > 0,
+    product: !!product.trim(),
+    financing: !!financing.trim(),
+    businessModel: !!businessModel.trim(),
+  };
+  const missingFields = (Object.keys(filled) as RequiredField[]).filter((field) => !filled[field]);
+  const isMissing = (field: RequiredField) => showMissing && !filled[field];
+
   const removeExistingDocument = async (document: PlasticProjectDocument) => {
     if (projectId === undefined || !window.confirm(t.projectForm.confirmRemoveDocument(document.title))) return;
     setFilesError('');
@@ -120,27 +193,6 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
       setExistingDocuments((current) => current.filter((d) => d.id !== document.id));
     } catch (error: any) {
       setFilesError(error.message || t.projectForm.removeFailed);
-    }
-  };
-
-  // Helper function to format country names
-  const formatCountryName = (countryName: string): string => {
-    return countryName
-      .split('_')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
-      .replace(/\bAnd\b/g, '&');
-  };
-
-  const handleButtonClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setImageUrl(url);
     }
   };
 
@@ -169,22 +221,10 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
     setLinks((current) => current.map((link, i) => (i === index ? { ...link, [field]: value } : link)));
   };
 
-  const handleCountryChange = (event: { target: { value: SetStateAction<string> } }) => {
-    setCountry(event.target.value);
-  };
-
   const handlePlasticsChange = (event: SelectChangeEvent<typeof selectedPlastics>) => {
     const value = event.target.value;
     const values = Array.isArray(value) ? value : [value];
     setSelectedPlastics(values.map((id) => (typeof id === 'string' ? Number(id) : id)));
-  };
-
-  const handleFinancingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFinancing(event.target.value);
-  };
-
-  const handleBusinessModelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setBusinessModel(event.target.value);
   };
 
   const handleWasteCollectedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -192,26 +232,13 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
     setWasteCollected(isNaN(value) ? 0 : value);
   };
 
-  const handleUpload = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined }) => {
+  const handleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFormError('');
-    const form = event.currentTarget;
-    const inputs = form?.elements as unknown as {
-      [key: string]: HTMLInputElement & { required: boolean };
-    };
-    const emptyFields = Object.values(inputs).filter((input) => {
-      return input.required && !input.value;
-    });
+    setShowMissing(true);
 
-    if (emptyFields.length > 0) {
-      const fieldNames = emptyFields.slice(0, emptyFields.length / 2).map((element) => `"${element.name}"`);
-      setFormError(t.common.requiredFields(fieldNames.join(', ')));
-      return;
-    }
-
-    // Validate required fields
-    if (!name.trim() || !product.trim() || !country || country === 'country') {
-      setFormError(t.projectForm.fillRequired);
+    if (missingFields.length > 0) {
+      setFormError(t.projectForm.missingFields(missingFields.map((field) => fieldLabels[field]).join(', ')));
       return;
     }
 
@@ -233,55 +260,31 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
       return;
     }
 
+    setSaving(true);
     try {
-      // Format dates
-      let startDateISO: string | undefined;
-      let endDateISO: string | undefined;
-
-      if (startDate) {
-        startDateISO = toIsoDate(startDate);
-      }
-
-      if (endDate) {
-        endDateISO = toIsoDate(endDate);
-      }
-
-      // Store the display name (e.g. "Kenya") like the rest of the platform data, not the form key.
-      const countryName =
-        country === CURRENT_COUNTRY
-          ? customCountry
-          : countryLabels[country as keyof typeof countryLabels] || formatCountryName(country);
+      const fields = {
+        name: name.trim(),
+        startDate: startDateIso as string,
+        endDate: endDateIso,
+        country: countryName,
+        product: product.trim(),
+        financing: financing.trim(),
+        businessModel: businessModel.trim(),
+        wasteCollected,
+        summary: summary.trim(),
+        plasticIds: selectedPlastics,
+      };
 
       let savedProjectId: number;
       if (projectId !== undefined) {
-        await updatePlasticProject(projectId, {
-          name: name.trim(),
-          startDate: startDateISO,
-          endDate: endDateISO,
-          country: countryName,
-          product: product.trim(),
-          financing,
-          businessModel,
-          wasteCollected,
-          summary: summary.trim() || undefined,
-          plasticIds: selectedPlastics,
-        });
+        await updatePlasticProject(projectId, fields);
         for (const link of filledLinks) {
           await addPlasticProjectLink(projectId, link);
         }
         savedProjectId = projectId;
       } else {
         const createdProject = await createPlasticProject({
-          name: name.trim(),
-          startDate: startDateISO || new Date().toISOString().split('T')[0],
-          endDate: endDateISO,
-          country: countryName,
-          product: product.trim(),
-          financing: financing,
-          businessModel: businessModel,
-          wasteCollected: wasteCollected,
-          summary: summary.trim() || undefined,
-          plasticIds: selectedPlastics.length > 0 ? selectedPlastics : undefined,
+          ...fields,
           links: filledLinks.length > 0 ? filledLinks : undefined,
         });
         savedProjectId = createdProject.id;
@@ -304,6 +307,8 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
     } catch (error: any) {
       console.error('Upload error:', error);
       setFormError(error.message || t.projectForm.uploadFailed);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -319,342 +324,253 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
   }
 
   return (
-    <Box component="form" noValidate onSubmit={handleUpload} sx={{ margin: '0 auto', width: 500 }}>
-      <TextField
-        required
-        fullWidth
-        id="projectTitle"
-        label={t.projectForm.name}
-        name="projectTitle"
-        value={name}
-        onChange={(event) => setName(event.target.value)}
-        sx={{
-          marginBottom: '1em',
-          backgroundColor: '#e0e0e0',
-          '&:focus-within': {
-            backgroundColor: 'white',
-          },
-        }}
-      />
+    <div className="projectFormLayout">
+      <Box component="form" noValidate onSubmit={handleUpload} className="projectFormCard">
+        <p className="projectFormRequiredNote">{t.projectForm.requiredNote}</p>
 
-      <TextField
-        required
-        fullWidth
-        id="product"
-        label={t.projectForm.product}
-        name="product"
-        value={product}
-        onChange={(event) => setProduct(event.target.value)}
-        sx={{
-          marginBottom: '1em',
-          backgroundColor: '#e0e0e0',
-          '&:focus-within': {
-            backgroundColor: 'white',
-          },
-        }}
-      />
+        {/* 1. The card's title and text */}
+        <h2 className="projectFormSection">{t.projectForm.sectionAbout}</h2>
+        <TextField
+          required
+          fullWidth
+          id="projectTitle"
+          label={t.projectForm.name}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          error={isMissing('name')}
+          margin="dense"
+        />
+        <TextField
+          required
+          fullWidth
+          id="summary"
+          label={t.projectForm.summary}
+          value={summary}
+          onChange={(event) => setSummary(event.target.value)}
+          error={isMissing('summary')}
+          helperText={t.projectForm.summaryHelp}
+          multiline
+          minRows={4}
+          margin="dense"
+        />
 
-      <Box display={'flex'} sx={{ marginBottom: '1em' }}>
-        <Select
-          id="country"
-          label={t.filters.country}
-          value={country}
-          name="country"
-          onChange={handleCountryChange}
-          sx={{
-            width: '100%',
-            marginRight: '1em',
-            '& .MuiSelect-select': {
-              backgroundColor: '#e0e0e0',
-            },
-            '&.Mui-focused .MuiSelect-select': {
-              backgroundColor: 'white',
-            },
-            '& fieldset': {
-              legend: { display: 'none' },
-            },
-          }}
-        >
-          <MenuItem value="country">{t.projectForm.selectCountry}</MenuItem>
-          {customCountry && <MenuItem value={CURRENT_COUNTRY}>{customCountry}</MenuItem>}
-          {countries.map((c) => (
-            <MenuItem key={c} value={c}>
-              {formatCountryName(c)}
+        {/* 2. The facts listed on the detailed card, in the same order */}
+        <h2 className="projectFormSection">{t.projectForm.sectionCard}</h2>
+        <div className="projectFormRow">
+          <DatePicker
+            label={`${t.projectForm.startDate} *`}
+            value={startDate}
+            onChange={(newValue) => setStartDate(newValue)}
+            renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+              <TextField {...params} fullWidth margin="dense" error={isMissing('startDate')} />
+            )}
+          />
+          <DatePicker
+            label={t.projectForm.endDate}
+            value={endDate}
+            onChange={(newValue) => setEndDate(newValue)}
+            renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+              <TextField {...params} fullWidth margin="dense" helperText={t.projectForm.endDateHelp} />
+            )}
+          />
+        </div>
+
+        <FormControl fullWidth margin="dense" required error={isMissing('country')}>
+          <InputLabel id="country-label">{t.filters.country}</InputLabel>
+          <Select
+            labelId="country-label"
+            id="country"
+            label={t.filters.country}
+            value={country}
+            onChange={(event) => setCountry(event.target.value)}
+          >
+            <MenuItem value={NO_COUNTRY}>
+              <em>{t.projectForm.selectCountry}</em>
             </MenuItem>
-          ))}
-        </Select>
+            {customCountry && <MenuItem value={CURRENT_COUNTRY}>{customCountry}</MenuItem>}
+            {countries.map((c) => (
+              <MenuItem key={c} value={c}>
+                {formatCountryName(c)}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
+        <FormControl fullWidth margin="dense" required error={isMissing('plastics')}>
+          <InputLabel id="plastics-label">{t.projectForm.plastics}</InputLabel>
+          <Select
+            labelId="plastics-label"
+            id="plastics"
+            multiple
+            value={selectedPlastics}
+            onChange={handlePlasticsChange}
+            input={<OutlinedInput label={t.projectForm.plastics} />}
+            renderValue={() => (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                {plasticNames.map((plasticName) => (
+                  <Chip key={plasticName} label={plasticName} size="small" />
+                ))}
+              </Box>
+            )}
+          >
+            {plastics.map((plastic) => (
+              <MenuItem key={plastic.id} value={plastic.id}>
+                {plastic.name}
+              </MenuItem>
+            ))}
+          </Select>
+          <FormHelperText>{t.projectForm.selectPlasticsHint}</FormHelperText>
+        </FormControl>
+
+        <TextField
+          required
+          fullWidth
+          id="product"
+          label={t.projectForm.product}
+          value={product}
+          onChange={(event) => setProduct(event.target.value)}
+          error={isMissing('product')}
+          margin="dense"
+        />
+        <TextField
+          required
+          fullWidth
+          id="financing"
+          label={t.projectForm.financing}
+          value={financing}
+          onChange={(event) => setFinancing(event.target.value)}
+          error={isMissing('financing')}
+          margin="dense"
+        />
+        <TextField
+          required
+          fullWidth
+          id="businessModel"
+          label={t.projectForm.businessModel}
+          value={businessModel}
+          onChange={(event) => setBusinessModel(event.target.value)}
+          error={isMissing('businessModel')}
+          margin="dense"
+        />
         <TextField
           type="number"
           fullWidth
           id="wasteCollected"
           label={t.projectForm.wasteCollected}
-          name="wasteCollected"
           value={wasteCollected}
           onChange={handleWasteCollectedChange}
-          sx={{
-            backgroundColor: '#e0e0e0',
-            '&:focus-within': {
-              backgroundColor: 'white',
-            },
-          }}
+          helperText={t.projectForm.wasteHelp}
+          inputProps={{ min: 0, step: 'any' }}
+          margin="dense"
         />
-      </Box>
 
-      <Select
-        multiple
-        displayEmpty
-        id="plastics"
-        value={selectedPlastics}
-        onChange={handlePlasticsChange}
-        renderValue={(selected) => {
-          if (selected.length === 0) {
-            return <span style={{ color: '#666' }}>{t.common.selectPlastics}</span>;
-          }
-          return selected.map((id) => plastics.find((p) => p.id === id)?.name).join(', ');
-        }}
-        sx={{
-          width: '100%',
-          marginBottom: '1em',
-          '& .MuiSelect-select': {
-            backgroundColor: '#e0e0e0',
-            padding: '16px',
-            minHeight: '1.4375em',
-          },
-          '&.Mui-focused .MuiSelect-select': {
-            backgroundColor: 'white',
-          },
-          '& fieldset': {
-            legend: { display: 'none' },
-          },
-        }}
-      >
-        <MenuItem disabled>
-          <em>{t.projectForm.selectPlasticsHint}</em>
-        </MenuItem>
-        {plastics.map((plastic) => (
-          <MenuItem key={plastic.id} value={plastic.id}>
-            {plastic.name}
-          </MenuItem>
+        {/* 3. Reports and links, shown on the project page */}
+        <h2 className="projectFormSection">{t.projectForm.sectionDocuments}</h2>
+        {isEdit && existingDocuments.length > 0 && (
+          <Box sx={{ mb: 1 }}>
+            <b>{t.projectForm.currentDocuments}</b>
+            {existingDocuments.map((document) => (
+              <div key={document.id} className="projectFormListRow">
+                <span>
+                  {document.title} ({document.kind === 'FILE' ? t.projectForm.pdf : t.projectForm.link})
+                </span>
+                <Button size="small" color="error" onClick={() => removeExistingDocument(document)}>
+                  {t.common.remove}
+                </Button>
+              </div>
+            ))}
+          </Box>
+        )}
+
+        <input
+          type="file"
+          accept="application/pdf"
+          multiple
+          style={{ display: 'none' }}
+          ref={pdfInputRef}
+          onChange={handlePdfChange}
+        />
+        <Button
+          fullWidth
+          variant="outlined"
+          className="projectFormAddButton"
+          onClick={() => pdfInputRef.current?.click()}
+        >
+          {t.projectForm.addReports(MAX_PDF_MB)}
+        </Button>
+        {filesError && (
+          <Typography color="error" sx={{ mb: 1 }}>
+            {filesError}
+          </Typography>
+        )}
+        {pdfFiles.map((file, index) => (
+          <div key={`${file.name}-${index}`} className="projectFormListRow">
+            <span>
+              {file.name} ({(file.size / 1024 / 1024).toFixed(1)} MB)
+            </span>
+            <Button size="small" onClick={() => removePdf(index)}>
+              {t.common.remove}
+            </Button>
+          </div>
         ))}
-      </Select>
 
-      <Box display={'flex'} sx={{ marginBottom: '1em' }}>
-        <TextField
+        {links.map((link, index) => (
+          <div key={index} className="projectFormRow projectFormLinkRow">
+            <TextField
+              label={t.projectForm.linkTitle}
+              value={link.title}
+              onChange={(event) => updateLink(index, 'title', event.target.value)}
+              margin="dense"
+            />
+            <TextField
+              label={t.projectForm.linkUrl}
+              value={link.url}
+              onChange={(event) => updateLink(index, 'url', event.target.value)}
+              margin="dense"
+            />
+            <Button size="small" onClick={() => setLinks((current) => current.filter((_, i) => i !== index))}>
+              {t.common.remove}
+            </Button>
+          </div>
+        ))}
+        <Button
           fullWidth
-          id="financing"
-          label={t.projectForm.financing}
-          name="financing"
-          value={financing}
-          onChange={handleFinancingChange}
-          sx={{
-            marginRight: '1em',
-            backgroundColor: '#e0e0e0',
-            '&:focus-within': {
-              backgroundColor: 'white',
-            },
-          }}
-        />
+          variant="outlined"
+          className="projectFormAddButton"
+          onClick={() => setLinks((current) => [...current, { title: '', url: '' }])}
+        >
+          {t.projectForm.addLink}
+        </Button>
 
-        <TextField
-          fullWidth
-          id="businessModel"
-          label={t.projectForm.businessModel}
-          name="businessModel"
-          value={businessModel}
-          onChange={handleBusinessModelChange}
-          sx={{
-            backgroundColor: '#e0e0e0',
-            '&:focus-within': {
-              backgroundColor: 'white',
-            },
-          }}
-        />
+        {formError && (
+          <Typography color="error" sx={{ mt: 2 }}>
+            {formError}
+          </Typography>
+        )}
+        <Button type="submit" variant="contained" fullWidth disabled={saving} className="projectFormSubmit">
+          {isEdit ? t.projectForm.submitEdit : t.projectForm.submitCreate}
+        </Button>
       </Box>
 
-      <Box display={'flex'} sx={{ marginBottom: '1em' }}>
-        <DatePicker
-          label={t.projectForm.startDate}
-          value={startDate}
-          onChange={(newValue) => setStartDate(newValue)}
-          renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-            <TextField
-              {...params}
-              sx={{
-                width: '100%',
-                marginRight: '1em',
-                backgroundColor: '#e0e0e0',
-                '&:focus-within': {
-                  backgroundColor: 'white',
-                },
-              }}
-            />
-          )}
+      {/* Live preview of the detailed project card */}
+      <aside className="projectFormPreview">
+        <h2 className="projectFormSection">{t.projectForm.preview}</h2>
+        <p className="projectFormPreviewHint">{t.projectForm.previewHint}</p>
+        <PlasticProjectCard
+          variant="detailed"
+          name={name.trim() || t.projectForm.name}
+          summary={summary.trim() || t.projectForm.summaryHelp}
+          startDate={startDateIso}
+          endDate={endDateIso}
+          country={countryName}
+          plastics={plasticNames}
+          product={product}
+          financing={financing}
+          businessModel={businessModel}
+          wasteCollected={wasteCollected}
         />
-
-        <DatePicker
-          label={t.projectForm.endDate}
-          value={endDate}
-          onChange={(newValue) => setEndDate(newValue)}
-          renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-            <TextField
-              {...params}
-              sx={{
-                width: '100%',
-                backgroundColor: '#e0e0e0',
-                '&:focus-within': {
-                  backgroundColor: 'white',
-                },
-              }}
-            />
-          )}
-        />
-      </Box>
-
-      <TextField
-        fullWidth
-        id="summary"
-        label={t.projectForm.summary}
-        name="summary"
-        value={summary}
-        onChange={(event) => setSummary(event.target.value)}
-        multiline
-        minRows={4}
-        sx={{
-          marginBottom: '1em',
-          backgroundColor: '#e0e0e0',
-          '&:focus-within': {
-            backgroundColor: 'white',
-          },
-        }}
-      />
-
-      {isEdit && existingDocuments.length > 0 && (
-        <Box sx={{ marginBottom: '1em' }}>
-          <b>{t.projectForm.currentDocuments}</b>
-          {existingDocuments.map((document) => (
-            <Box key={document.id} display="flex" alignItems="center" justifyContent="space-between">
-              <span>
-                {document.title} ({document.kind === 'FILE' ? t.projectForm.pdf : t.projectForm.link})
-              </span>
-              <Button size="small" color="error" onClick={() => removeExistingDocument(document)}>
-                {t.common.remove}
-              </Button>
-            </Box>
-          ))}
-        </Box>
-      )}
-
-      <input
-        type="file"
-        accept="application/pdf"
-        multiple
-        style={{ display: 'none' }}
-        ref={pdfInputRef}
-        onChange={handlePdfChange}
-      />
-      <Button
-        size="large"
-        variant="outlined"
-        onClick={() => pdfInputRef.current?.click()}
-        style={{
-          width: '100%',
-          color: 'black',
-          textTransform: 'none',
-          border: '1px solid grey',
-          marginBottom: '0.5em',
-          backgroundColor: '#e0e0e0',
-        }}
-      >
-        {t.projectForm.addReports(MAX_PDF_MB)}
-      </Button>
-      {filesError && (
-        <Typography color="error" sx={{ mb: 1 }}>
-          {filesError}
-        </Typography>
-      )}
-      {pdfFiles.length > 0 && (
-        <Box sx={{ marginBottom: '1em' }}>
-          {pdfFiles.map((file, index) => (
-            <Box key={`${file.name}-${index}`} display="flex" alignItems="center" justifyContent="space-between">
-              <span>
-                {file.name} ({(file.size / 1024 / 1024).toFixed(1)} MB)
-              </span>
-              <Button size="small" onClick={() => removePdf(index)}>
-                {t.common.remove}
-              </Button>
-            </Box>
-          ))}
-        </Box>
-      )}
-
-      {links.map((link, index) => (
-        <Box key={index} display="flex" alignItems="center" sx={{ marginBottom: '0.5em' }}>
-          <TextField
-            label={t.projectForm.linkTitle}
-            value={link.title}
-            onChange={(event) => updateLink(index, 'title', event.target.value)}
-            sx={{ width: '40%', marginRight: '0.5em', backgroundColor: '#e0e0e0' }}
-          />
-          <TextField
-            label={t.projectForm.linkUrl}
-            value={link.url}
-            onChange={(event) => updateLink(index, 'url', event.target.value)}
-            sx={{ flex: 1, backgroundColor: '#e0e0e0' }}
-          />
-          <Button size="small" onClick={() => setLinks((current) => current.filter((_, i) => i !== index))}>
-            {t.common.remove}
-          </Button>
-        </Box>
-      ))}
-      <Button
-        size="large"
-        variant="outlined"
-        onClick={() => setLinks((current) => [...current, { title: '', url: '' }])}
-        style={{
-          width: '100%',
-          color: 'black',
-          textTransform: 'none',
-          border: '1px solid grey',
-          marginBottom: '1em',
-          backgroundColor: '#e0e0e0',
-        }}
-      >
-        {t.projectForm.addLink}
-      </Button>
-
-      <input type="file" accept="image/*" style={{ display: 'none' }} ref={fileInputRef} onChange={handleFileChange} />
-      <Button
-        size="large"
-        variant="outlined"
-        onClick={handleButtonClick}
-        style={{
-          width: '100%',
-          color: 'black',
-          textTransform: 'none',
-          border: '1px solid grey',
-          marginBottom: '1em',
-          backgroundColor: '#e0e0e0',
-        }}
-      >
-        {t.common.uploadPicture}
-      </Button>
-
-      {imageUrl && (
-        <div style={{ marginBottom: '1em' }}>
-          <img src={imageUrl} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: 200 }} />
-        </div>
-      )}
-
-      {formError && (
-        <Typography color="error" sx={{ mb: 2 }}>
-          {formError}
-        </Typography>
-      )}
-      <Button type="submit" variant="contained" style={{ width: 200, height: 50, margin: '1em' }}>
-        {isEdit ? t.projectForm.submitEdit : t.projectForm.submitCreate}
-      </Button>
-    </Box>
+      </aside>
+    </div>
   );
 };
 

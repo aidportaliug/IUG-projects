@@ -1,0 +1,110 @@
+@import '../../mainStyles/mainStyles.css';
+
+/* Form on the left, live card preview on the right; stacked on small screens. */
+.projectFormLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 32px;
+  max-width: 1040px;
+  margin: 0 auto 48px;
+  padding: 0 16px;
+  text-align: left;
+  align-items: start;
+}
+
+.projectFormCard {
+  background: #fff;
+  border: 1px solid #e3e8e3;
+  border-radius: 14px;
+  padding: 24px 28px 28px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.projectFormRequiredNote {
+  margin: 0;
+  text-align: right;
+  font-size: 0.85rem;
+  color: var(--UiGray);
+}
+
+.projectFormSection {
+  font-size: 1.1rem;
+  color: var(--mainGreen);
+  margin: 20px 0 4px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e3e8e3;
+}
+.projectFormSection:first-of-type {
+  margin-top: 4px;
+}
+
+.projectFormRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.projectFormLinkRow {
+  grid-template-columns: 1fr 1.5fr auto;
+  align-items: center;
+}
+
+.projectFormListRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 0;
+  overflow-wrap: anywhere;
+}
+
+.projectFormCard .projectFormAddButton {
+  margin: 8px 0;
+  color: var(--mainGreen);
+  border-color: var(--secondaryGreen);
+  text-transform: none;
+}
+
+.projectFormCard .projectFormSubmit {
+  margin-top: 20px;
+  padding: 12px;
+  background-color: var(--mainGreen);
+  font-weight: 700;
+  text-transform: none;
+  font-size: 1rem;
+}
+.projectFormCard .projectFormSubmit:hover {
+  background-color: #2f5f35;
+}
+
+.projectFormPreview {
+  position: sticky;
+  top: 90px;
+}
+.projectFormPreview .plasticCard {
+  cursor: default;
+}
+.projectFormPreviewHint {
+  margin: 4px 0 12px;
+  font-size: 0.9rem;
+  color: var(--UiGray);
+}
+
+@media (max-width: 860px) {
+  .projectFormLayout {
+    grid-template-columns: 1fr;
+  }
+  .projectFormPreview {
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .projectFormCard {
+    padding: 16px;
+  }
+  .projectFormRow,
+  .projectFormLinkRow {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

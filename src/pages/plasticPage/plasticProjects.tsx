@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/AuthContext';
 import { canUploadProjects } from '../../services/auth';
 import { useI18n } from '../../i18n/I18nContext';
+import PlasticProjectCard, { uploadButtonSx } from '../../components/PlasticProjectCards/PlasticProjectCard';
 
 interface PlasticProjectData {
   project_id: string;
@@ -56,14 +57,6 @@ const machineImageByName: Record<string, string> = {
   'twig grinder': shredder,
   ventilation,
   'ventilation system': ventilation,
-};
-
-// "2020–2024", "2024" for a single year, or "2022–ongoing" without an end date.
-const formatYears = (startDate: string, endDate: string | undefined, ongoing: string): string => {
-  const startYear = startDate.slice(0, 4);
-  if (!endDate) return `${startYear}–${ongoing}`;
-  const endYear = endDate.slice(0, 4);
-  return startYear === endYear ? startYear : `${startYear}–${endYear}`;
 };
 
 // Sorted, de-duplicated filter values taken from the loaded data.
@@ -318,15 +311,7 @@ const PlasticProjects: React.FC = () => {
 
               {showUploadButton && (
                 <div className="plasticUploadRow">
-                  <Button
-                    onClick={() => navigate(uploadButtonRoute)}
-                    style={{
-                      color: 'black',
-                      textTransform: 'none',
-                      border: '1px solid grey',
-                      backgroundColor: '#e0e0e0',
-                    }}
-                  >
+                  <Button onClick={() => navigate(uploadButtonRoute)} sx={uploadButtonSx}>
                     {uploadButtonLabel}
                   </Button>
                 </div>
@@ -373,79 +358,23 @@ const PlasticProjects: React.FC = () => {
             ) : (
               <div className="plasticCardGrid">
                 {activeTab === 'projects'
-                  ? filteredProjects.map((project) =>
-                      projectViewMode === 'small' ? (
-                        <div
-                          key={project.project_id}
-                          className="plasticCard"
-                          onClick={() => navigate(`/plastic-project/${project.project_id}`)}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          <div className="plasticCardOutline">
-                            <img className="plasticCardImage" src={imageProjectCard} alt={project.project_name} />
-                            {/* Small view: only the project info */}
-                            <div className="plasticCardBody">
-                              <div className="plasticCardTitle">{project.project_name}</div>
-                              <div className="plasticCardDescription plasticCardDescriptionClamped">
-                                {project.summary}
-                              </div>
-                              <div className="plasticCardLink">{t.plastic.viewProject}</div>
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div
-                          key={project.project_id}
-                          className="plasticCard"
-                          onClick={() => navigate(`/plastic-project/${project.project_id}`)}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          <div className="plasticCardOutline">
-                            <img className="plasticCardImage" src={imageProjectCard} alt={project.project_name} />
-                            <div className="plasticCardBody">
-                              <div className="plasticCardTitle">{project.project_name}</div>
-                              <div className="plasticCardDescription plasticCardDescriptionClamped">
-                                {project.summary}
-                              </div>
-
-                              <div className="plasticCardTags">
-                                <b>{t.plastic.years} </b>
-                                {formatYears(project.start_date, project.end_date, t.plastic.ongoing)}
-                              </div>
-
-                              <div className="plasticCardTags">
-                                <b>{t.plastic.country} </b>
-                                {project.country}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>{t.plastic.plastics} </b>
-                                {project.plastics?.map((p) => (
-                                  <span key={p} className="plasticTag">
-                                    {p}
-                                  </span>
-                                ))}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>{t.plastic.product}</b> {project.product}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>{t.plastic.financing}</b> {project.financing}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>{t.plastic.businessModel}</b> {project.businessModel}
-                              </div>
-                              {project.wasteCollected > 0 && (
-                                <div className="plasticCardTags">
-                                  <b>{t.plastic.wasteCollected}</b> {t.common.tons(project.wasteCollected)}
-                                </div>
-                              )}
-
-                              <div className="plasticCardLink">{t.plastic.viewProject}</div>
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    )
+                  ? filteredProjects.map((project) => (
+                      <PlasticProjectCard
+                        key={project.project_id}
+                        variant={projectViewMode}
+                        name={project.project_name}
+                        summary={project.summary}
+                        startDate={project.start_date}
+                        endDate={project.end_date}
+                        country={project.country}
+                        plastics={project.plastics ?? []}
+                        product={project.product}
+                        financing={project.financing}
+                        businessModel={project.businessModel}
+                        wasteCollected={project.wasteCollected}
+                        onClick={() => navigate(`/plastic-project/${project.project_id}`)}
+                      />
+                    ))
                   : machines.map((machine) =>
                       machineViewMode === 'small' ? (
                         <div
