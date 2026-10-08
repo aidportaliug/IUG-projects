@@ -18,6 +18,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AuthProvider } from './services/AuthContext';
 import MachineDetailsPage from './pages/MachineDetailPage/machineDetailPage';
+import AdminSignupsPage from './pages/adminPage/AdminSignupsPage';
 
 const App: React.FC = () => {
   // Set default colors for all MUI components
@@ -39,6 +40,7 @@ const App: React.FC = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/User" element={<UserView />} />
               <Route path="/signUp" element={<SignUp />} />
+              <Route path="/admin/signups" element={<AdminSignupsPage />} />
               <Route path="/project/:id" element={<ProjectDetailsPage />} />
               <Route path="/report/:id" element={<ReportDetailsPage />} />
               <Route path="/plastic-project/:id" element={<PlasticProjectDetailsPage />} />
