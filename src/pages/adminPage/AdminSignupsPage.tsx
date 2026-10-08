@@ -1,10 +1,27 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, CircularProgress, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  ToggleButton,
+  ToggleButtonGroup,
+} from '@mui/material';
 import Layout from '../../components/Navbar/Layout';
 import Meta from '../../components/Meta';
 import { useAuth } from '../../services/AuthContext';
 import { UserResponse, userTypeLabel } from '../../services/auth';
-import { approveUser, ApprovalStatus, deleteUser, getUsersByStatus, rejectUser } from '../../services/adminService';
+import {
+  approveUser,
+  ApprovalStatus,
+  changeUserType,
+  ChangeableUserType,
+  deleteUser,
+  getUsersByStatus,
+  rejectUser,
+} from '../../services/adminService';
 import './adminSignupsPage.css';
 
 const fullName = (user: UserResponse) => [user.firstName, user.lastName].filter(Boolean).join(' ');
@@ -84,6 +101,18 @@ const AdminSignupsPage: React.FC = () => {
     }
   };
 
+  const handleTypeChange = async (target: UserResponse, userType: ChangeableUserType) => {
+    setBusyId(target.id);
+    try {
+      const updated = await changeUserType(target.id, userType);
+      setUsers((current) => current.map((u) => (u.id === updated.id ? updated : u)));
+    } catch (e: any) {
+      alert(e.message || 'Could not change the user type');
+    } finally {
+      setBusyId(null);
+    }
+  };
+
   let content: React.ReactNode;
   if (authLoading) {
     content = <CircularProgress />;
@@ -123,9 +152,25 @@ const AdminSignupsPage: React.FC = () => {
                     {u.phoneNumber && <span> · {u.phoneNumber}</span>}
                   </div>
                   <div className="adminUserMeta">
-                    {userTypeLabel(u)} · Signed up {formatDate(u.createdAt)}
+                    {u.isAdmin ? `${userTypeLabel(u)} · ` : ''}Signed up {formatDate(u.createdAt)}
                   </div>
                 </div>
+                {!u.isAdmin && (
+                  <FormControl size="small" className="adminUserType">
+                    <InputLabel id={`type-label-${u.id}`}>Type</InputLabel>
+                    <Select
+                      labelId={`type-label-${u.id}`}
+                      label="Type"
+                      value={(u.userType === 'admin' ? 'member' : u.userType) ?? 'member'}
+                      disabled={busyId === u.id}
+                      onChange={(e) => handleTypeChange(u, e.target.value as ChangeableUserType)}
+                    >
+                      <MenuItem value="member">Member</MenuItem>
+                      <MenuItem value="student">Student</MenuItem>
+                      <MenuItem value="professor">Professor</MenuItem>
+                    </Select>
+                  </FormControl>
+                )}
                 {status === 'APPROVED' && !u.isAdmin && (
                   <div className="adminUserActions">
                     <Button variant="outlined" color="error" disabled={busyId === u.id} onClick={() => handleDelete(u)}>

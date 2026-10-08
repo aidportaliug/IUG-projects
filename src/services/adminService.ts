@@ -21,3 +21,10 @@ export async function rejectUser(id: number): Promise<void> {
 export async function deleteUser(id: number): Promise<void> {
   await apiClient.delete(`/admin/users/${id}`);
 }
+
+export type ChangeableUserType = 'member' | 'student' | 'professor';
+
+// Changes a user's type. The admin account's type cannot be changed.
+export async function changeUserType(id: number, userType: ChangeableUserType): Promise<UserResponse> {
+  return apiClient.put<UserResponse>(`/admin/users/${id}/type`, { userType });
+}
