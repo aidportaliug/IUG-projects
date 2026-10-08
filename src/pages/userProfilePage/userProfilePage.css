@@ -47,6 +47,27 @@ h1 {
   color: var(--TypoBlack);
 }
 
+.myUploads {
+  margin: 2em auto;
+  max-width: 700px;
+}
+.myUploadsList {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+}
+.myUploadsItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+  padding: 0.75em 0;
+  border-bottom: 1px solid #ddd;
+}
+.myUploadsInfo {
+  display: flex;
+  flex-direction: column;
+}
 .buttonsIcon {
   margin-top: 3%;
   display: flex;

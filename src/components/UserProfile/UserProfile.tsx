@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Button, TextField, Grid, Box } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { logOut, userTypeLabel } from '../../services/auth';
+import { canUploadProjects, logOut, userTypeLabel } from '../../services/auth';
 import { useAuth } from '../../services/AuthContext';
 import { apiClient } from '../../services/apiClient';
+import MyUploads from './MyUploads';
 
 const UserProfileComponent: React.FC = () => {
   const { user, refreshUser } = useAuth();
@@ -91,6 +92,7 @@ const UserProfileComponent: React.FC = () => {
             <Button variant="contained" id="btnLogOut" onClick={logout}>
               Log out
             </Button>
+            {canUploadProjects(user) && <MyUploads user={user} />}
           </>
         ) : (
           <Box sx={{ width: '100%', maxWidth: 600, mt: 3, p: 3 }}>
