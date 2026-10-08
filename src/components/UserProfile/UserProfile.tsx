@@ -31,7 +31,6 @@ const UserProfileComponent: React.FC = () => {
       await apiClient.put('/me', formData);
       await refreshUser();
       setEditing(false);
-      alert('Profile updated successfully!');
     } catch (error: any) {
       console.error('Update error:', error);
       alert(error.message || 'Failed to update profile');
