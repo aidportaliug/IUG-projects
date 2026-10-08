@@ -237,3 +237,13 @@
     font-size: 2.5em;
   }
 }
+
+/* Long summaries are cut after a few lines on the cards; the full text is on the project page. */
+.plasticCardDescriptionClamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 0 1 auto;
+}
