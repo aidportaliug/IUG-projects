@@ -45,6 +45,8 @@ export interface PlasticProjectResponse {
   summary: string | null;
   plastics: PlasticResponse[];
   documents: PlasticProjectDocument[];
+  // ID of the user who uploaded the project; null for the seeded projects (admin-only).
+  createdBy?: number | null;
 }
 
 export interface PlasticProjectListResponse {

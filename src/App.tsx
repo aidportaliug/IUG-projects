@@ -44,6 +44,7 @@ const App: React.FC = () => {
               <Route path="/project/:id" element={<ProjectDetailsPage />} />
               <Route path="/report/:id" element={<ReportDetailsPage />} />
               <Route path="/plastic-project/:id" element={<PlasticProjectDetailsPage />} />
+              <Route path="/plastic-project/:id/edit" element={<UploadPlasticProject />} />
               <Route path="/machine/:id" element={<MachineDetailsPage />} />
               <Route path="/uploadProject" element={<UploadProject />} />
               <Route path="/uploadexperienceReport" element={<UploadExperienceReport />} />

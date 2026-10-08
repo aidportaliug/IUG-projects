@@ -14,6 +14,8 @@ import ventilation from '../../images/ventilation.jpg';
 import { getMachines, MachineResponse } from '../../services/machineService';
 import { getPlasticProjects, PlasticProjectResponse } from '../../services/plasticService';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../services/AuthContext';
+import { canUploadProjects } from '../../services/auth';
 
 interface PlasticProjectData {
   project_id: string;
@@ -92,6 +94,9 @@ const PlasticProjects: React.FC = () => {
   const navigate = useNavigate();
   const uploadButtonLabel = activeTab === 'machines' ? 'Upload machine' : 'Upload your project';
   const uploadButtonRoute = activeTab === 'machines' ? '/uploadMachine' : '/UploadPlasticProject';
+  // Machines are added by the admin; projects by students, professors and the admin.
+  const { user } = useAuth();
+  const showUploadButton = activeTab === 'machines' ? !!user?.isAdmin : canUploadProjects(user);
 
   useEffect(() => {
     const fetchPlasticDatabase = async () => {
@@ -309,19 +314,21 @@ const PlasticProjects: React.FC = () => {
                 </Button>
               </div>
 
-              <div className="plasticUploadRow">
-                <Button
-                  onClick={() => navigate(uploadButtonRoute)}
-                  style={{
-                    color: 'black',
-                    textTransform: 'none',
-                    border: '1px solid grey',
-                    backgroundColor: '#e0e0e0',
-                  }}
-                >
-                  {uploadButtonLabel}
-                </Button>
-              </div>
+              {showUploadButton && (
+                <div className="plasticUploadRow">
+                  <Button
+                    onClick={() => navigate(uploadButtonRoute)}
+                    style={{
+                      color: 'black',
+                      textTransform: 'none',
+                      border: '1px solid grey',
+                      backgroundColor: '#e0e0e0',
+                    }}
+                  >
+                    {uploadButtonLabel}
+                  </Button>
+                </div>
+              )}
             </div>
 
             {showFilters && (

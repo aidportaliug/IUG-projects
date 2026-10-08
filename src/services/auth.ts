@@ -123,3 +123,16 @@ export async function getCurrentUser(): Promise<UserResponse | null> {
 export function isAuthenticated(): boolean {
   return !!localStorage.getItem('token');
 }
+
+// Plastic projects: students and professors upload projects and edit their own; the admin edits and deletes any.
+export function canUploadProjects(user?: UserResponse | null): boolean {
+  return !!user && (!!user.isAdmin || !!user.isProfessor || !!user.isStudent);
+}
+
+export function canEditProject(user: UserResponse | null | undefined, project: { createdBy?: number | null }): boolean {
+  return !!user && (!!user.isAdmin || (canUploadProjects(user) && project.createdBy === user.id));
+}
+
+export function canDeleteProjects(user?: UserResponse | null): boolean {
+  return !!user?.isAdmin;
+}
