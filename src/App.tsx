@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/homePage/homePage';
 import Login from './pages/loginPage/LoginPage';
 import SignUp from './pages/signupPage/SignupPage';
 import UserView from './pages/userProfilePage/UserProfilePage';
@@ -36,7 +35,7 @@ const App: React.FC = () => {
         <AuthProvider>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<PlasticProject />} />
               <Route path="/login" element={<Login />} />
               <Route path="/User" element={<UserView />} />
               <Route path="/signUp" element={<SignUp />} />
