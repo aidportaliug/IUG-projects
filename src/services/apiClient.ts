@@ -88,6 +88,14 @@ class ApiClient {
     });
   }
 
+  async putForm<T>(endpoint: string, formData: FormData, requiresAuth = true): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'PUT',
+      body: formData,
+      requiresAuth,
+    });
+  }
+
   async put<T>(endpoint: string, data?: any, requiresAuth = true): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'PUT',

@@ -117,8 +117,16 @@
   border-color: var(--secondaryGreen);
   background: var(--tertiaryGreen);
 }
+.myUploadsThumb {
+  width: 64px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
 .myUploadsInfo {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 4px;
   min-width: 0;

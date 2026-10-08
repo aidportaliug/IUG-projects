@@ -20,14 +20,18 @@ import {
   addPlasticProjectLink,
   createPlasticProject,
   deletePlasticProjectDocument,
+  deletePlasticProjectImage,
   DocumentLinkRequest,
   getPlasticProject,
   getPlastics,
   PlasticProjectDocument,
   PlasticResponse,
+  projectImageHref,
   updatePlasticProject,
+  uploadPlasticProjectImage,
   uploadPlasticProjectPdf,
 } from '../../services/plasticService';
+import { formatBytes, ImageError, prepareImage } from '../../services/imageResize';
 import { countries, country as countryLabels } from '../../models/allowedValues';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext';
@@ -99,8 +103,23 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
   const [wasteCollected, setWasteCollected] = useState<number>(0);
   const [pdfFiles, setPdfFiles] = useState<File[]>([]);
   const [links, setLinks] = useState<DocumentLinkRequest[]>([]);
+  // Picture: the saved one (edit mode), a new shrunk one waiting for upload, or removed.
+  const [savedImage, setSavedImage] = useState<string | undefined>(undefined);
+  const [newImage, setNewImage] = useState<Blob | null>(null);
+  const [newImageUrl, setNewImageUrl] = useState<string | undefined>(undefined);
+  const [removeImage, setRemoveImage] = useState(false);
+  const [preparingImage, setPreparingImage] = useState(false);
+  const [imageError, setImageError] = useState('');
   const navigate = useNavigate();
   const pdfInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  // Free the preview's object URL when it is replaced or the form closes.
+  useEffect(() => {
+    return () => {
+      if (newImageUrl) URL.revokeObjectURL(newImageUrl);
+    };
+  }, [newImageUrl]);
 
   // Fetch plastics on component mount
   useEffect(() => {
@@ -131,6 +150,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
         setWasteCollected(project.wasteCollected);
         setSelectedPlastics(project.plastics.map((plastic) => plastic.id));
         setExistingDocuments(project.documents ?? []);
+        setSavedImage(projectImageHref(project));
         const countryKey = countries.find(
           (key) => countryLabels[key as keyof typeof countryLabels] === project.country
         );
@@ -221,6 +241,41 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
     setLinks((current) => current.map((link, i) => (i === index ? { ...link, [field]: value } : link)));
   };
 
+  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+    setImageError('');
+    setPreparingImage(true);
+    try {
+      const image = await prepareImage(file);
+      setNewImage(image);
+      setNewImageUrl(URL.createObjectURL(image));
+      setRemoveImage(false);
+    } catch (error) {
+      const code = error instanceof ImageError ? error.code : 'unreadable';
+      setImageError(
+        code === 'notImage'
+          ? t.projectForm.pictureNotImage
+          : code === 'tooLarge'
+          ? t.projectForm.pictureTooLarge
+          : t.projectForm.pictureUnreadable
+      );
+    } finally {
+      setPreparingImage(false);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setNewImage(null);
+    setNewImageUrl(undefined);
+    setRemoveImage(!!savedImage);
+    setImageError('');
+  };
+
+  // What the card shows right now: the new picture, else the saved one unless it is being removed.
+  const shownImage = newImageUrl ?? (removeImage ? undefined : savedImage);
+
   const handlePlasticsChange = (event: SelectChangeEvent<typeof selectedPlastics>) => {
     const value = event.target.value;
     const values = Array.isArray(value) ? value : [value];
@@ -290,7 +345,19 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
         savedProjectId = createdProject.id;
       }
 
-      // PDFs are attached after the project exists; one failing file should not hide the others.
+      // The picture and PDFs are attached after the project exists; a failure here keeps the saved project.
+      const warnings: string[] = [];
+      try {
+        if (newImage) {
+          await uploadPlasticProjectImage(savedProjectId, newImage);
+        } else if (removeImage) {
+          await deletePlasticProjectImage(savedProjectId);
+        }
+      } catch (imageUploadError) {
+        console.error('Failed to save the picture:', imageUploadError);
+        warnings.push(t.projectForm.pictureFailed);
+      }
+
       const failedPdfs: string[] = [];
       for (const file of pdfFiles) {
         try {
@@ -302,7 +369,8 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
       }
 
       // The detail page shows this warning once (see plasticProjectDetailPage).
-      const uploadWarning = failedPdfs.length > 0 ? t.projectForm.pdfsFailed(isEdit, failedPdfs.join(', ')) : undefined;
+      if (failedPdfs.length > 0) warnings.push(t.projectForm.pdfsFailed(isEdit, failedPdfs.join(', ')));
+      const uploadWarning = warnings.length > 0 ? warnings.join(' ') : undefined;
       navigate(`/plastic-project/${savedProjectId}`, { state: uploadWarning ? { uploadWarning } : undefined });
     } catch (error: any) {
       console.error('Upload error:', error);
@@ -354,8 +422,42 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
           margin="dense"
         />
 
-        {/* 2. The facts listed on the detailed card, in the same order */}
+        {/* 2. The picture and the facts on the detailed card, in the card's order */}
         <h2 className="projectFormSection">{t.projectForm.sectionCard}</h2>
+        <div className="projectFormPicture">
+          <span className="projectFormPictureLabel">{t.projectForm.picture}</span>
+          {shownImage && <img className="projectFormPictureThumb" src={shownImage} alt="" />}
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            style={{ display: 'none' }}
+            ref={imageInputRef}
+            onChange={handleImageChange}
+          />
+          <div className="projectFormPictureButtons">
+            <Button
+              variant="outlined"
+              className="projectFormAddButton"
+              disabled={preparingImage}
+              onClick={() => imageInputRef.current?.click()}
+            >
+              {preparingImage
+                ? t.projectForm.preparingPicture
+                : shownImage
+                ? t.projectForm.replacePicture
+                : t.projectForm.choosePicture}
+            </Button>
+            {shownImage && (
+              <Button color="error" onClick={handleRemoveImage} sx={{ textTransform: 'none' }}>
+                {t.projectForm.removePicture}
+              </Button>
+            )}
+          </div>
+          <FormHelperText>
+            {newImage ? t.projectForm.pictureSize(formatBytes(newImage.size)) : t.projectForm.pictureHint}
+          </FormHelperText>
+          {imageError && <Typography color="error">{imageError}</Typography>}
+        </div>
         <div className="projectFormRow">
           <DatePicker
             label={`${t.projectForm.startDate} *`}
@@ -568,6 +670,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
           financing={financing}
           businessModel={businessModel}
           wasteCollected={wasteCollected}
+          image={shownImage}
         />
       </aside>
     </div>

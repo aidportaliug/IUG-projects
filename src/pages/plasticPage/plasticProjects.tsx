@@ -12,7 +12,7 @@ import melter from '../../images/melter.png';
 import shredder from '../../images/shredder.png';
 import ventilation from '../../images/ventilation.jpg';
 import { getMachines, MachineResponse } from '../../services/machineService';
-import { getPlasticProjects, PlasticProjectResponse } from '../../services/plasticService';
+import { getPlasticProjects, PlasticProjectResponse, projectImageHref } from '../../services/plasticService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/AuthContext';
 import { canUploadProjects } from '../../services/auth';
@@ -35,6 +35,7 @@ interface PlasticProjectData {
   businessModel: string;
   partnershipOwnership: string;
   wasteCollected: number;
+  image?: string;
 }
 
 interface MachineData {
@@ -141,6 +142,7 @@ const PlasticProjects: React.FC = () => {
             businessModel: project.businessModel,
             partnershipOwnership: '',
             wasteCollected: project.wasteCollected,
+            image: projectImageHref(project),
           })
         );
 
@@ -372,6 +374,7 @@ const PlasticProjects: React.FC = () => {
                         financing={project.financing}
                         businessModel={project.businessModel}
                         wasteCollected={project.wasteCollected}
+                        image={project.image}
                         onClick={() => navigate(`/plastic-project/${project.project_id}`)}
                       />
                     ))

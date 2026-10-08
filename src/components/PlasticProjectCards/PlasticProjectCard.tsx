@@ -14,6 +14,8 @@ export interface PlasticProjectCardProps {
   financing: string;
   businessModel: string;
   wasteCollected: number;
+  // The project's own picture; the default picture is shown when missing.
+  image?: string;
   // Small: name and summary only. Detailed: also years, country, plastics, product, financing, business model, waste.
   variant: 'small' | 'detailed';
   onClick?: () => void;
@@ -42,12 +44,12 @@ export const uploadButtonSx = {
 // One project card, used by the project list and by the live preview in the upload form.
 const PlasticProjectCard: React.FC<PlasticProjectCardProps> = (props) => {
   const { t } = useI18n();
-  const { name, summary, startDate, endDate, country, plastics, variant, onClick } = props;
+  const { name, summary, startDate, endDate, country, plastics, image, variant, onClick } = props;
 
   return (
     <div className="plasticCard" onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
       <div className="plasticCardOutline">
-        <img className="plasticCardImage" src={imageProjectCard} alt={name} />
+        <img className="plasticCardImage" src={image || imageProjectCard} alt={name} />
         <div className="plasticCardBody">
           <div className="plasticCardTitle">{name}</div>
           <div className="plasticCardDescription plasticCardDescriptionClamped">{summary}</div>

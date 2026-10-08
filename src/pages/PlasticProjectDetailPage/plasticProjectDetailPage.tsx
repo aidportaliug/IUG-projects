@@ -5,6 +5,7 @@ import {
   documentHref,
   getPlasticProject,
   PlasticProjectResponse,
+  projectImageHref,
 } from '../../services/plasticService';
 import { useAuth } from '../../services/AuthContext';
 import { canDeleteProjects, canEditProject } from '../../services/auth';
@@ -119,7 +120,7 @@ const PlasticProjectDetailsPage: React.FC = () => {
                 {actionError || uploadWarning}
               </Typography>
             )}
-            <ProjectImageBox source={imageIcon} altText={t.projectDetail.imageAlt} />
+            <ProjectImageBox source={projectImageHref(project) ?? imageIcon} altText={t.projectDetail.imageAlt} />
             <hr />
             <div className="projectInformation">
               <div className="infoRow">
