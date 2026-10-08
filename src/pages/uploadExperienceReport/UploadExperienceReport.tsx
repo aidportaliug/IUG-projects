@@ -34,18 +34,7 @@ const UploadExperienceReport: React.FC = () => {
         <div className="outline">
           <UploadExperienceReportForm />
         </div>
-        <Footer
-          nameLink1="Demo_1"
-          nameLink1URL="demo.com"
-          nameLink2="Demo_1"
-          nameLink2URL="demo.com"
-          nameLink3="Demo_1"
-          nameLink3URL="demo.com"
-          nameLink4="Demo_1"
-          nameLink4URL="demo.com"
-          category1="category1"
-          category2="category2"
-        />
+        <Footer />
       </>
     );
   }
