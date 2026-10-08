@@ -14,7 +14,8 @@ import NavLogo from './Navlogo';
 import { useFirebaseAuth } from '../../services/AuthContext';
 import './navbar.css';
 
-const pages = ['Masterprojects', 'Experience Reports', 'Plastic Project'];
+// Master projects and experience reports are no longer shown; the plastic platform is the site's main page.
+const pages = ['Plastic Project'];
 const settings = ['Profile', 'Logout'];
 const loggedOutSettings = ['Login', 'Sign Up'];
 
