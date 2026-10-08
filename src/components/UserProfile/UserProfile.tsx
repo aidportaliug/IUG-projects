@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, Grid, Box } from '@mui/material';
+import { Button, TextField, Grid, Box, Typography } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { canUploadProjects, logOut, userTypeLabel } from '../../services/auth';
 import { useAuth } from '../../services/AuthContext';
@@ -10,6 +10,7 @@ const UserProfileComponent: React.FC = () => {
   const { user, refreshUser } = useAuth();
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
+  const [formError, setFormError] = useState('');
   const [formData, setFormData] = useState({
     username: user?.username || '',
     firstName: user?.firstName || '',
@@ -27,13 +28,14 @@ const UserProfileComponent: React.FC = () => {
   };
 
   const handleUpdate = async () => {
+    setFormError('');
     try {
       await apiClient.put('/me', formData);
       await refreshUser();
       setEditing(false);
     } catch (error: any) {
       console.error('Update error:', error);
-      alert(error.message || 'Failed to update profile');
+      setFormError(error.message || 'Failed to update profile');
     }
   };
 
@@ -162,6 +164,11 @@ const UserProfileComponent: React.FC = () => {
                   />
                 </Grid>
               </Grid>
+              {formError && (
+                <Typography color="error" sx={{ mt: 2 }}>
+                  {formError}
+                </Typography>
+              )}
               <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
                 <Button
                   variant="contained"
@@ -172,7 +179,10 @@ const UserProfileComponent: React.FC = () => {
                 </Button>
                 <Button
                   variant="text"
-                  onClick={() => setEditing(false)}
+                  onClick={() => {
+                    setEditing(false);
+                    setFormError('');
+                  }}
                   sx={{ color: '#3D7844', textTransform: 'none' }}
                 >
                   Cancel

@@ -1,6 +1,6 @@
 import React, { SetStateAction, useState, useRef, useEffect } from 'react';
 import './uploadPlasticProjectForm.css';
-import { Box, Button, MenuItem, Select, SelectChangeEvent, TextField, TextFieldProps } from '@mui/material';
+import { Box, Button, MenuItem, Select, SelectChangeEvent, TextField, TextFieldProps, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import {
   addPlasticProjectLink,
@@ -43,6 +43,10 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
   const [customCountry, setCustomCountry] = useState('');
   const [existingDocuments, setExistingDocuments] = useState<PlasticProjectDocument[]>([]);
   const [loadingProject, setLoadingProject] = useState(isEdit);
+  const [loadError, setLoadError] = useState('');
+  // Shown next to the submit button and the reports section instead of popups.
+  const [formError, setFormError] = useState('');
+  const [filesError, setFilesError] = useState('');
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const [country, setCountry] = useState('country');
@@ -98,7 +102,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
           setCountry(CURRENT_COUNTRY);
         }
       } catch (error: any) {
-        alert(error.message || 'Could not load the project');
+        setLoadError(error.message || 'Could not load the project');
       } finally {
         setLoadingProject(false);
       }
@@ -108,11 +112,12 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
 
   const removeExistingDocument = async (document: PlasticProjectDocument) => {
     if (projectId === undefined || !window.confirm(`Remove "${document.title}" from the project?`)) return;
+    setFilesError('');
     try {
       await deletePlasticProjectDocument(projectId, document.id);
       setExistingDocuments((current) => current.filter((d) => d.id !== document.id));
     } catch (error: any) {
-      alert(error.message || 'Could not remove the document');
+      setFilesError(error.message || 'Could not remove the document');
     }
   };
 
@@ -141,12 +146,14 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
     const selected = Array.from(event.target.files ?? []);
     const tooLarge = selected.filter((file) => file.size > MAX_PDF_MB * 1024 * 1024);
     const notPdf = selected.filter((file) => file.type !== 'application/pdf');
+    const problems: string[] = [];
     if (tooLarge.length > 0) {
-      alert(`These files are larger than ${MAX_PDF_MB} MB: ${tooLarge.map((file) => file.name).join(', ')}`);
+      problems.push(`These files are larger than ${MAX_PDF_MB} MB: ${tooLarge.map((file) => file.name).join(', ')}`);
     }
     if (notPdf.length > 0) {
-      alert(`Only PDF files can be uploaded: ${notPdf.map((file) => file.name).join(', ')}`);
+      problems.push(`Only PDF files can be uploaded: ${notPdf.map((file) => file.name).join(', ')}`);
     }
+    setFilesError(problems.join('. '));
     const accepted = selected.filter((file) => !tooLarge.includes(file) && !notPdf.includes(file));
     setPdfFiles((current) => [...current, ...accepted]);
     event.target.value = '';
@@ -185,6 +192,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
 
   const handleUpload = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined }) => {
     event.preventDefault();
+    setFormError('');
     const form = event.currentTarget;
     const inputs = form?.elements as unknown as {
       [key: string]: HTMLInputElement & { required: boolean };
@@ -195,23 +203,23 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
 
     if (emptyFields.length > 0) {
       const fieldNames = emptyFields.slice(0, emptyFields.length / 2).map((element) => `"${element.name}"`);
-      alert(`Please fill in the following required fields: ${fieldNames.join(', ')}`);
+      setFormError(`Please fill in the following required fields: ${fieldNames.join(', ')}`);
       return;
     }
 
     // Validate required fields
     if (!name.trim() || !product.trim() || !country || country === 'country') {
-      alert('Please fill in all required fields');
+      setFormError('Please fill in all required fields');
       return;
     }
 
     if (!countries.includes(country) && country !== CURRENT_COUNTRY) {
-      alert('You must choose a country from the list.');
+      setFormError('You must choose a country from the list.');
       return;
     }
 
     if (wasteCollected < 0) {
-      alert('Waste collected must be a positive number');
+      setFormError('Waste collected must be a positive number');
       return;
     }
 
@@ -219,7 +227,7 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
       .map((link) => ({ title: link.title.trim(), url: link.url.trim() }))
       .filter((link) => link.title || link.url);
     if (filledLinks.some((link) => !link.title || !isHttpUrl(link.url))) {
-      alert('Each link needs a title and a URL starting with http:// or https://');
+      setFormError('Each link needs a title and a URL starting with http:// or https://');
       return;
     }
 
@@ -288,23 +296,28 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
         }
       }
 
-      if (failedPdfs.length > 0) {
-        alert(
-          `The project was ${isEdit ? 'saved' : 'created'}, but these reports could not be uploaded: ` +
+      // The detail page shows this warning once (see plasticProjectDetailPage).
+      const uploadWarning =
+        failedPdfs.length > 0
+          ? `The project was ${isEdit ? 'saved' : 'created'}, but these reports could not be uploaded: ` +
             `${failedPdfs.join(', ')}. You can try again by editing the project.`
-        );
-      } else {
-        alert(isEdit ? 'Changes saved' : 'Successfully uploaded plastic project');
-      }
-      navigate(`/plastic-project/${savedProjectId}`);
+          : undefined;
+      navigate(`/plastic-project/${savedProjectId}`, { state: uploadWarning ? { uploadWarning } : undefined });
     } catch (error: any) {
       console.error('Upload error:', error);
-      alert(error.message || 'Failed to upload plastic project');
+      setFormError(error.message || 'Failed to upload plastic project');
     }
   };
 
   if (loadingProject) {
     return <p style={{ textAlign: 'center' }}>Loading project…</p>;
+  }
+  if (loadError) {
+    return (
+      <Typography color="error" textAlign="center">
+        {loadError}
+      </Typography>
+    );
   }
 
   return (
@@ -557,6 +570,11 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
       >
         Add reports (PDF, max {MAX_PDF_MB} MB each)
       </Button>
+      {filesError && (
+        <Typography color="error" sx={{ mb: 1 }}>
+          {filesError}
+        </Typography>
+      )}
       {pdfFiles.length > 0 && (
         <Box sx={{ marginBottom: '1em' }}>
           {pdfFiles.map((file, index) => (
@@ -630,6 +648,11 @@ const UploadPlasticProjectForm: React.FC<UploadPlasticProjectFormProps> = ({ pro
         </div>
       )}
 
+      {formError && (
+        <Typography color="error" sx={{ mb: 2 }}>
+          {formError}
+        </Typography>
+      )}
       <Button type="submit" variant="contained" style={{ width: 200, height: 50, margin: '1em' }}>
         {isEdit ? 'Save changes' : 'Upload Plastic Project'}
       </Button>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   deletePlasticProject,
   documentHref,
@@ -8,7 +8,7 @@ import {
 } from '../../services/plasticService';
 import { useAuth } from '../../services/AuthContext';
 import { canDeleteProjects, canEditProject } from '../../services/auth';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import './plasticProjectDetailPage.css';
 import Trax_Ghana from '../../images/Trax_Ghana.png';
 import ProjectImageBox from '../../components/ProjectImageBox/ProjectImageBox';
@@ -24,6 +24,9 @@ const PlasticProjectDetailsPage: React.FC = () => {
   const imageIcon = Trax_Ghana;
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [actionError, setActionError] = useState('');
+  // Set by the upload form when some PDFs could not be uploaded.
+  const uploadWarning = (useLocation().state as { uploadWarning?: string } | null)?.uploadWarning;
 
   // Only the admin can delete; the backend checks this again.
   const handleDelete = async () => {
@@ -33,11 +36,12 @@ const PlasticProjectDetailsPage: React.FC = () => {
     ) {
       return;
     }
+    setActionError('');
     try {
       await deletePlasticProject(project.id);
       navigate('/plasticProjects');
     } catch (err: any) {
-      alert(err.message || 'Could not delete the project');
+      setActionError(err.message || 'Could not delete the project');
     }
   };
 
@@ -113,6 +117,11 @@ const PlasticProjectDetailsPage: React.FC = () => {
                   </Button>
                 )}
               </Box>
+            )}
+            {(actionError || uploadWarning) && (
+              <Typography color="error" textAlign="center" sx={{ mb: 2 }}>
+                {actionError || uploadWarning}
+              </Typography>
             )}
             <ProjectImageBox source={imageIcon} altText={'Project Image'} />
             <hr />

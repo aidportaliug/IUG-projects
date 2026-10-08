@@ -58,10 +58,7 @@ export default async function logIn(email: string, password: string): Promise<bo
     console.log('Logged in successfully');
     return true;
   } catch (error: any) {
-    const errorMessage = error.message || 'Login failed';
-    console.error(errorMessage);
-    alert(errorMessage);
-    return false;
+    throw new Error(error.message || 'Login failed');
   }
 }
 
@@ -98,10 +95,7 @@ export async function signUp(
     console.log('Registration successful');
     return true;
   } catch (error: any) {
-    const errorMessage = error.message || 'Registration failed';
-    console.error(errorMessage);
-    alert(errorMessage);
-    return false;
+    throw new Error(error.message || 'Registration failed');
   }
 }
 
