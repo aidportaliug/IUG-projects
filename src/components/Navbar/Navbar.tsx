@@ -8,6 +8,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
 import MenuItemIUG from './MenuItemIUG';
 import ButtonForNavbar from './ButtonForNavbar';
 import NavLogo from './Navlogo';
@@ -17,10 +19,10 @@ import './navbar.css';
 // Master projects and experience reports are no longer shown; the plastic platform is the site's main page.
 const pages = ['Plastic Project'];
 const settings = ['Profile', 'Logout'];
-const loggedOutSettings = ['Login', 'Sign Up'];
 
 const Navbar: React.FC = () => {
   const { user } = useFirebaseAuth();
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -87,31 +89,46 @@ const Navbar: React.FC = () => {
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User Avatar" src="/src/images/logo.png" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {user
-                ? settings.map((setting) => <MenuItemIUG setting={setting} key={setting} />)
-                : loggedOutSettings.map((setting) => <MenuItemIUG setting={setting} key={setting} />)}
-            </Menu>
+            {user ? (
+              <>
+                <Tooltip title="Open profile menu">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} aria-label="open profile menu">
+                    <Avatar alt={user.username} sx={{ bgcolor: '#3D7844' }}>
+                      {user.username.charAt(0).toUpperCase()}
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-user"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItemIUG setting={setting} key={setting} />
+                  ))}
+                </Menu>
+              </>
+            ) : (
+              // Logged out: a plain Login button (the login page links to sign-up).
+              <Button
+                variant="outlined"
+                onClick={() => navigate('/login')}
+                sx={{ color: '#3D7844', borderColor: '#3D7844', textTransform: 'none', fontWeight: 600 }}
+              >
+                Login
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </Container>

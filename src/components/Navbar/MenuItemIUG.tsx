@@ -3,6 +3,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { logOut } from '../../services/auth';
+import { useAuth } from '../../services/AuthContext';
 
 interface MenuProps {
   setting: string;
@@ -10,9 +11,11 @@ interface MenuProps {
 
 const MenuItemIUG: React.FC<MenuProps> = ({ setting }) => {
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
 
   const logout = async () => {
     await logOut();
+    await refreshUser();
     console.log('User signed out');
     navigate('/');
   };
