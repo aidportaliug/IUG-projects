@@ -4,6 +4,19 @@ interface ApiRequestOptions extends RequestInit {
   requiresAuth?: boolean;
 }
 
+// The API answers errors with plain text or JSON ({message}, {error} or {validationErrors: [{message}]}).
+function readableError(text: string): string {
+  try {
+    const body = JSON.parse(text);
+    if (Array.isArray(body?.validationErrors) && body.validationErrors.length > 0) {
+      return body.validationErrors.map((e: { message: string }) => e.message).join('. ');
+    }
+    return body?.message || body?.error || text;
+  } catch {
+    return text;
+  }
+}
+
 class ApiClient {
   private baseURL: string;
 
@@ -39,7 +52,7 @@ class ApiClient {
 
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(text || `Request failed with status ${response.status}`);
+      throw new Error(readableError(text) || `Request failed with status ${response.status}`);
     }
 
     if (response.status === 204) {

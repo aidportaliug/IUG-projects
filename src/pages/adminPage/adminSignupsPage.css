@@ -1,0 +1,87 @@
+@import '../../mainStyles/mainStyles.css';
+
+.adminPage {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 16px;
+  font-family: var(--mainFontFamily), serif;
+}
+
+.adminTitle {
+  color: var(--mainGreen);
+  margin-bottom: 4px;
+}
+
+.adminIntro {
+  color: var(--UiGray);
+  margin-bottom: 20px;
+}
+
+.adminStatusToggle {
+  margin-bottom: 20px;
+}
+
+.adminError {
+  color: #c62828;
+}
+
+.adminUserList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.adminUserCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid #d6e3d4;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.adminUserInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-wrap: anywhere;
+}
+
+.adminUserName {
+  font-weight: 700;
+  color: var(--mainGreen);
+}
+
+.adminUserFullName {
+  font-weight: 400;
+  color: var(--UiGray);
+}
+
+.adminUserMeta {
+  font-size: 13px;
+  color: var(--UiGray);
+}
+
+.adminUserType {
+  min-width: 140px;
+  margin-left: auto !important;
+}
+
+.adminUserActions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .adminUserCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .adminUserType {
+    margin-left: 0 !important;
+  }
+}

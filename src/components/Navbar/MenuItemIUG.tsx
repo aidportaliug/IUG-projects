@@ -29,6 +29,8 @@ const MenuItemIUG: React.FC<MenuProps> = ({ setting }) => {
       navigate('/login');
     } else if (setting === 'Sign Up') {
       navigate('/signup');
+    } else if (setting === 'Approve sign-ups') {
+      navigate('/admin/signups');
     } else if (setting === 'Plastic Project') {
       navigate('/plasticProjects');
     }

@@ -19,7 +19,7 @@ const LoginComponent: React.FC = () => {
 
       if (success) {
         await refreshUser();
-        navigate('/User');
+        navigate('/plasticProjects');
       }
     } catch (error: any) {
       setError(error.message || 'Login failed');

@@ -31,11 +31,15 @@ export interface UserResponse {
   institute?: string;
   university?: string;
   isProfessor: boolean;
+  isStudent?: boolean;
   isAdmin?: boolean;
-  userType?: 'admin' | 'professor' | 'student';
+  userType?: 'admin' | 'professor' | 'student' | 'member';
+  // New sign-ups are PENDING until the admin approves them.
+  approvalStatus?: 'PENDING' | 'APPROVED';
+  createdAt?: string | null;
 }
 
-const userTypeLabels = { admin: 'Admin', professor: 'Professor', student: 'Student' };
+const userTypeLabels = { admin: 'Admin', professor: 'Professor', student: 'Student', member: 'Member' };
 
 // Display name of the user's type; falls back to isProfessor for backends without userType.
 export function userTypeLabel(user: UserResponse): string {
@@ -69,9 +73,7 @@ export async function signUp(
     firstName?: string;
     lastName?: string;
     phoneNumber?: string;
-    institute?: string;
-    university?: string;
-    isProfessor?: boolean;
+    isStudent?: boolean;
   }
 ): Promise<boolean> {
   if (username === '' || email === '' || password === '') {
@@ -88,9 +90,7 @@ export async function signUp(
         firstName: additionalData?.firstName,
         lastName: additionalData?.lastName,
         phoneNumber: additionalData?.phoneNumber,
-        institute: additionalData?.institute,
-        university: additionalData?.university,
-        isProfessor: additionalData?.isProfessor || false,
+        isStudent: additionalData?.isStudent || false,
       },
       false
     );

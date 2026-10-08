@@ -114,7 +114,7 @@ const Navbar: React.FC = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {settings.map((setting) => (
+                  {(user.isAdmin ? ['Approve sign-ups', ...settings] : settings).map((setting) => (
                     <MenuItemIUG setting={setting} key={setting} />
                   ))}
                 </Menu>
