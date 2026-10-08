@@ -55,6 +55,14 @@ const machineImageByName: Record<string, string> = {
   'ventilation system': ventilation,
 };
 
+// "2020–2024", "2024" for a single year, or "2022–ongoing" without an end date.
+const formatYears = (startDate: string, endDate?: string): string => {
+  const startYear = startDate.slice(0, 4);
+  if (!endDate) return `${startYear}–ongoing`;
+  const endYear = endDate.slice(0, 4);
+  return startYear === endYear ? startYear : `${startYear}–${endYear}`;
+};
+
 // Sorted, de-duplicated filter values taken from the loaded data.
 const uniqueSorted = (values: string[]): string[] =>
   Array.from(new Set(values.filter((value) => value.trim() !== ''))).sort((a, b) => a.localeCompare(b));
@@ -360,30 +368,11 @@ const PlasticProjects: React.FC = () => {
                         >
                           <div className="plasticCardOutline">
                             <img className="plasticCardImage" src={imageProjectCard} alt={project.project_name} />
+                            {/* Small view: only the project info */}
                             <div className="plasticCardBody">
                               <div className="plasticCardTitle">{project.project_name}</div>
-                              <div className="plasticCardDescription">{project.summary}</div>
-                              <div className="plasticCardTags">
-                                <b>Year(s): </b>
-                                {project.start_date}
-                                {project.end_date && ` to ${project.end_date}`}
-                                {!project.end_date && ' (ongoing)'}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>Country: </b>
-                                {project.country}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>Plastics: </b>
-                                {project.plastics?.map((p) => (
-                                  <span key={p} className="plasticTag">
-                                    {p}
-                                  </span>
-                                ))}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>Product: </b>
-                                {project.product}
+                              <div className="plasticCardDescription plasticCardDescriptionClamped">
+                                {project.summary}
                               </div>
                               <div className="plasticCardLink">View project &rarr;</div>
                             </div>
@@ -400,11 +389,13 @@ const PlasticProjects: React.FC = () => {
                             <img className="plasticCardImage" src={imageProjectCard} alt={project.project_name} />
                             <div className="plasticCardBody">
                               <div className="plasticCardTitle">{project.project_name}</div>
-                              <div className="plasticCardDescription">{project.summary}</div>
+                              <div className="plasticCardDescription plasticCardDescriptionClamped">
+                                {project.summary}
+                              </div>
 
                               <div className="plasticCardTags">
                                 <b>Year(s): </b>
-                                {project.start_date} {project.end_date ? ` to ${project.end_date}` : ' (ongoing)'}
+                                {formatYears(project.start_date, project.end_date)}
                               </div>
 
                               <div className="plasticCardTags">
@@ -428,9 +419,11 @@ const PlasticProjects: React.FC = () => {
                               <div className="plasticCardTags">
                                 <b>Business Model:</b> {project.businessModel}
                               </div>
-                              <div className="plasticCardTags">
-                                <b>Waste Collected:</b> {project.wasteCollected} tons
-                              </div>
+                              {project.wasteCollected > 0 && (
+                                <div className="plasticCardTags">
+                                  <b>Waste Collected:</b> {project.wasteCollected} tons
+                                </div>
+                              )}
 
                               <div className="plasticCardLink">View project →</div>
                             </div>
