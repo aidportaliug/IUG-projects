@@ -73,7 +73,17 @@ export const Footer: React.FC = () => {
       </Container>
 
       <Container maxWidth="lg" className="footerBottom">
-        © {new Date().getFullYear()} Ingeniører Uten Grenser (Engineers Without Borders Norway)
+        <span>© {new Date().getFullYear()} Ingeniører Uten Grenser (Engineers Without Borders Norway)</span>
+        <span>
+          Created by{' '}
+          <a href="https://iug.no/om-oss/lokalavdelinger/iug-ntnu" {...external}>
+            EWB NTNU
+          </a>{' '}
+          ·{' '}
+          <a href="https://github.com/aidportaliug/IUG-projects" {...external}>
+            Source code on GitHub
+          </a>
+        </span>
       </Container>
     </Box>
   );
