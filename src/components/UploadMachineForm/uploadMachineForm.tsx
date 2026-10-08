@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Box, TextField, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { Button, Box, TextField, Select, MenuItem, SelectChangeEvent, Typography } from '@mui/material';
 import { getPlastics, PlasticResponse } from '../../services/plasticService';
 import { createMachine } from '../../services/machineService';
 import { useNavigate } from 'react-router-dom';
 
 const UploadMachineForm: React.FC = () => {
   const [machineName, setMachineName] = useState('');
+  const [formError, setFormError] = useState('');
   const [whatItDoes, setWhatItDoes] = useState('');
   const [howItWorksAndAcquired, setHowItWorksAndAcquired] = useState('');
   const [operationComplicationsAndLessons, setOperationComplicationsAndLessons] = useState('');
@@ -65,6 +66,7 @@ const UploadMachineForm: React.FC = () => {
 
   const handleUpload = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined }) => {
     event.preventDefault();
+    setFormError('');
     const form = event.currentTarget;
     const inputs = form?.elements as unknown as {
       [key: string]: HTMLInputElement & { required: boolean };
@@ -75,7 +77,7 @@ const UploadMachineForm: React.FC = () => {
 
     if (emptyFields.length > 0) {
       const fieldNames = emptyFields.slice(0, emptyFields.length / 2).map((element) => `"${element.name}"`);
-      alert(`Please fill in the following required fields: ${fieldNames.join(', ')}`);
+      setFormError(`Please fill in the following required fields: ${fieldNames.join(', ')}`);
       return;
     }
 
@@ -89,11 +91,10 @@ const UploadMachineForm: React.FC = () => {
         plasticIds: selectedPlastics.length > 0 ? selectedPlastics : undefined,
       });
 
-      alert('Successfully uploaded machine');
       navigate('/plasticProjects');
     } catch (error: any) {
       console.error('Upload error:', error);
-      alert(error.message || 'Failed to upload machine');
+      setFormError(error.message || 'Failed to upload machine');
     }
   };
 
@@ -233,6 +234,11 @@ const UploadMachineForm: React.FC = () => {
         </div>
       )}
 
+      {formError && (
+        <Typography color="error" sx={{ mb: 2 }}>
+          {formError}
+        </Typography>
+      )}
       <Button type="submit" variant="contained" style={{ width: 200, height: 50, margin: '1em' }}>
         Upload Machine
       </Button>

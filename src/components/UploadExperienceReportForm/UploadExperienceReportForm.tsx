@@ -9,6 +9,7 @@ export const UploadExperienceReportForm = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const [selectedProject, setSelectedProject] = useState('');
   const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,13 +24,10 @@ export const UploadExperienceReportForm = () => {
     navigate('/');
   };
 
-  const handleSaveAsDraft = () => {
-    alert('Draft functionality not implemented yet');
-  };
-
   const handleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    setFormError('');
     setLoading(true);
 
     try {
@@ -45,7 +43,7 @@ export const UploadExperienceReportForm = () => {
       const location = data.get('location') as string;
 
       if (!projectId) {
-        alert('Please select a project');
+        setFormError('Please select a project');
         setLoading(false);
         return;
       }
@@ -63,11 +61,10 @@ export const UploadExperienceReportForm = () => {
         thesisLink: thesisLink || undefined,
       });
 
-      alert('Successfully uploaded report');
       navigate('/experienceReports');
     } catch (error: any) {
       console.error('Upload error:', error);
-      alert(error.message || 'Failed to upload report');
+      setFormError(error.message || 'Failed to upload report');
     } finally {
       setLoading(false);
     }
@@ -80,9 +77,9 @@ export const UploadExperienceReportForm = () => {
           Cancel
         </button>
         <h1 className="form-title">YOUR EXPERIENCE</h1>
-        <button type="button" className="header-button" onClick={handleSaveAsDraft}>
-          Save as draft
-        </button>
+        <span className="header-button" aria-hidden="true" style={{ visibility: 'hidden' }}>
+          Cancel
+        </span>
       </div>
 
       <form onSubmit={handleUpload}>
@@ -217,6 +214,11 @@ export const UploadExperienceReportForm = () => {
 
         <div className="divider"></div>
 
+        {formError && (
+          <p role="alert" style={{ color: '#d32f2f', textAlign: 'center' }}>
+            {formError}
+          </p>
+        )}
         <div className="button-group">
           <button type="submit" className="upload-button" disabled={loading}>
             {loading ? 'Uploading...' : 'Upload'}

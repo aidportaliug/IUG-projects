@@ -3,6 +3,7 @@ import './userProfilePage.css';
 import UserProfileComponent from '../../components/UserProfile/UserProfile';
 import Layout from '../../components/Navbar/Layout';
 import Meta from '../../components/Meta';
+import Footer from '../../components/Footer/Footer';
 
 const UserView: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ const UserView: React.FC = () => {
       <Layout>
         <UserProfileComponent />
       </Layout>
+      <Footer />
     </>
   );
 };

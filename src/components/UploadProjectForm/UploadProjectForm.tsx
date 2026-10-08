@@ -1,6 +1,6 @@
 import React, { SetStateAction, useState, useRef } from 'react';
 import './uploadProjectForm.css';
-import { Box, Button, MenuItem, Select, TextField, TextFieldProps } from '@mui/material';
+import { Box, Button, MenuItem, Select, TextField, TextFieldProps, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { createProject } from '../../services/projectService';
 import { allowedLocations, allowedStudyFields } from '../../models/allowedValues';
@@ -10,6 +10,7 @@ const UploadProjectForm: React.FC = () => {
   const [value, setValue] = useState<string | null>(Date());
   const [studyField, setStudyField] = useState('study_field');
   const [location, setLocation] = useState('location');
+  const [formError, setFormError] = useState('');
   const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -37,6 +38,7 @@ const UploadProjectForm: React.FC = () => {
 
   const handleUpload = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined }) => {
     event.preventDefault();
+    setFormError('');
     const form = event.currentTarget;
     const inputs = form?.elements as unknown as {
       [key: string]: HTMLInputElement & { required: boolean };
@@ -48,25 +50,25 @@ const UploadProjectForm: React.FC = () => {
     if (emptyFields.length > 0) {
       const fieldNames = emptyFields.slice(0, emptyFields.length / 2).map((element) => `"${element.name}"`);
       console.log('navn', fieldNames);
-      alert(`Please fill in the following required fields: ${fieldNames.join(', ')}`);
+      setFormError(`Please fill in the following required fields: ${fieldNames.join(', ')}`);
       return;
     }
 
     const data = new FormData(event.currentTarget);
     const duration = parseInt(data.get('duration') as string);
     if (Number.isNaN(duration)) {
-      alert(`Duration must be a number`);
+      setFormError('Duration must be a number');
       return;
     }
 
     const location = data.get('location') as string;
     const studyField = data.get('studyField') as string;
     if (!allowedLocations.includes(location)) {
-      alert('You must choose a location from the list.');
+      setFormError('You must choose a location from the list.');
       return;
     }
     if (!allowedStudyFields.includes(studyField)) {
-      alert('You must choose a studyfield from the list.');
+      setFormError('You must choose a study field from the list.');
       return;
     }
 
@@ -98,11 +100,10 @@ const UploadProjectForm: React.FC = () => {
         duration: duration,
       });
 
-      alert('Successfully uploaded project');
       navigate('/');
     } catch (error: any) {
       console.error('Upload error:', error);
-      alert(error.message || 'Failed to upload project');
+      setFormError(error.message || 'Failed to upload project');
     }
   };
 
@@ -299,6 +300,11 @@ const UploadProjectForm: React.FC = () => {
         <div style={{ marginTop: '1em' }}>
           <img src={imageUrl} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: 300 }} />
         </div>
+      )}
+      {formError && (
+        <Typography color="error" sx={{ mb: 2 }}>
+          {formError}
+        </Typography>
       )}
       <Button type="submit" variant="contained" style={{ width: 200, height: 50, margin: '1em' }}>
         Upload Form

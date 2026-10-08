@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { documentHref, getPlasticProject, PlasticProjectResponse } from '../../services/plasticService';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import {
+  deletePlasticProject,
+  documentHref,
+  getPlasticProject,
+  PlasticProjectResponse,
+} from '../../services/plasticService';
+import { useAuth } from '../../services/AuthContext';
+import { canDeleteProjects, canEditProject } from '../../services/auth';
+import { Box, Button, Typography } from '@mui/material';
 import './plasticProjectDetailPage.css';
 import Trax_Ghana from '../../images/Trax_Ghana.png';
 import ProjectImageBox from '../../components/ProjectImageBox/ProjectImageBox';
@@ -14,6 +22,28 @@ const PlasticProjectDetailsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const imageIcon = Trax_Ghana;
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [actionError, setActionError] = useState('');
+  // Set by the upload form when some PDFs could not be uploaded.
+  const uploadWarning = (useLocation().state as { uploadWarning?: string } | null)?.uploadWarning;
+
+  // Only the admin can delete; the backend checks this again.
+  const handleDelete = async () => {
+    if (
+      !project ||
+      !window.confirm(`Delete "${project.name}" with all its reports and links? This cannot be undone.`)
+    ) {
+      return;
+    }
+    setActionError('');
+    try {
+      await deletePlasticProject(project.id);
+      navigate('/plasticProjects');
+    } catch (err: any) {
+      setActionError(err.message || 'Could not delete the project');
+    }
+  };
 
   async function getProjectData(projectId: string) {
     setLoading(true);
@@ -70,6 +100,29 @@ const PlasticProjectDetailsPage: React.FC = () => {
         <Layout>
           <div className="projectDetailoutline">
             <div className="Title">{project.name}</div>
+            {(canEditProject(user, project) || canDeleteProjects(user)) && (
+              <Box display="flex" justifyContent="center" gap={2} marginBottom={2}>
+                {canEditProject(user, project) && (
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate(`/plastic-project/${project.id}/edit`)}
+                    style={{ backgroundColor: '#3D7844', textTransform: 'none' }}
+                  >
+                    Edit project
+                  </Button>
+                )}
+                {canDeleteProjects(user) && (
+                  <Button variant="outlined" color="error" onClick={handleDelete} style={{ textTransform: 'none' }}>
+                    Delete project
+                  </Button>
+                )}
+              </Box>
+            )}
+            {(actionError || uploadWarning) && (
+              <Typography color="error" textAlign="center" sx={{ mb: 2 }}>
+                {actionError || uploadWarning}
+              </Typography>
+            )}
             <ProjectImageBox source={imageIcon} altText={'Project Image'} />
             <hr />
             <div className="projectInformation">

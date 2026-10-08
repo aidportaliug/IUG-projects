@@ -56,12 +56,13 @@ const AdminSignupsPage: React.FC = () => {
   }, [user, loadUsers]);
 
   const handleApprove = async (target: UserResponse) => {
+    setError('');
     setBusyId(target.id);
     try {
       await approveUser(target.id);
       setUsers((current) => current.filter((u) => u.id !== target.id));
     } catch (e: any) {
-      alert(e.message || 'Could not approve the sign-up');
+      setError(e.message || 'Could not approve the sign-up');
     } finally {
       setBusyId(null);
     }
@@ -71,12 +72,13 @@ const AdminSignupsPage: React.FC = () => {
     if (!window.confirm(`Reject and delete the sign-up from ${target.username} (${target.email})?`)) {
       return;
     }
+    setError('');
     setBusyId(target.id);
     try {
       await rejectUser(target.id);
       setUsers((current) => current.filter((u) => u.id !== target.id));
     } catch (e: any) {
-      alert(e.message || 'Could not reject the sign-up');
+      setError(e.message || 'Could not reject the sign-up');
     } finally {
       setBusyId(null);
     }
@@ -90,24 +92,26 @@ const AdminSignupsPage: React.FC = () => {
     ) {
       return;
     }
+    setError('');
     setBusyId(target.id);
     try {
       await deleteUser(target.id);
       setUsers((current) => current.filter((u) => u.id !== target.id));
     } catch (e: any) {
-      alert(e.message || 'Could not delete the user');
+      setError(e.message || 'Could not delete the user');
     } finally {
       setBusyId(null);
     }
   };
 
   const handleTypeChange = async (target: UserResponse, userType: ChangeableUserType) => {
+    setError('');
     setBusyId(target.id);
     try {
       const updated = await changeUserType(target.id, userType);
       setUsers((current) => current.map((u) => (u.id === updated.id ? updated : u)));
     } catch (e: any) {
-      alert(e.message || 'Could not change the user type');
+      setError(e.message || 'Could not change the user type');
     } finally {
       setBusyId(null);
     }
