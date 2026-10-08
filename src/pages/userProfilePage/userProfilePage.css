@@ -1,76 +1,150 @@
 @import '../../mainStyles/mainStyles.css';
 
-.user {
-  background-color: var(--mainBackground);
-  margin: 0 15%;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+.profilePage {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
   font-family: var(--mainFontFamily), serif;
-  color: var(--TypoBlack);
+  color: #1f2a20;
 }
 
-h1 {
-  font-family: var(--mainFontFamily), serif;
-  color: var(--TypoBlack);
+/* Banner with name, user type and email */
+.profileBanner {
+  background: linear-gradient(135deg, var(--mainGreen) 0%, #5a9a61 100%);
+  color: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 6px 20px rgba(61, 120, 68, 0.25);
 }
-
-.top-part {
-  border-radius: 10%;
-  background-color: var(--mainBackground);
+.profileBanner h1 {
+  margin: 0 0 8px;
+  font-size: 2rem;
+  color: #fff;
+  overflow-wrap: anywhere;
 }
-
-.username {
-  border-radius: 10%;
-  text-align: center;
-  padding: 2% 0 0 0;
-}
-
-.avatar {
-  padding: 0 0;
-  display: block;
+.profileBannerMeta {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  gap: 8px 14px;
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+.profileBadge {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  padding: 2px 12px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+.profileBannerActions {
+  display: flex;
+  gap: 8px;
 }
 
-#btnSend {
-  background-color: var(--mainBackground);
-  padding: 1%;
-  margin: 3%;
-  height: 3%;
-  color: black; /**/
+/* Cards */
+.profileCard {
+  background: #fff;
+  border: 1px solid #e3e8e3;
+  border-radius: 14px;
+  padding: 24px;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
-#btnLogOut {
-  background-color: var(--mainBackground);
-  margin: 3%;
-  color: var(--TypoBlack);
+.profileCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.profileCardHeader h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--mainGreen);
 }
 
-.myUploads {
-  margin: 2em auto;
-  max-width: 700px;
+/* Account details */
+.profileDetails {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px 24px;
+  margin: 0;
 }
+.profileDetails dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--UiGray);
+  margin-bottom: 2px;
+}
+.profileDetails dd {
+  margin: 0;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+/* My uploads */
 .myUploadsList {
   list-style: none;
   padding: 0;
-  text-align: left;
+  margin: 0;
 }
 .myUploadsItem {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1em;
-  padding: 0.75em 0;
-  border-bottom: 1px solid #ddd;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #e3e8e3;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.myUploadsItem:hover {
+  border-color: var(--secondaryGreen);
+  background: var(--tertiaryGreen);
 }
 .myUploadsInfo {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
-.buttonsIcon {
-  margin-top: 3%;
+.myUploadsInfo strong {
+  overflow-wrap: anywhere;
+}
+.myUploadsMeta {
+  font-size: 0.9rem;
+  color: var(--UiGray);
+}
+.myUploadsActions {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-shrink: 0;
+  gap: 4px;
+}
+.myUploadsEmpty {
+  text-align: center;
+  color: var(--UiGray);
+  padding: 24px 0;
+}
+
+@media (max-width: 600px) {
+  .profileBanner {
+    padding: 24px 20px;
+  }
+  .profileBanner h1 {
+    font-size: 1.6rem;
+  }
+  .myUploadsItem {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

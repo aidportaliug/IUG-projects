@@ -29,9 +29,9 @@ const MyUploads: React.FC<{ user: UserResponse }> = ({ user }) => {
   if (loading) {
     content = <CircularProgress size={24} />;
   } else if (error) {
-    content = <p>{error}</p>;
+    content = <p className="myUploadsEmpty">{error}</p>;
   } else if (projects.length === 0) {
-    content = <p>You have not uploaded any projects yet.</p>;
+    content = <p className="myUploadsEmpty">You have not uploaded any projects yet.</p>;
   } else {
     content = (
       <ul className="myUploadsList">
@@ -39,15 +39,25 @@ const MyUploads: React.FC<{ user: UserResponse }> = ({ user }) => {
           <li key={project.id} className="myUploadsItem">
             <div className="myUploadsInfo">
               <strong>{project.name}</strong>
-              <span>
-                {project.country} · {project.product} · {project.documents.length} reports/links
+              <span className="myUploadsMeta">
+                {project.country} · {project.product} · {project.documents.length}{' '}
+                {project.documents.length === 1 ? 'report/link' : 'reports/links'}
               </span>
             </div>
-            <div>
-              <Button size="small" onClick={() => navigate(`/plastic-project/${project.id}`)}>
+            <div className="myUploadsActions">
+              <Button
+                size="small"
+                onClick={() => navigate(`/plastic-project/${project.id}`)}
+                sx={{ color: '#3D7844', textTransform: 'none' }}
+              >
                 View
               </Button>
-              <Button size="small" onClick={() => navigate(`/plastic-project/${project.id}/edit`)}>
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={() => navigate(`/plastic-project/${project.id}/edit`)}
+                sx={{ color: '#3D7844', borderColor: '#3D7844', textTransform: 'none' }}
+              >
                 Edit
               </Button>
             </div>
@@ -58,17 +68,19 @@ const MyUploads: React.FC<{ user: UserResponse }> = ({ user }) => {
   }
 
   return (
-    <div className="myUploads">
-      <h3>My uploads:</h3>
+    <section className="profileCard">
+      <div className="profileCardHeader">
+        <h2>My uploads{!loading && !error ? ` (${projects.length})` : ''}</h2>
+        <Button
+          variant="contained"
+          onClick={() => navigate('/UploadPlasticProject')}
+          sx={{ backgroundColor: '#3D7844', textTransform: 'none', '&:hover': { backgroundColor: '#2f5f35' } }}
+        >
+          Upload a new project
+        </Button>
+      </div>
       {content}
-      <Button
-        variant="contained"
-        onClick={() => navigate('/UploadPlasticProject')}
-        style={{ backgroundColor: '#3D7844', textTransform: 'none' }}
-      >
-        Upload a new project
-      </Button>
-    </div>
+    </section>
   );
 };
 
