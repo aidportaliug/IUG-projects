@@ -4,7 +4,7 @@ import Layout from '../../components/Navbar/Layout';
 import Meta from '../../components/Meta';
 import { useAuth } from '../../services/AuthContext';
 import { UserResponse, userTypeLabel } from '../../services/auth';
-import { approveUser, ApprovalStatus, getUsersByStatus, rejectUser } from '../../services/adminService';
+import { approveUser, ApprovalStatus, deleteUser, getUsersByStatus, rejectUser } from '../../services/adminService';
 import './adminSignupsPage.css';
 
 const fullName = (user: UserResponse) => [user.firstName, user.lastName].filter(Boolean).join(' ');
@@ -65,6 +65,25 @@ const AdminSignupsPage: React.FC = () => {
     }
   };
 
+  const handleDelete = async (target: UserResponse) => {
+    if (
+      !window.confirm(
+        `Delete the account of ${target.username} (${target.email})? Their master projects and reports are deleted too. This cannot be undone.`
+      )
+    ) {
+      return;
+    }
+    setBusyId(target.id);
+    try {
+      await deleteUser(target.id);
+      setUsers((current) => current.filter((u) => u.id !== target.id));
+    } catch (e: any) {
+      alert(e.message || 'Could not delete the user');
+    } finally {
+      setBusyId(null);
+    }
+  };
+
   let content: React.ReactNode;
   if (authLoading) {
     content = <CircularProgress />;
@@ -107,6 +126,13 @@ const AdminSignupsPage: React.FC = () => {
                     {userTypeLabel(u)} · Signed up {formatDate(u.createdAt)}
                   </div>
                 </div>
+                {status === 'APPROVED' && !u.isAdmin && (
+                  <div className="adminUserActions">
+                    <Button variant="outlined" color="error" disabled={busyId === u.id} onClick={() => handleDelete(u)}>
+                      Delete
+                    </Button>
+                  </div>
+                )}
                 {status === 'PENDING' && (
                   <div className="adminUserActions">
                     <Button
@@ -137,7 +163,8 @@ const AdminSignupsPage: React.FC = () => {
         <div className="adminPage">
           <h1 className="adminTitle">Approve sign-ups</h1>
           <p className="adminIntro">
-            New accounts can log in only after you approve them. Rejecting deletes the sign-up.
+            New accounts can log in only after you approve them. Rejecting deletes the sign-up; approved users can be
+            deleted from the Approved tab.
           </p>
           {content}
         </div>

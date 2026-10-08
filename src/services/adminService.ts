@@ -16,3 +16,8 @@ export async function approveUser(id: number): Promise<UserResponse> {
 export async function rejectUser(id: number): Promise<void> {
   await apiClient.post<void>(`/admin/users/${id}/reject`);
 }
+
+// Deletes the account together with the master projects and reports it owns. The admin account cannot be deleted.
+export async function deleteUser(id: number): Promise<void> {
+  await apiClient.delete(`/admin/users/${id}`);
+}
