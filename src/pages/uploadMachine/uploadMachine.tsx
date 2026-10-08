@@ -8,12 +8,14 @@ import Meta from '../../components/Meta';
 import { useNavigate } from 'react-router-dom';
 import { Button, Box } from '@mui/material';
 import { Footer } from '../../components/Footer/Footer';
+import { useI18n } from '../../i18n/I18nContext';
 
 const UploadMachine: React.FC = () => {
   const { user } = useFirebaseAuth();
   const [userUpdatet, setUserUpdatet] = useState<boolean>(false);
   const [customUser, setCustomUser] = useState<CustomUser | null>(null);
   const navigate = useNavigate();
+  const { t } = useI18n();
 
   async function CallGetUser() {
     return await getCurrentUser();
@@ -32,7 +34,7 @@ const UploadMachine: React.FC = () => {
 
   return (
     <>
-      <Meta title={'Upload a machine'}></Meta>
+      <Meta title={t.machineForm.pageTitle}></Meta>
       <div className="outline">
         <Box display="flex" justifyContent="space-evenly" alignItems="center" marginTop="30px">
           <Button
@@ -47,21 +49,12 @@ const UploadMachine: React.FC = () => {
               marginBottom: 20,
             }}
           >
-            Back
+            {t.common.back}
           </Button>
-          <div className="title"> Upload Machine </div>
-          <Button
-            size="large"
-            variant="outlined"
-            style={{ color: 'black', textTransform: 'none', border: '1px solid grey', marginBottom: 20 }}
-          >
-            Save draft
-          </Button>
+          <div className="title">{t.machineForm.heading}</div>
+          <span style={{ width: 90 }} />
         </Box>
 
-        <div style={{ padding: '20px', fontFamily: 'var(--mainFontFamily), serif' }}>
-          <p>This is the upload machine page. Add your machine upload form here...................................</p>
-        </div>
         <UploadMachineForm />
       </div>
       <Footer />

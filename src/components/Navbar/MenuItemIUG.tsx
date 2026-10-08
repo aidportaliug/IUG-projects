@@ -4,14 +4,27 @@ import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { logOut } from '../../services/auth';
 import { useAuth } from '../../services/AuthContext';
+import { useI18n } from '../../i18n/I18nContext';
+
+// Menu entries are stable keys; the shown text comes from the active language.
+export type NavMenuKey = 'plasticProjects' | 'profile' | 'logout' | 'login' | 'signUp' | 'approveSignups';
+
+const routes: Partial<Record<NavMenuKey, string>> = {
+  plasticProjects: '/plasticProjects',
+  profile: '/user',
+  login: '/login',
+  signUp: '/signup',
+  approveSignups: '/admin/signups',
+};
 
 interface MenuProps {
-  setting: string;
+  setting: NavMenuKey;
 }
 
 const MenuItemIUG: React.FC<MenuProps> = ({ setting }) => {
   const navigate = useNavigate();
   const { refreshUser } = useAuth();
+  const { t } = useI18n();
 
   const logout = async () => {
     await logOut();
@@ -20,25 +33,17 @@ const MenuItemIUG: React.FC<MenuProps> = ({ setting }) => {
     navigate('/');
   };
 
-  const handleOpenUserProfile = () => {
-    if (setting === 'Profile') {
-      navigate('/user');
-    } else if (setting === 'Logout') {
+  const handleClick = () => {
+    if (setting === 'logout') {
       logout();
-    } else if (setting === 'Login') {
-      navigate('/login');
-    } else if (setting === 'Sign Up') {
-      navigate('/signup');
-    } else if (setting === 'Approve sign-ups') {
-      navigate('/admin/signups');
-    } else if (setting === 'Plastic Project') {
-      navigate('/plasticProjects');
+    } else {
+      navigate(routes[setting] ?? '/');
     }
   };
 
   return (
-    <MenuItem onClick={handleOpenUserProfile}>
-      <Typography textAlign="center">{setting}</Typography>
+    <MenuItem onClick={handleClick}>
+      <Typography textAlign="center">{t.nav[setting]}</Typography>
     </MenuItem>
   );
 };

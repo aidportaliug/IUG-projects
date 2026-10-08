@@ -19,6 +19,19 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AuthProvider } from './services/AuthContext';
 import MachineDetailsPage from './pages/MachineDetailPage/machineDetailPage';
 import AdminSignupsPage from './pages/adminPage/AdminSignupsPage';
+import { I18nProvider, useI18n } from './i18n/I18nContext';
+import 'dayjs/locale/nb';
+import 'dayjs/locale/en-gb';
+
+// Date pickers follow the chosen language (dd.mm.yyyy in Norwegian).
+const DatePickerLocale: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { lang } = useI18n();
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={lang === 'nb' ? 'nb' : 'en-gb'}>
+      {children}
+    </LocalizationProvider>
+  );
+};
 
 const App: React.FC = () => {
   // Set default colors for all MUI components
@@ -32,31 +45,33 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <AuthProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<PlasticProject />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/User" element={<UserView />} />
-              <Route path="/signUp" element={<SignUp />} />
-              <Route path="/admin/signups" element={<AdminSignupsPage />} />
-              <Route path="/project/:id" element={<ProjectDetailsPage />} />
-              <Route path="/report/:id" element={<ReportDetailsPage />} />
-              <Route path="/plastic-project/:id" element={<PlasticProjectDetailsPage />} />
-              <Route path="/plastic-project/:id/edit" element={<UploadPlasticProject />} />
-              <Route path="/machine/:id" element={<MachineDetailsPage />} />
-              <Route path="/uploadProject" element={<UploadProject />} />
-              <Route path="/uploadexperienceReport" element={<UploadExperienceReport />} />
-              <Route path="/experienceReports" element={<ExperienceReports />} />
-              <Route path="/plasticProjects" element={<PlasticProject />} />
-              <Route path="/404" element={<Error />} />
-              <Route path="/UploadPlasticProject" element={<UploadPlasticProject />} />
-              <Route path="/uploadMachine" element={<UploadMachine />} />
-            </Routes>
-          </BrowserRouter>
-        </AuthProvider>
-      </LocalizationProvider>
+      <I18nProvider>
+        <DatePickerLocale>
+          <AuthProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<PlasticProject />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/User" element={<UserView />} />
+                <Route path="/signUp" element={<SignUp />} />
+                <Route path="/admin/signups" element={<AdminSignupsPage />} />
+                <Route path="/project/:id" element={<ProjectDetailsPage />} />
+                <Route path="/report/:id" element={<ReportDetailsPage />} />
+                <Route path="/plastic-project/:id" element={<PlasticProjectDetailsPage />} />
+                <Route path="/plastic-project/:id/edit" element={<UploadPlasticProject />} />
+                <Route path="/machine/:id" element={<MachineDetailsPage />} />
+                <Route path="/uploadProject" element={<UploadProject />} />
+                <Route path="/uploadexperienceReport" element={<UploadExperienceReport />} />
+                <Route path="/experienceReports" element={<ExperienceReports />} />
+                <Route path="/plasticProjects" element={<PlasticProject />} />
+                <Route path="/404" element={<Error />} />
+                <Route path="/UploadPlasticProject" element={<UploadPlasticProject />} />
+                <Route path="/uploadMachine" element={<UploadMachine />} />
+              </Routes>
+            </BrowserRouter>
+          </AuthProvider>
+        </DatePickerLocale>
+      </I18nProvider>
     </ThemeProvider>
   );
 };

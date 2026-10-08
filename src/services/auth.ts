@@ -39,11 +39,11 @@ export interface UserResponse {
   createdAt?: string | null;
 }
 
-const userTypeLabels = { admin: 'Admin', professor: 'Professor', student: 'Student', member: 'Member' };
+export type UserType = NonNullable<UserResponse['userType']>;
 
-// Display name of the user's type; falls back to isProfessor for backends without userType.
-export function userTypeLabel(user: UserResponse): string {
-  return userTypeLabels[user.userType ?? (user.isProfessor ? 'professor' : 'student')];
+// The user's type, shown with t.userType[...]; falls back to isProfessor for backends without userType.
+export function userTypeKey(user: UserResponse): UserType {
+  return user.userType ?? (user.isProfessor ? 'professor' : 'student');
 }
 
 export default async function logIn(email: string, password: string): Promise<boolean> {

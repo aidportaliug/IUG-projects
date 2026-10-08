@@ -16,6 +16,7 @@ import { getPlasticProjects, PlasticProjectResponse } from '../../services/plast
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/AuthContext';
 import { canUploadProjects } from '../../services/auth';
+import { useI18n } from '../../i18n/I18nContext';
 
 interface PlasticProjectData {
   project_id: string;
@@ -58,9 +59,9 @@ const machineImageByName: Record<string, string> = {
 };
 
 // "2020–2024", "2024" for a single year, or "2022–ongoing" without an end date.
-const formatYears = (startDate: string, endDate?: string): string => {
+const formatYears = (startDate: string, endDate: string | undefined, ongoing: string): string => {
   const startYear = startDate.slice(0, 4);
-  if (!endDate) return `${startYear}–ongoing`;
+  if (!endDate) return `${startYear}–${ongoing}`;
   const endYear = endDate.slice(0, 4);
   return startYear === endYear ? startYear : `${startYear}–${endYear}`;
 };
@@ -92,7 +93,8 @@ const PlasticProjects: React.FC = () => {
   const [noProject, setNoProject] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
-  const uploadButtonLabel = activeTab === 'machines' ? 'Upload machine' : 'Upload your project';
+  const { t } = useI18n();
+  const uploadButtonLabel = activeTab === 'machines' ? t.plastic.uploadMachine : t.plastic.uploadProject;
   const uploadButtonRoute = activeTab === 'machines' ? '/uploadMachine' : '/UploadPlasticProject';
   // Machines are added by the admin; projects by students, professors and the admin.
   const { user } = useAuth();
@@ -201,21 +203,21 @@ const PlasticProjects: React.FC = () => {
       <div className="plasticProjectBackground">
         <Layout>
           <div className="plasticProjectContainer">
-            <div className="plasticProjectTitle">PLASTIC DATABASE</div>
+            <div className="plasticProjectTitle">{t.plastic.title}</div>
 
             <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginBottom: 12 }}>
               <Button
                 variant={activeTab === 'projects' ? 'contained' : 'outlined'}
                 onClick={() => setActiveTab('projects')}
               >
-                Projects
+                {t.plastic.projectsTab}
               </Button>
 
               <Button
                 variant={activeTab === 'machines' ? 'contained' : 'outlined'}
                 onClick={() => setActiveTab('machines')}
               >
-                Machines
+                {t.plastic.machinesTab}
               </Button>
             </div>
 
@@ -233,7 +235,7 @@ const PlasticProjects: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    Small
+                    {t.plastic.small}
                   </Button>
 
                   <Button
@@ -247,7 +249,7 @@ const PlasticProjects: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    Detailed
+                    {t.plastic.detailed}
                   </Button>
                 </>
               ) : (
@@ -263,7 +265,7 @@ const PlasticProjects: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    Small
+                    {t.plastic.small}
                   </Button>
 
                   <Button
@@ -277,7 +279,7 @@ const PlasticProjects: React.FC = () => {
                       textTransform: 'none',
                     }}
                   >
-                    Detailed
+                    {t.plastic.detailed}
                   </Button>
                 </>
               )}
@@ -286,7 +288,7 @@ const PlasticProjects: React.FC = () => {
             <div className="plasticSearchContainer">
               <div className="plasticSearchRow">
                 <TextField
-                  placeholder="Search projects..."
+                  placeholder={t.plastic.search}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   variant="outlined"
@@ -310,7 +312,7 @@ const PlasticProjects: React.FC = () => {
                     textTransform: 'none',
                   }}
                 >
-                  Filters
+                  {t.plastic.filters}
                 </Button>
               </div>
 
@@ -337,18 +339,24 @@ const PlasticProjects: React.FC = () => {
                   value={filterCountry}
                   setValue={setFilterCountry}
                   country={true}
+                  label={t.filters.country}
+                  allLabel={t.filters.allCountries}
                   options={uniqueSorted(projects.map((project) => project.country))}
                 />
                 <PlasticFilterDropdown
                   value={filterPlastic}
                   setValue={setFilterPlastic}
                   plastic={true}
+                  label={t.filters.plastic}
+                  allLabel={t.filters.allPlastics}
                   options={uniqueSorted(projects.flatMap((project) => project.plastics ?? []))}
                 />
                 <PlasticFilterDropdown
                   value={filterMachine}
                   setValue={setFilterMachine}
                   machine={true}
+                  label={t.filters.machine}
+                  allLabel={t.filters.allMachines}
                   options={uniqueSorted(machines.map((machine) => machine.title))}
                 />
               </div>
@@ -360,7 +368,7 @@ const PlasticProjects: React.FC = () => {
               </div>
             ) : noProject ? (
               <div className="no-projects-message">
-                <h4>No projects found</h4>
+                <h4>{t.plastic.noProjects}</h4>
               </div>
             ) : (
               <div className="plasticCardGrid">
@@ -381,7 +389,7 @@ const PlasticProjects: React.FC = () => {
                               <div className="plasticCardDescription plasticCardDescriptionClamped">
                                 {project.summary}
                               </div>
-                              <div className="plasticCardLink">View project &rarr;</div>
+                              <div className="plasticCardLink">{t.plastic.viewProject}</div>
                             </div>
                           </div>
                         </div>
@@ -401,16 +409,16 @@ const PlasticProjects: React.FC = () => {
                               </div>
 
                               <div className="plasticCardTags">
-                                <b>Year(s): </b>
-                                {formatYears(project.start_date, project.end_date)}
+                                <b>{t.plastic.years} </b>
+                                {formatYears(project.start_date, project.end_date, t.plastic.ongoing)}
                               </div>
 
                               <div className="plasticCardTags">
-                                <b>Country: </b>
+                                <b>{t.plastic.country} </b>
                                 {project.country}
                               </div>
                               <div className="plasticCardTags">
-                                <b>Plastics: </b>
+                                <b>{t.plastic.plastics} </b>
                                 {project.plastics?.map((p) => (
                                   <span key={p} className="plasticTag">
                                     {p}
@@ -418,21 +426,21 @@ const PlasticProjects: React.FC = () => {
                                 ))}
                               </div>
                               <div className="plasticCardTags">
-                                <b>Product:</b> {project.product}
+                                <b>{t.plastic.product}</b> {project.product}
                               </div>
                               <div className="plasticCardTags">
-                                <b>Financing:</b> {project.financing}
+                                <b>{t.plastic.financing}</b> {project.financing}
                               </div>
                               <div className="plasticCardTags">
-                                <b>Business Model:</b> {project.businessModel}
+                                <b>{t.plastic.businessModel}</b> {project.businessModel}
                               </div>
                               {project.wasteCollected > 0 && (
                                 <div className="plasticCardTags">
-                                  <b>Waste Collected:</b> {project.wasteCollected} tons
+                                  <b>{t.plastic.wasteCollected}</b> {t.common.tons(project.wasteCollected)}
                                 </div>
                               )}
 
-                              <div className="plasticCardLink">View project →</div>
+                              <div className="plasticCardLink">{t.plastic.viewProject}</div>
                             </div>
                           </div>
                         </div>
@@ -455,7 +463,7 @@ const PlasticProjects: React.FC = () => {
                                 alt={machine.title}
                               />
                               <div className="plasticCardTags">
-                                <b>Plastic types: </b>
+                                <b>{t.plastic.plasticTypes} </b>
                                 {machine.plastics?.map((p) => (
                                   <span key={p} className="plasticTag">
                                     {p}
@@ -463,7 +471,7 @@ const PlasticProjects: React.FC = () => {
                                 ))}
                               </div>
                               <div className="plasticCardTags">
-                                <b>What it does: </b>
+                                <b>{t.plastic.whatItDoes} </b>
                                 {machine.whatDoes}
                               </div>
                             </div>
@@ -480,7 +488,7 @@ const PlasticProjects: React.FC = () => {
                                 alt={machine.title}
                               />
                               <div className="plasticCardTags">
-                                <b>Plastic types: </b>
+                                <b>{t.plastic.plasticTypes} </b>
                                 {machine.plastics?.map((p) => (
                                   <span key={p} className="plasticTag">
                                     {p}
@@ -488,15 +496,15 @@ const PlasticProjects: React.FC = () => {
                                 ))}
                               </div>
                               <div className="plasticCardTags">
-                                <b>How does it work and how is it aquired? </b>
+                                <b>{t.plastic.howItWorks} </b>
                                 {machine.howDoes}
                               </div>
                               <div className="plasticCardTags">
-                                <b>Operation complications and important lessons from projects: </b>
+                                <b>{t.plastic.lessons} </b>
                                 {machine.complicLesson}
                               </div>
                               <div className="plasticCardTags">
-                                <b>In use in EWB projects: </b>
+                                <b>{t.plastic.inUse} </b>
                                 {machine.inUseEWB}
                               </div>
                             </div>
