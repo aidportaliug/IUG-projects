@@ -39,15 +39,25 @@ const UserProfileComponent: React.FC = () => {
   };
 
   if (user) {
-    const details: [string, string | null | undefined][] = [
-      ['Email', user.email],
-      ['Username', user.username],
-      ['First name', user.firstName],
-      ['Last name', user.lastName],
-      ['Phone', user.phoneNumber],
-      ['Institute', user.institute],
-      ['University', user.university],
+    // Each inner list is one row; empty fields and rows are hidden.
+    type Field = [string, string | null | undefined];
+    const allRows: Field[][] = [
+      [['User type', userTypeLabel(user)]],
+      [
+        ['Email', user.email],
+        ['Username', user.username],
+      ],
+      [
+        ['First name', user.firstName],
+        ['Last name', user.lastName],
+      ],
+      [['Phone', user.phoneNumber]],
+      [
+        ['Institute', user.institute],
+        ['University', user.university],
+      ],
     ];
+    const detailRows = allRows.map((row) => row.filter(([, value]) => !!value)).filter((row) => row.length > 0);
     const memberSince = user.createdAt
       ? new Date(user.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long' })
       : null;
@@ -90,18 +100,16 @@ const UserProfileComponent: React.FC = () => {
 
           {!editing ? (
             <dl className="profileDetails">
-              {details
-                .filter(([, value]) => !!value)
-                .map(([label, value]) => (
-                  <div key={label}>
-                    <dt>{label}</dt>
-                    <dd>{value}</dd>
-                  </div>
-                ))}
-              <div>
-                <dt>User type</dt>
-                <dd>{userTypeLabel(user)}</dd>
-              </div>
+              {detailRows.map((row) => (
+                <div key={row[0][0]} className="profileDetailsRow">
+                  {row.map(([label, value]) => (
+                    <div key={label}>
+                      <dt>{label}</dt>
+                      <dd>{value}</dd>
+                    </div>
+                  ))}
+                </div>
+              ))}
             </dl>
           ) : (
             <Box>

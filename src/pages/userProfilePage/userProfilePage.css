@@ -10,7 +10,7 @@
 
 /* Banner with name, user type and email */
 .profileBanner {
-  background: linear-gradient(135deg, var(--mainGreen) 0%, #5a9a61 100%);
+  background: var(--mainGreen);
   color: #fff;
   border-radius: 16px;
   padding: 32px;
@@ -73,10 +73,15 @@
 
 /* Account details */
 .profileDetails {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   margin: 0;
+}
+.profileDetailsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
 }
 .profileDetails dt {
   font-size: 0.75rem;
@@ -142,6 +147,9 @@
   }
   .profileBanner h1 {
     font-size: 1.6rem;
+  }
+  .profileDetailsRow {
+    grid-template-columns: 1fr;
   }
   .myUploadsItem {
     flex-direction: column;
