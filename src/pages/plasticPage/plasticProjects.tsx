@@ -10,7 +10,7 @@ import imageProjectCard from '../../images/plasticProject.png';
 import { machinePicture } from '../../models/machineImages';
 import { getMachines, MachineResponse } from '../../services/machineService';
 import { getPlasticProjects, PlasticProjectResponse, projectImageHref } from '../../services/plasticService';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/AuthContext';
 import { canUploadProjects } from '../../services/auth';
 import { useI18n } from '../../i18n/I18nContext';
@@ -52,7 +52,10 @@ const uniqueSorted = (values: string[]): string[] =>
   Array.from(new Set(values.filter((value) => value.trim() !== ''))).sort((a, b) => a.localeCompare(b));
 
 const PlasticProjects: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'projects' | 'machines'>('projects');
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState<'projects' | 'machines'>(
+    (location.state as { tab?: string } | null)?.tab === 'machines' ? 'machines' : 'projects'
+  );
   const [projectViewMode, setProjectViewMode] = useState<'small' | 'detailed'>('small');
   const [machineViewMode, setMachineViewMode] = useState<'small' | 'detailed'>('small');
 

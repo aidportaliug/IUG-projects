@@ -54,3 +54,18 @@ hr {
   padding: 4px 12px;
   text-align: center;
 }
+/* Machine page: reuses the project page layout; long texts get a single column. */
+.machineFacts {
+  grid-template-columns: 1fr;
+}
+.machinePagePicture {
+  margin: -12px 0 20px;
+}
+
+/* Keep the icon next to the project name on small screens. */
+.machineProjectList .projectDocumentRow {
+  flex-wrap: nowrap;
+}
+.machineProjectList .projectDocumentIcon {
+  flex-shrink: 0;
+}
