@@ -4,6 +4,7 @@ import Layout from '../../components/Navbar/Layout';
 import Footer from '../../components/Footer/Footer';
 import CircularProgress from '@mui/material/CircularProgress';
 import PlasticFilterDropdown from '../../components/PlasticFilterDropdown/PlasticFilterDropdown';
+import Meta from '../../components/Meta';
 import { TextField, InputAdornment, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import imageProjectCard from '../../images/plasticProject.png';
@@ -180,6 +181,7 @@ const PlasticProjects: React.FC = () => {
 
   return (
     <>
+      <Meta title="Plastic Project" />
       <div className="plasticProjectBackground">
         <Layout>
           <div className="plasticProjectContainer">
