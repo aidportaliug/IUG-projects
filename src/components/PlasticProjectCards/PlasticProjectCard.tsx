@@ -21,6 +21,9 @@ export interface PlasticProjectCardProps {
   onClick?: () => void;
 }
 
+// Shown when a project has no picture of its own (cards and the project page).
+export const defaultProjectImage = imageProjectCard;
+
 // "2020–2024", "2024" for a single year, or "2022–ongoing" without an end date.
 export const formatYears = (startDate: string, endDate: string | undefined, ongoing: string): string => {
   const startYear = startDate.slice(0, 4);
