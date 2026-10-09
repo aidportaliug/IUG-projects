@@ -90,12 +90,12 @@ hr {
   color: #1f2a20;
 }
 
+/* Title and subtitle, with the Edit/Delete buttons underneath. */
 .projectPageHeader {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
+  gap: 14px;
   margin-bottom: 20px;
 }
 .projectPageTitle {
