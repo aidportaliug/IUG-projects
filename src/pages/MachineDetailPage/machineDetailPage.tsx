@@ -132,7 +132,7 @@ const MachineDetailsPage: React.FC = () => {
 
           {/* Same picture as on the machine card */}
           <img
-            className="projectPageImage"
+            className="projectPageImage machinePageImage"
             src={machinePicture(machine) ?? defaultProjectImage}
             alt={t.machineDetail.imageAlt}
           />

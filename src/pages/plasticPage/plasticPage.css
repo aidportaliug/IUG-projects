@@ -95,11 +95,13 @@
   right: 0;
 }
 
+/* The whole machine is shown (scaled to fit), not cropped. */
 .machineCardImage {
   width: 100%;
-  object-fit: cover;
+  object-fit: contain;
   height: 175px;
   margin-bottom: 10px;
+  background: #fff;
 }
 
 .plasticCardBody {
