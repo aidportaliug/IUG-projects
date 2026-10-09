@@ -1,25 +1,43 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Button, Box, TextField, Select, MenuItem, SelectChangeEvent, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import {
+  Button,
+  Box,
+  Chip,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  SelectChangeEvent,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { getPlastics, PlasticResponse } from '../../services/plasticService';
 import { createMachine } from '../../services/machineService';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext';
+import imageMachineCard from '../../images/plasticProject.png';
+// Same layout and styles as the project upload form.
+import '../UploadPlasticProjectForm/uploadPlasticProjectForm.css';
+import '../../pages/plasticPage/plasticPage.css';
+
+type RequiredField = 'name' | 'whatItDoes' | 'howItWorks';
 
 const UploadMachineForm: React.FC = () => {
-  const [machineName, setMachineName] = useState('');
-  const [formError, setFormError] = useState('');
   const { t } = useI18n();
+  const navigate = useNavigate();
+  const [machineName, setMachineName] = useState('');
   const [whatItDoes, setWhatItDoes] = useState('');
   const [howItWorksAndAcquired, setHowItWorksAndAcquired] = useState('');
   const [operationComplicationsAndLessons, setOperationComplicationsAndLessons] = useState('');
   const [selectedPlastics, setSelectedPlastics] = useState<number[]>([]);
   const [plastics, setPlastics] = useState<PlasticResponse[]>([]);
-  const navigate = useNavigate();
+  const [formError, setFormError] = useState('');
+  // Missing fields are highlighted only after the first submit attempt.
+  const [showMissing, setShowMissing] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-
-  // Fetch plastics on component mount
   useEffect(() => {
     const fetchPlastics = async () => {
       try {
@@ -32,33 +50,22 @@ const UploadMachineForm: React.FC = () => {
     fetchPlastics();
   }, []);
 
-  const handleButtonClick = () => {
-    fileInputRef.current?.click();
-  };
+  const plasticNames = selectedPlastics
+    .map((id) => plastics.find((plastic) => plastic.id === id)?.name)
+    .filter((plasticName): plasticName is string => !!plasticName);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setImageUrl(url);
-    }
+  const fieldLabels: Record<RequiredField, string> = {
+    name: t.machineForm.name,
+    whatItDoes: t.machineForm.whatItDoes,
+    howItWorks: t.machineForm.howItWorks,
   };
-
-  const handleMachineNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMachineName(event.target.value);
+  const filled: Record<RequiredField, boolean> = {
+    name: !!machineName.trim(),
+    whatItDoes: !!whatItDoes.trim(),
+    howItWorks: !!howItWorksAndAcquired.trim(),
   };
-
-  const handleWhatItDoesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setWhatItDoes(event.target.value);
-  };
-
-  const handleHowItWorksAndAcquiredChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setHowItWorksAndAcquired(event.target.value);
-  };
-
-  const handleOperationComplicationsAndLessonsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setOperationComplicationsAndLessons(event.target.value);
-  };
+  const missingFields = (Object.keys(filled) as RequiredField[]).filter((field) => !filled[field]);
+  const isMissing = (field: RequiredField) => showMissing && !filled[field];
 
   const handlePlasticsChange = (event: SelectChangeEvent<typeof selectedPlastics>) => {
     const value = event.target.value;
@@ -66,185 +73,152 @@ const UploadMachineForm: React.FC = () => {
     setSelectedPlastics(values.map((id) => (typeof id === 'string' ? Number(id) : id)));
   };
 
-  const handleUpload = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined }) => {
+  const handleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFormError('');
-    const form = event.currentTarget;
-    const inputs = form?.elements as unknown as {
-      [key: string]: HTMLInputElement & { required: boolean };
-    };
-    const emptyFields = Object.values(inputs).filter((input) => {
-      return input.required && !input.value;
-    });
-
-    if (emptyFields.length > 0) {
-      const fieldNames = emptyFields.slice(0, emptyFields.length / 2).map((element) => `"${element.name}"`);
-      setFormError(t.common.requiredFields(fieldNames.join(', ')));
+    setShowMissing(true);
+    if (missingFields.length > 0) {
+      setFormError(t.projectForm.missingFields(missingFields.map((field) => fieldLabels[field]).join(', ')));
       return;
     }
 
-    // TODO: Implement machine upload API call
+    setSaving(true);
     try {
       await createMachine({
-        name: machineName,
-        whatItDoes: whatItDoes,
-        howItWorksAndAcquired: howItWorksAndAcquired,
-        operationComplicationsAndLessons: operationComplicationsAndLessons,
+        name: machineName.trim(),
+        whatItDoes: whatItDoes.trim(),
+        howItWorksAndAcquired: howItWorksAndAcquired.trim(),
+        operationComplicationsAndLessons: operationComplicationsAndLessons.trim(),
         plasticIds: selectedPlastics.length > 0 ? selectedPlastics : undefined,
       });
-
       navigate('/plasticProjects');
     } catch (error: any) {
       console.error('Upload error:', error);
       setFormError(error.message || t.machineForm.uploadFailed);
+    } finally {
+      setSaving(false);
     }
   };
 
   return (
-    <Box component="form" noValidate onSubmit={handleUpload} sx={{ margin: '0 auto', width: 500 }}>
-      <TextField
-        required
-        fullWidth
-        id="machineName"
-        label={t.machineForm.name}
-        name="machineName"
-        value={machineName}
-        onChange={handleMachineNameChange}
-        sx={{
-          marginBottom: '1em',
-          backgroundColor: '#e0e0e0',
-          '&:focus-within': {
-            backgroundColor: 'white',
-          },
-        }}
-      />
+    <div className="projectFormLayout">
+      <Box component="form" noValidate onSubmit={handleUpload} className="projectFormCard">
+        <p className="projectFormRequiredNote">{t.projectForm.requiredNote}</p>
 
-      <TextField
-        required
-        fullWidth
-        id="whatItDoes"
-        label={t.machineForm.whatItDoes}
-        name="whatItDoes"
-        value={whatItDoes}
-        onChange={handleWhatItDoesChange}
-        multiline
-        minRows={3}
-        sx={{
-          marginBottom: '1em',
-          backgroundColor: '#e0e0e0',
-          '&:focus-within': {
-            backgroundColor: 'white',
-          },
-        }}
-      />
+        {/* 1. What the machine card shows */}
+        <h2 className="projectFormSection">{t.machineForm.sectionCard}</h2>
+        <TextField
+          required
+          fullWidth
+          id="machineName"
+          label={t.machineForm.name}
+          value={machineName}
+          onChange={(event) => setMachineName(event.target.value)}
+          error={isMissing('name')}
+          margin="dense"
+        />
+        <FormControl fullWidth margin="dense">
+          <InputLabel id="machine-plastics-label">{t.projectForm.plastics}</InputLabel>
+          <Select
+            labelId="machine-plastics-label"
+            id="plastics"
+            multiple
+            value={selectedPlastics}
+            onChange={handlePlasticsChange}
+            input={<OutlinedInput label={t.projectForm.plastics} />}
+            renderValue={() => (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                {plasticNames.map((plasticName) => (
+                  <Chip key={plasticName} label={plasticName} size="small" />
+                ))}
+              </Box>
+            )}
+          >
+            {plastics.map((plastic) => (
+              <MenuItem key={plastic.id} value={plastic.id}>
+                {plastic.name}
+              </MenuItem>
+            ))}
+          </Select>
+          <FormHelperText>{t.machineForm.selectPlasticsHint}</FormHelperText>
+        </FormControl>
+        <TextField
+          required
+          fullWidth
+          id="whatItDoes"
+          label={t.machineForm.whatItDoes}
+          value={whatItDoes}
+          onChange={(event) => setWhatItDoes(event.target.value)}
+          error={isMissing('whatItDoes')}
+          helperText={t.machineForm.whatItDoesHelp}
+          multiline
+          minRows={2}
+          margin="dense"
+        />
 
-      <TextField
-        required
-        fullWidth
-        id="howItWorksAndAcquired"
-        label={t.machineForm.howItWorks}
-        name="howItWorksAndAcquired"
-        value={howItWorksAndAcquired}
-        onChange={handleHowItWorksAndAcquiredChange}
-        multiline
-        minRows={4}
-        sx={{
-          marginBottom: '1em',
-          backgroundColor: '#e0e0e0',
-          '&:focus-within': {
-            backgroundColor: 'white',
-          },
-        }}
-      />
+        {/* 2. More details, shown on the machine's own page */}
+        <h2 className="projectFormSection">{t.machineForm.sectionDetails}</h2>
+        <TextField
+          required
+          fullWidth
+          id="howItWorksAndAcquired"
+          label={t.machineForm.howItWorks}
+          value={howItWorksAndAcquired}
+          onChange={(event) => setHowItWorksAndAcquired(event.target.value)}
+          error={isMissing('howItWorks')}
+          helperText={t.machineForm.howItWorksHelp}
+          multiline
+          minRows={4}
+          margin="dense"
+        />
+        <TextField
+          fullWidth
+          id="operationComplicationsAndLessons"
+          label={t.machineForm.lessons}
+          value={operationComplicationsAndLessons}
+          onChange={(event) => setOperationComplicationsAndLessons(event.target.value)}
+          helperText={t.machineForm.lessonsHelp}
+          multiline
+          minRows={4}
+          margin="dense"
+        />
 
-      <TextField
-        fullWidth
-        id="operationComplicationsAndLessons"
-        label={t.machineForm.lessons}
-        name="operationComplicationsAndLessons"
-        value={operationComplicationsAndLessons}
-        onChange={handleOperationComplicationsAndLessonsChange}
-        multiline
-        minRows={4}
-        sx={{
-          marginBottom: '1em',
-          backgroundColor: '#e0e0e0',
-          '&:focus-within': {
-            backgroundColor: 'white',
-          },
-        }}
-      />
+        {formError && (
+          <Typography color="error" sx={{ mt: 2 }}>
+            {formError}
+          </Typography>
+        )}
+        <Button type="submit" variant="contained" fullWidth disabled={saving} className="projectFormSubmit">
+          {t.machineForm.submit}
+        </Button>
+      </Box>
 
-      <Select
-        multiple
-        displayEmpty
-        id="plastics"
-        value={selectedPlastics}
-        onChange={handlePlasticsChange}
-        renderValue={(selected) => {
-          if (selected.length === 0) {
-            return <span style={{ color: '#666' }}>{t.common.selectPlastics}</span>;
-          }
-          return selected.map((id) => plastics.find((p) => p.id === id)?.name).join(', ');
-        }}
-        sx={{
-          width: '100%',
-          marginBottom: '1em',
-          '& .MuiSelect-select': {
-            backgroundColor: '#e0e0e0',
-            padding: '16px',
-            minHeight: '1.4375em',
-          },
-          '&.Mui-focused .MuiSelect-select': {
-            backgroundColor: 'white',
-          },
-          '& fieldset': {
-            legend: { display: 'none' },
-          },
-        }}
-      >
-        <MenuItem disabled>
-          <em>{t.machineForm.selectPlasticsHint}</em>
-        </MenuItem>
-        {plastics.map((plastic) => (
-          <MenuItem key={plastic.id} value={plastic.id}>
-            {plastic.name}
-          </MenuItem>
-        ))}
-      </Select>
-
-      <input type="file" accept="image/*" style={{ display: 'none' }} ref={fileInputRef} onChange={handleFileChange} />
-      <Button
-        size="large"
-        variant="outlined"
-        onClick={handleButtonClick}
-        style={{
-          width: '100%',
-          color: 'black',
-          textTransform: 'none',
-          border: '1px solid grey',
-          marginBottom: '1em',
-          backgroundColor: '#e0e0e0',
-        }}
-      >
-        {t.common.uploadPicture}
-      </Button>
-
-      {imageUrl && (
-        <div style={{ marginBottom: '1em' }}>
-          <img src={imageUrl} alt="Uploaded" style={{ maxWidth: '100%', maxHeight: 200 }} />
+      {/* Live preview of the machine card, as in the machine list */}
+      <aside className="projectFormPreview">
+        <h2 className="projectFormSection">{t.projectForm.preview}</h2>
+        <p className="projectFormPreviewHint">{t.machineForm.previewHint}</p>
+        <div className="plasticCard">
+          <div className="plasticCardOutline">
+            <div className="plasticCardBody">
+              <div className="machineCardTitle">{machineName.trim() || t.machineForm.name}</div>
+              <img className="machineCardImage" src={imageMachineCard} alt="" />
+              <div className="plasticCardTags">
+                <b>{t.plastic.plasticTypes} </b>
+                {plasticNames.map((plasticName) => (
+                  <span key={plasticName} className="plasticTag">
+                    {plasticName}
+                  </span>
+                ))}
+              </div>
+              <div className="plasticCardTags">
+                <b>{t.plastic.whatItDoes} </b>
+                {whatItDoes.trim() || t.machineForm.whatItDoesHelp}
+              </div>
+            </div>
+          </div>
         </div>
-      )}
-
-      {formError && (
-        <Typography color="error" sx={{ mb: 2 }}>
-          {formError}
-        </Typography>
-      )}
-      <Button type="submit" variant="contained" style={{ width: 200, height: 50, margin: '1em' }}>
-        {t.machineForm.submit}
-      </Button>
-    </Box>
+      </aside>
+    </div>
   );
 };
 

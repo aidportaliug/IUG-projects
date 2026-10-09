@@ -227,6 +227,13 @@ export const nb: Messages = {
     selectPlasticsHint: 'Velg plasttypene maskinen behandler',
     submit: 'Last opp maskin',
     uploadFailed: 'Kunne ikke laste opp maskinen',
+    sectionCard: 'Vises på maskinkortet',
+    sectionDetails: 'Detaljer på maskinsiden',
+    whatItDoesHelp: 'En eller to setninger som vises på maskinkortet.',
+    howItWorksHelp: 'Hvordan maskinen fungerer, og om den ble kjøpt eller bygget selv.',
+    lessonsHelp: 'Valgfritt. Problemer i drift og hva andre prosjekter bør vite.',
+    previewHint: 'Slik vil maskinen se ut i maskinlisten.',
+    onlyAdmin: 'Bare administratoren kan legge til maskiner.',
   },
   profile: {
     pageTitle: 'Profilen din',
