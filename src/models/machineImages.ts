@@ -1,6 +1,4 @@
 import polyfloss from '../images/polyfloss.png';
-import ventilation from '../images/ventilation.jpg';
-import twigGrinder from '../images/shredder.png';
 import shredder from '../images/machines/shredder.jpg';
 import extruder from '../images/machines/extruder.jpg';
 import compressionOven from '../images/machines/compression-oven.jpg';
@@ -21,9 +19,6 @@ const machineImageByName: Record<string, string> = {
   'grinder for soft plastics': grinderSoftPlastics,
   'washing and water cleaning system': washingSystem,
   baler,
-  'twig grinder': twigGrinder,
-  'ventilation system': ventilation,
-  ventilation,
   polyfloss,
 };
 
