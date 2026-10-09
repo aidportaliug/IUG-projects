@@ -7,6 +7,7 @@ import Meta from '../../components/Meta';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Box, CircularProgress } from '@mui/material';
 import { Footer } from '../../components/Footer/Footer';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useI18n } from '../../i18n/I18nContext';
 
 // Upload a new plastic project (/UploadPlasticProject) or edit one (/plastic-project/:id/edit).
@@ -42,18 +43,12 @@ const UploadPlasticProject: React.FC = () => {
     <>
       <Meta title={title}></Meta>
       <div className="outline">
-        <Box display="flex" justifyContent="space-evenly" alignItems="center" marginTop="30px">
+        <Box display="flex" justifyContent="space-evenly" alignItems="center" marginTop="30px" marginBottom="20px">
           <Button
-            size="large"
-            onClick={() => navigate(-1)}
             variant="outlined"
-            style={{
-              color: 'black',
-              textTransform: 'none',
-              border: '1px solid grey',
-              backgroundColor: '#e0e0e0',
-              marginBottom: 20,
-            }}
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate(-1)}
+            sx={{ color: '#3D7844', borderColor: '#3D7844', textTransform: 'none', borderRadius: '8px' }}
           >
             {t.common.back}
           </Button>

@@ -227,6 +227,13 @@ export const en = {
     selectPlasticsHint: 'Select plastics this machine processes',
     submit: 'Upload machine',
     uploadFailed: 'Failed to upload machine',
+    sectionCard: 'Shown on the machine card',
+    sectionDetails: 'Details on the machine page',
+    whatItDoesHelp: 'One or two sentences, shown on the machine card.',
+    howItWorksHelp: 'How the machine works, and whether it was bought or built (DIY).',
+    lessonsHelp: 'Optional. Problems during operation and what other projects should know.',
+    previewHint: 'This is how the machine will look in the machine list.',
+    onlyAdmin: 'Only the administrator can add machines.',
   },
   profile: {
     pageTitle: 'Your profile',
