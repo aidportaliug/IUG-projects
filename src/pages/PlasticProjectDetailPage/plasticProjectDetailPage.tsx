@@ -9,10 +9,13 @@ import {
 } from '../../services/plasticService';
 import { useAuth } from '../../services/AuthContext';
 import { canDeleteProjects, canEditProject } from '../../services/auth';
-import { Box, Button, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import LinkIcon from '@mui/icons-material/Link';
 import './plasticProjectDetailPage.css';
-import Trax_Ghana from '../../images/Trax_Ghana.png';
-import ProjectImageBox from '../../components/ProjectImageBox/ProjectImageBox';
+import { defaultProjectImage, formatYears } from '../../components/PlasticProjectCards/PlasticProjectCard';
+import Footer from '../../components/Footer/Footer';
 import Meta from '../../components/Meta';
 import Layout from '../../components/Navbar/Layout';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -23,7 +26,6 @@ const PlasticProjectDetailsPage: React.FC = () => {
   const [project, setProject] = useState<PlasticProjectResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<'invalidId' | 'loadFailed' | null>(null);
-  const imageIcon = Trax_Ghana;
   const { user } = useAuth();
   const navigate = useNavigate();
   const { t, formatDate } = useI18n();
@@ -91,112 +93,138 @@ const PlasticProjectDetailsPage: React.FC = () => {
   }
 
   if (project != null) {
+    const facts: [string, React.ReactNode][] = [
+      [t.projectDetail.country, project.country],
+      [t.projectDetail.startDate, formatDate(project.startDate)],
+      ...(project.endDate ? [[t.projectDetail.endDate, formatDate(project.endDate)] as [string, string]] : []),
+      ...(project.durationDays
+        ? [[t.projectDetail.duration, t.projectDetail.days(project.durationDays)] as [string, string]]
+        : []),
+      [t.projectDetail.product, project.product],
+      [t.projectDetail.financing, project.financing],
+      [t.projectDetail.businessModel, project.businessModel],
+      [
+        t.projectDetail.wasteCollected,
+        project.wasteCollected > 0 ? t.common.tons(project.wasteCollected) : t.common.notReported,
+      ],
+    ];
+
     return (
       <>
         <Meta title={project.name}></Meta>
         <Layout>
-          <div className="projectDetailoutline">
-            <div className="Title">{project.name}</div>
-            {(canEditProject(user, project) || canDeleteProjects(user)) && (
-              <Box display="flex" justifyContent="center" gap={2} marginBottom={2}>
-                {canEditProject(user, project) && (
-                  <Button
-                    variant="contained"
-                    onClick={() => navigate(`/plastic-project/${project.id}/edit`)}
-                    style={{ backgroundColor: '#3D7844', textTransform: 'none' }}
-                  >
-                    {t.projectDetail.edit}
-                  </Button>
-                )}
-                {canDeleteProjects(user) && (
-                  <Button variant="outlined" color="error" onClick={handleDelete} style={{ textTransform: 'none' }}>
-                    {t.projectDetail.delete}
-                  </Button>
-                )}
-              </Box>
-            )}
+          <div className="projectPage">
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<ArrowBackIcon />}
+              onClick={() => navigate('/plasticProjects')}
+              sx={{ color: '#3D7844', borderColor: '#9fc4a3', textTransform: 'none', borderRadius: '8px', mb: 3 }}
+            >
+              {t.projectDetail.backToList}
+            </Button>
+
+            <header className="projectPageHeader">
+              <div>
+                <h1 className="projectPageTitle">{project.name}</h1>
+                <p className="projectPageSubtitle">
+                  {project.country} · {formatYears(project.startDate, project.endDate ?? undefined, t.plastic.ongoing)}
+                </p>
+              </div>
+              {(canEditProject(user, project) || canDeleteProjects(user)) && (
+                <div className="projectPageActions">
+                  {canEditProject(user, project) && (
+                    <Button
+                      variant="contained"
+                      onClick={() => navigate(`/plastic-project/${project.id}/edit`)}
+                      sx={{
+                        backgroundColor: '#3D7844',
+                        textTransform: 'none',
+                        '&:hover': { backgroundColor: '#2f5f35' },
+                      }}
+                    >
+                      {t.projectDetail.edit}
+                    </Button>
+                  )}
+                  {canDeleteProjects(user) && (
+                    <Button variant="outlined" color="error" onClick={handleDelete} sx={{ textTransform: 'none' }}>
+                      {t.projectDetail.delete}
+                    </Button>
+                  )}
+                </div>
+              )}
+            </header>
+
             {(actionError || uploadWarning) && (
-              <Typography color="error" textAlign="center" sx={{ mb: 2 }}>
+              <Typography color="error" sx={{ mb: 2 }}>
                 {actionError || uploadWarning}
               </Typography>
             )}
-            <ProjectImageBox source={projectImageHref(project) ?? imageIcon} altText={t.projectDetail.imageAlt} />
-            <hr />
-            <div className="projectInformation">
-              <div className="infoRow">
-                <b>{t.projectDetail.country}</b> {project.country}
-              </div>
-              <div className="infoRow">
-                <b>{t.projectDetail.startDate}</b> {formatDate(project.startDate)}
-              </div>
-              {project.endDate && (
-                <div className="infoRow">
-                  <b>{t.projectDetail.endDate}</b> {formatDate(project.endDate)}
-                </div>
-              )}
-              {project.durationDays && (
-                <div className="infoRow">
-                  <b>{t.projectDetail.duration}</b> {t.projectDetail.days(project.durationDays)}
-                </div>
-              )}
-              <div className="infoRow">
-                <b>{t.projectDetail.product}</b> {project.product}
-              </div>
-              <div className="infoRow">
-                <b>{t.projectDetail.financing}</b> {project.financing}
-              </div>
-              <div className="infoRow">
-                <b>{t.projectDetail.businessModel}</b> {project.businessModel}
-              </div>
-              <div className="infoRow">
-                <b>{t.projectDetail.wasteCollected}</b>{' '}
-                {project.wasteCollected > 0 ? t.common.tons(project.wasteCollected) : t.common.notReported}
-              </div>
-              {project.plastics && project.plastics.length > 0 && (
-                <div className="infoRow">
-                  <b>{t.projectDetail.plasticsUsed}</b>{' '}
-                  {project.plastics.map((p, index) => (
-                    <span key={index}>
-                      {index > 0 && ' '}
-                      <span className="plasticTag">{p.name}</span>
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-            <hr />
+
+            {/* Same picture as on the project card */}
+            <img
+              className="projectPageImage"
+              src={projectImageHref(project) ?? defaultProjectImage}
+              alt={t.projectDetail.imageAlt}
+            />
+
+            <section className="projectPageCard">
+              <h2>{t.projectDetail.facts}</h2>
+              <dl className="projectFacts">
+                {facts.map(([label, value]) => (
+                  <div key={label}>
+                    <dt>{label}</dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+                {project.plastics && project.plastics.length > 0 && (
+                  <div className="projectFactsWide">
+                    <dt>{t.projectDetail.plasticsUsed}</dt>
+                    <dd className="projectPlastics">
+                      {project.plastics.map((plastic) => (
+                        <span key={plastic.id} className="plasticTag">
+                          {plastic.name}
+                        </span>
+                      ))}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            </section>
+
             {project.summary && (
-              <div className="projectDetails" style={{ fontSize: '15px' }}>
-                <b>{t.projectDetail.summary} </b>
-                <p>{project.summary}</p>
-              </div>
+              <section className="projectPageCard">
+                <h2>{t.projectDetail.summary}</h2>
+                <p className="projectSummary">{project.summary}</p>
+              </section>
             )}
+
             {project.documents && project.documents.length > 0 && (
-              <>
-                <hr />
-                <div className="projectDocuments">
-                  <b>{t.projectDetail.documents}</b>
-                  <ul>
-                    {project.documents.map((document) => (
-                      <li key={document.id}>
-                        <a href={documentHref(document)} target="_blank" rel="noopener noreferrer">
-                          {document.title}
-                        </a>
-                        {document.kind === 'FILE' ? (
-                          <span className="documentMeta">
-                            {' '}
-                            (PDF{document.sizeBytes ? `, ${(document.sizeBytes / 1024 / 1024).toFixed(1)} MB` : ''})
-                          </span>
-                        ) : (
-                          <span className="documentMeta"> ({t.projectDetail.link})</span>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </>
+              <section className="projectPageCard">
+                <h2>{t.projectDetail.documents}</h2>
+                <ul className="projectDocumentList">
+                  {project.documents.map((document) => (
+                    <li key={document.id} className="projectDocumentRow">
+                      {document.kind === 'FILE' ? (
+                        <PictureAsPdfIcon className="projectDocumentIcon" />
+                      ) : (
+                        <LinkIcon className="projectDocumentIcon" />
+                      )}
+                      <a href={documentHref(document)} target="_blank" rel="noopener noreferrer">
+                        {document.title}
+                      </a>
+                      <span className="documentMeta">
+                        {document.kind === 'FILE'
+                          ? `PDF${document.sizeBytes ? `, ${(document.sizeBytes / 1024 / 1024).toFixed(1)} MB` : ''}`
+                          : t.projectDetail.link}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
             )}
           </div>
+          <Footer />
         </Layout>
       </>
     );
