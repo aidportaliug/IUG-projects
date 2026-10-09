@@ -143,6 +143,7 @@ export const nb: Messages = {
     link: 'lenke',
   },
   machineDetail: {
+    pictureFailed: 'Bildet kunne ikke lagres',
     invalidId: 'Ugyldig maskin-ID',
     loadFailed: 'Kunne ikke laste maskinen',
     notFound: '404: Fant ikke maskinen',
@@ -234,6 +235,8 @@ export const nb: Messages = {
     lessonsHelp: 'Valgfritt. Problemer i drift og hva andre prosjekter bør vite.',
     previewHint: 'Slik vil maskinen se ut i maskinlisten.',
     onlyAdmin: 'Bare administratoren kan legge til maskiner.',
+    picture: 'Maskinbilde (valgfritt)',
+    pictureFailed: 'Maskinen ble lagret, men bildet kunne ikke lastes opp. Du kan legge det til på maskinsiden.',
   },
   profile: {
     pageTitle: 'Profilen din',

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { getMachine, MachineResponse } from '../../services/machineService';
+import { useLocation, useParams } from 'react-router-dom';
+import { deleteMachineImage, getMachine, MachineResponse, uploadMachineImage } from '../../services/machineService';
 import './machineDetailPage.css';
 import Trax_Ghana from '../../images/Trax_Ghana.png';
-import { getMachineImage } from '../../models/machineImages';
+import { machinePicture } from '../../models/machineImages';
+import PicturePicker from '../../components/PicturePicker/PicturePicker';
+import { useAuth } from '../../services/AuthContext';
+import { Typography } from '@mui/material';
 import ProjectImageBox from '../../components/ProjectImageBox/ProjectImageBox';
 import Meta from '../../components/Meta';
 import Layout from '../../components/Navbar/Layout';
@@ -17,6 +20,26 @@ const MachineDetailsPage: React.FC = () => {
   const [error, setError] = useState<'invalidId' | 'loadFailed' | null>(null);
   const imageIcon = Trax_Ghana;
   const { t } = useI18n();
+  const { user } = useAuth();
+  const [savingPicture, setSavingPicture] = useState(false);
+  const [pictureError, setPictureError] = useState('');
+  // Set by the upload form when the new machine's picture could not be uploaded.
+  const uploadWarning = (useLocation().state as { uploadWarning?: string } | null)?.uploadWarning;
+
+  // Admin only: the picture is saved right away.
+  const savePicture = async (change: () => Promise<string | null>) => {
+    if (!machine) return;
+    setPictureError('');
+    setSavingPicture(true);
+    try {
+      const imageUrl = await change();
+      setMachine({ ...machine, imageUrl });
+    } catch (err: any) {
+      setPictureError(err.message || t.machineDetail.pictureFailed);
+    } finally {
+      setSavingPicture(false);
+    }
+  };
 
   async function getMachineData(machineId: string) {
     setLoading(true);
@@ -79,7 +102,27 @@ const MachineDetailsPage: React.FC = () => {
       <Layout>
         <div className="machineDetailoutline">
           <div className="Title">{machine.name}</div>
-          <ProjectImageBox source={getMachineImage(machine.name) ?? imageIcon} altText={t.machineDetail.imageAlt} />
+          {uploadWarning && (
+            <Typography color="error" textAlign="center" sx={{ mb: 2 }}>
+              {uploadWarning}
+            </Typography>
+          )}
+          <ProjectImageBox source={machinePicture(machine) ?? imageIcon} altText={t.machineDetail.imageAlt} />
+          {user?.isAdmin && (
+            <PicturePicker
+              image={machine.imageUrl ? machinePicture(machine) : undefined}
+              showThumbnail={false}
+              busy={savingPicture}
+              error={pictureError}
+              onPicked={(picked) => savePicture(() => uploadMachineImage(machine.id, picked))}
+              onRemove={() =>
+                savePicture(async () => {
+                  await deleteMachineImage(machine.id);
+                  return null;
+                })
+              }
+            />
+          )}
           <hr />
           <div className="machineInformation">
             <div className="infoRow">

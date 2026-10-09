@@ -14,7 +14,9 @@ import {
   Typography,
 } from '@mui/material';
 import { getPlastics, PlasticResponse } from '../../services/plasticService';
-import { createMachine } from '../../services/machineService';
+import { createMachine, uploadMachineImage } from '../../services/machineService';
+import { getMachineImage } from '../../models/machineImages';
+import PicturePicker from '../PicturePicker/PicturePicker';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext';
 import imageMachineCard from '../../images/plasticProject.png';
@@ -37,6 +39,16 @@ const UploadMachineForm: React.FC = () => {
   // Missing fields are highlighted only after the first submit attempt.
   const [showMissing, setShowMissing] = useState(false);
   const [saving, setSaving] = useState(false);
+  // A picked picture waits here until the machine exists, then it is uploaded.
+  const [picture, setPicture] = useState<Blob | null>(null);
+  const [pictureUrl, setPictureUrl] = useState<string | undefined>(undefined);
+
+  // Free the preview's object URL when it is replaced or the form closes.
+  useEffect(() => {
+    return () => {
+      if (pictureUrl) URL.revokeObjectURL(pictureUrl);
+    };
+  }, [pictureUrl]);
 
   useEffect(() => {
     const fetchPlastics = async () => {
@@ -84,13 +96,23 @@ const UploadMachineForm: React.FC = () => {
 
     setSaving(true);
     try {
-      await createMachine({
+      const machine = await createMachine({
         name: machineName.trim(),
         whatItDoes: whatItDoes.trim(),
         howItWorksAndAcquired: howItWorksAndAcquired.trim(),
         operationComplicationsAndLessons: operationComplicationsAndLessons.trim(),
         plasticIds: selectedPlastics.length > 0 ? selectedPlastics : undefined,
       });
+      if (picture) {
+        try {
+          await uploadMachineImage(machine.id, picture);
+        } catch (pictureError) {
+          // The machine is saved; the machine page shows the warning and lets the admin try again.
+          console.error('Failed to upload the machine picture:', pictureError);
+          navigate(`/machine/${machine.id}`, { state: { uploadWarning: t.machineForm.pictureFailed } });
+          return;
+        }
+      }
       navigate('/plasticProjects');
     } catch (error: any) {
       console.error('Upload error:', error);
@@ -116,6 +138,19 @@ const UploadMachineForm: React.FC = () => {
           onChange={(event) => setMachineName(event.target.value)}
           error={isMissing('name')}
           margin="dense"
+        />
+        <PicturePicker
+          label={t.machineForm.picture}
+          image={pictureUrl}
+          pickedSize={picture?.size}
+          onPicked={(picked) => {
+            setPicture(picked);
+            setPictureUrl(URL.createObjectURL(picked));
+          }}
+          onRemove={() => {
+            setPicture(null);
+            setPictureUrl(undefined);
+          }}
         />
         <FormControl fullWidth margin="dense">
           <InputLabel id="machine-plastics-label">{t.projectForm.plastics}</InputLabel>
@@ -201,7 +236,11 @@ const UploadMachineForm: React.FC = () => {
           <div className="plasticCardOutline">
             <div className="plasticCardBody">
               <div className="machineCardTitle">{machineName.trim() || t.machineForm.name}</div>
-              <img className="machineCardImage" src={imageMachineCard} alt="" />
+              <img
+                className="machineCardImage"
+                src={pictureUrl ?? getMachineImage(machineName) ?? imageMachineCard}
+                alt=""
+              />
               <div className="plasticCardTags">
                 <b>{t.plastic.plasticTypes} </b>
                 {plasticNames.map((plasticName) => (

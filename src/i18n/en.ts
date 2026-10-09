@@ -143,6 +143,7 @@ export const en = {
     link: 'link',
   },
   machineDetail: {
+    pictureFailed: 'The picture could not be saved',
     invalidId: 'Invalid machine ID',
     loadFailed: 'Failed to load machine',
     notFound: '404: Machine not found',
@@ -234,6 +235,8 @@ export const en = {
     lessonsHelp: 'Optional. Problems during operation and what other projects should know.',
     previewHint: 'This is how the machine will look in the machine list.',
     onlyAdmin: 'Only the administrator can add machines.',
+    picture: 'Machine picture (optional)',
+    pictureFailed: 'The machine was saved, but the picture could not be uploaded. You can add it on the machine page.',
   },
   profile: {
     pageTitle: 'Your profile',

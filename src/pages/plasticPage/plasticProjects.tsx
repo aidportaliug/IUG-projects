@@ -7,7 +7,7 @@ import PlasticFilterDropdown from '../../components/PlasticFilterDropdown/Plasti
 import { TextField, InputAdornment, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import imageProjectCard from '../../images/plasticProject.png';
-import { getMachineImage } from '../../models/machineImages';
+import { machinePicture } from '../../models/machineImages';
 import { getMachines, MachineResponse } from '../../services/machineService';
 import { getPlasticProjects, PlasticProjectResponse, projectImageHref } from '../../services/plasticService';
 import { useNavigate } from 'react-router-dom';
@@ -98,7 +98,7 @@ const PlasticProjects: React.FC = () => {
         const mappedMachines: MachineData[] = machineResponse.machines.map((machine: MachineResponse) => ({
           id: machine.id.toString(),
           title: machine.name,
-          image: getMachineImage(machine.name),
+          image: machinePicture(machine),
           whatDoes: machine.whatItDoes,
           howWork: machine.howItWorksAndAcquired,
           plastics: machine.plastics.map((plastic) => plastic.name),
