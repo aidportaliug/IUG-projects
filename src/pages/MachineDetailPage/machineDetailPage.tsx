@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
-import { deleteMachineImage, getMachine, MachineResponse, uploadMachineImage } from '../../services/machineService';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { getMachine, MachineResponse } from '../../services/machineService';
 import './machineDetailPage.css';
-import Trax_Ghana from '../../images/Trax_Ghana.png';
+// Same page layout as the project page.
+import '../PlasticProjectDetailPage/plasticProjectDetailPage.css';
+import { defaultProjectImage } from '../../components/PlasticProjectCards/PlasticProjectCard';
+import Footer from '../../components/Footer/Footer';
 import { machinePicture } from '../../models/machineImages';
-import PicturePicker from '../../components/PicturePicker/PicturePicker';
 import { useAuth } from '../../services/AuthContext';
-import { Typography } from '@mui/material';
-import ProjectImageBox from '../../components/ProjectImageBox/ProjectImageBox';
+import { Button, Typography } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import RecyclingIcon from '@mui/icons-material/Recycling';
 import Meta from '../../components/Meta';
 import Layout from '../../components/Navbar/Layout';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -18,28 +21,11 @@ const MachineDetailsPage: React.FC = () => {
   const [machine, setMachine] = useState<MachineResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<'invalidId' | 'loadFailed' | null>(null);
-  const imageIcon = Trax_Ghana;
+  const navigate = useNavigate();
   const { t } = useI18n();
   const { user } = useAuth();
-  const [savingPicture, setSavingPicture] = useState(false);
-  const [pictureError, setPictureError] = useState('');
   // Set by the upload form when the new machine's picture could not be uploaded.
   const uploadWarning = (useLocation().state as { uploadWarning?: string } | null)?.uploadWarning;
-
-  // Admin only: the picture is saved right away.
-  const savePicture = async (change: () => Promise<string | null>) => {
-    if (!machine) return;
-    setPictureError('');
-    setSavingPicture(true);
-    try {
-      const imageUrl = await change();
-      setMachine({ ...machine, imageUrl });
-    } catch (err: any) {
-      setPictureError(err.message || t.machineDetail.pictureFailed);
-    } finally {
-      setSavingPicture(false);
-    }
-  };
 
   async function getMachineData(machineId: string) {
     setLoading(true);
@@ -96,58 +82,100 @@ const MachineDetailsPage: React.FC = () => {
     );
   }
 
+  const facts: [string, React.ReactNode][] = [
+    [t.machineDetail.whatItDoes, machine.whatItDoes],
+    [t.machineDetail.howItWorks, machine.howItWorksAndAcquired],
+    [t.machineDetail.lessons, machine.operationComplicationsAndLessons.trim() || t.machineDetail.noLessons],
+  ];
+  const projectsInUse = machine.plasticProjectsInUse ?? [];
+
   return (
     <>
       <Meta title={machine.name}></Meta>
       <Layout>
-        <div className="machineDetailoutline">
-          <div className="Title">{machine.name}</div>
+        <div className="projectPage">
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate('/plasticProjects', { state: { tab: 'machines' } })}
+            sx={{ color: '#3D7844', borderColor: '#9fc4a3', textTransform: 'none', borderRadius: '8px', mb: 3 }}
+          >
+            {t.machineDetail.backToList}
+          </Button>
+
+          <header className="projectPageHeader">
+            <div>
+              <h1 className="projectPageTitle">{machine.name}</h1>
+              {projectsInUse.length > 0 && (
+                <p className="projectPageSubtitle">{t.machineDetail.usedIn(projectsInUse.length)}</p>
+              )}
+            </div>
+            {user?.isAdmin && (
+              <div className="projectPageActions">
+                <Button
+                  variant="contained"
+                  onClick={() => navigate(`/machine/${machine.id}/edit`)}
+                  sx={{ backgroundColor: '#3D7844', textTransform: 'none', '&:hover': { backgroundColor: '#2f5f35' } }}
+                >
+                  {t.machineDetail.edit}
+                </Button>
+              </div>
+            )}
+          </header>
+
           {uploadWarning && (
-            <Typography color="error" textAlign="center" sx={{ mb: 2 }}>
+            <Typography color="error" sx={{ mb: 2 }}>
               {uploadWarning}
             </Typography>
           )}
-          <ProjectImageBox source={machinePicture(machine) ?? imageIcon} altText={t.machineDetail.imageAlt} />
-          {user?.isAdmin && (
-            <PicturePicker
-              image={machine.imageUrl ? machinePicture(machine) : undefined}
-              showThumbnail={false}
-              busy={savingPicture}
-              error={pictureError}
-              onPicked={(picked) => savePicture(() => uploadMachineImage(machine.id, picked))}
-              onRemove={() =>
-                savePicture(async () => {
-                  await deleteMachineImage(machine.id);
-                  return null;
-                })
-              }
-            />
-          )}
-          <hr />
-          <div className="machineInformation">
-            <div className="infoRow">
-              <b>{t.machineDetail.whatItDoes}</b> {machine?.whatItDoes}
-            </div>
-            <div className="infoRow">
-              <b>{t.machineDetail.howItWorks}</b> {machine?.howItWorksAndAcquired}
-            </div>
-            <div className="infoRow">
-              <b>{t.machineDetail.lessons}</b> {machine?.operationComplicationsAndLessons}
-            </div>
-            {machine.plastics && machine.plastics.length > 0 && (
-              <div className="infoRow">
-                <b>{t.machineDetail.plasticTypes}</b>{' '}
-                {machine.plastics.map((p, index) => (
-                  <span key={p.id}>
-                    {index > 0 && ' '}
-                    <span className="plasticTag">{p.name}</span>
-                  </span>
+
+          {/* Same picture as on the machine card */}
+          <img
+            className="projectPageImage machinePageImage"
+            src={machinePicture(machine) ?? defaultProjectImage}
+            alt={t.machineDetail.imageAlt}
+          />
+
+          <section className="projectPageCard">
+            <h2>{t.machineDetail.about}</h2>
+            <dl className="projectFacts machineFacts">
+              {facts.map(([label, value]) => (
+                <div key={label}>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+              {machine.plastics && machine.plastics.length > 0 && (
+                <div>
+                  <dt>{t.machineDetail.plasticTypes}</dt>
+                  <dd className="projectPlastics">
+                    {machine.plastics.map((plastic) => (
+                      <span key={plastic.id} className="plasticTag">
+                        {plastic.name}
+                      </span>
+                    ))}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </section>
+
+          {projectsInUse.length > 0 && (
+            <section className="projectPageCard">
+              <h2>{t.machineDetail.inUse}</h2>
+              <ul className="projectDocumentList machineProjectList">
+                {projectsInUse.map((project) => (
+                  <li key={project.id} className="projectDocumentRow">
+                    <RecyclingIcon className="projectDocumentIcon" />
+                    <Link to={`/plastic-project/${project.id}`}>{project.name}</Link>
+                  </li>
                 ))}
-              </div>
-            )}
-          </div>
-          <hr />
+              </ul>
+            </section>
+          )}
         </div>
+        <Footer />
       </Layout>
     </>
   );

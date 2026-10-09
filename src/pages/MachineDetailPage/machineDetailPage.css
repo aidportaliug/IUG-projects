@@ -54,3 +54,29 @@ hr {
   padding: 4px 12px;
   text-align: center;
 }
+/* Machine page: reuses the project page layout; long texts get a single column. */
+.machineFacts {
+  grid-template-columns: 1fr;
+}
+
+/* Machine photos are wide product shots: show the whole picture, scaled down, instead of cropping it. */
+.projectPageImage.machinePageImage {
+  object-fit: contain;
+  height: 300px;
+  max-height: none;
+  background: #fff;
+  border: 1px solid #e3e8e3;
+}
+@media (max-width: 600px) {
+  .projectPageImage.machinePageImage {
+    height: 200px;
+  }
+}
+
+/* Keep the icon next to the project name on small screens. */
+.machineProjectList .projectDocumentRow {
+  flex-wrap: nowrap;
+}
+.machineProjectList .projectDocumentIcon {
+  flex-shrink: 0;
+}
