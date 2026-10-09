@@ -80,3 +80,135 @@ hr {
   color: #555;
   font-size: 13px;
 }
+
+/* Plastic project page */
+.projectPage {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 16px 72px;
+  font-family: var(--mainFontFamily), serif;
+  color: #1f2a20;
+}
+
+.projectPageHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.projectPageTitle {
+  margin: 0 0 6px;
+  font-size: 2.4rem;
+  line-height: 1.2;
+  color: var(--mainGreen);
+  overflow-wrap: anywhere;
+}
+.projectPageSubtitle {
+  margin: 0;
+  color: var(--UiGray);
+  font-size: 1.05rem;
+}
+.projectPageActions {
+  display: flex;
+  gap: 8px;
+}
+
+.projectPageImage {
+  display: block;
+  width: 100%;
+  max-height: 340px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 24px;
+}
+
+.projectPageCard {
+  background: #fff;
+  border: 1px solid #e3e8e3;
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.projectPageCard h2 {
+  margin: 0 0 18px;
+  font-size: 1.2rem;
+  color: var(--mainGreen);
+}
+
+.projectFacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 32px;
+  margin: 0;
+}
+.projectFacts dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--UiGray);
+  margin-bottom: 4px;
+}
+.projectFacts dd {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.projectFactsWide {
+  grid-column: 1 / -1;
+}
+.projectPlastics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.projectSummary {
+  margin: 0;
+  line-height: 1.7;
+  font-size: 1rem;
+  color: #2f3a30;
+  white-space: pre-line;
+}
+
+.projectDocumentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.projectDocumentRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eef1ee;
+}
+.projectDocumentRow:last-child {
+  border-bottom: none;
+}
+.projectDocumentRow a {
+  color: var(--mainGreen);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.projectDocumentIcon {
+  color: var(--mainGreen);
+}
+
+@media (max-width: 600px) {
+  .projectPageTitle {
+    font-size: 1.8rem;
+  }
+  .projectPageCard {
+    padding: 18px 16px;
+  }
+  .projectFacts {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
