@@ -14,8 +14,14 @@ import {
   Typography,
 } from '@mui/material';
 import { getPlastics, PlasticResponse } from '../../services/plasticService';
-import { createMachine, uploadMachineImage } from '../../services/machineService';
-import { getMachineImage } from '../../models/machineImages';
+import {
+  createMachine,
+  deleteMachineImage,
+  getMachine,
+  updateMachine,
+  uploadMachineImage,
+} from '../../services/machineService';
+import { getMachineImage, machinePicture } from '../../models/machineImages';
 import PicturePicker from '../PicturePicker/PicturePicker';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext';
@@ -26,7 +32,13 @@ import '../../pages/plasticPage/plasticPage.css';
 
 type RequiredField = 'name' | 'whatItDoes' | 'howItWorks';
 
-const UploadMachineForm: React.FC = () => {
+interface UploadMachineFormProps {
+  // When set, the form edits this machine instead of creating a new one.
+  machineId?: number;
+}
+
+const UploadMachineForm: React.FC<UploadMachineFormProps> = ({ machineId }) => {
+  const isEdit = machineId !== undefined;
   const { t } = useI18n();
   const navigate = useNavigate();
   const [machineName, setMachineName] = useState('');
@@ -42,6 +54,11 @@ const UploadMachineForm: React.FC = () => {
   // A picked picture waits here until the machine exists, then it is uploaded.
   const [picture, setPicture] = useState<Blob | null>(null);
   const [pictureUrl, setPictureUrl] = useState<string | undefined>(undefined);
+  // Edit mode: the uploaded picture the machine has now, and whether the admin removed it.
+  const [savedPicture, setSavedPicture] = useState<string | undefined>(undefined);
+  const [removePicture, setRemovePicture] = useState(false);
+  const [loadingMachine, setLoadingMachine] = useState(isEdit);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   // Free the preview's object URL when it is replaced or the form closes.
   useEffect(() => {
@@ -61,6 +78,30 @@ const UploadMachineForm: React.FC = () => {
     };
     fetchPlastics();
   }, []);
+
+  // Edit mode: fill the form with the machine's current values.
+  useEffect(() => {
+    if (machineId === undefined) return;
+    const loadMachine = async () => {
+      try {
+        const machine = await getMachine(machineId);
+        setMachineName(machine.name);
+        setWhatItDoes(machine.whatItDoes);
+        setHowItWorksAndAcquired(machine.howItWorksAndAcquired);
+        setOperationComplicationsAndLessons(machine.operationComplicationsAndLessons);
+        setSelectedPlastics(machine.plastics.map((plastic) => plastic.id));
+        setSavedPicture(machine.imageUrl ? machinePicture(machine) : undefined);
+      } catch (error: any) {
+        setLoadError(error.message || '');
+      } finally {
+        setLoadingMachine(false);
+      }
+    };
+    loadMachine();
+  }, [machineId]);
+
+  // The picture shown in the form and preview: a newly picked one, else the uploaded one unless removed.
+  const shownPicture = pictureUrl ?? (removePicture ? undefined : savedPicture);
 
   const plasticNames = selectedPlastics
     .map((id) => plastics.find((plastic) => plastic.id === id)?.name)
@@ -96,24 +137,29 @@ const UploadMachineForm: React.FC = () => {
 
     setSaving(true);
     try {
-      const machine = await createMachine({
+      const fields = {
         name: machineName.trim(),
         whatItDoes: whatItDoes.trim(),
         howItWorksAndAcquired: howItWorksAndAcquired.trim(),
         operationComplicationsAndLessons: operationComplicationsAndLessons.trim(),
-        plasticIds: selectedPlastics.length > 0 ? selectedPlastics : undefined,
-      });
-      if (picture) {
-        try {
+      };
+      const machine =
+        machineId !== undefined
+          ? await updateMachine(machineId, { ...fields, plasticIds: selectedPlastics })
+          : await createMachine({ ...fields, plasticIds: selectedPlastics.length > 0 ? selectedPlastics : undefined });
+      try {
+        if (picture) {
           await uploadMachineImage(machine.id, picture);
-        } catch (pictureError) {
-          // The machine is saved; the machine page shows the warning and lets the admin try again.
-          console.error('Failed to upload the machine picture:', pictureError);
-          navigate(`/machine/${machine.id}`, { state: { uploadWarning: t.machineForm.pictureFailed } });
-          return;
+        } else if (removePicture) {
+          await deleteMachineImage(machine.id);
         }
+      } catch (pictureError) {
+        // The machine is saved; the machine page shows the warning and the admin can try again by editing.
+        console.error('Failed to save the machine picture:', pictureError);
+        navigate(`/machine/${machine.id}`, { state: { uploadWarning: t.machineForm.pictureFailed } });
+        return;
       }
-      navigate('/plasticProjects');
+      navigate(isEdit ? `/machine/${machine.id}` : '/plasticProjects');
     } catch (error: any) {
       console.error('Upload error:', error);
       setFormError(error.message || t.machineForm.uploadFailed);
@@ -121,6 +167,17 @@ const UploadMachineForm: React.FC = () => {
       setSaving(false);
     }
   };
+
+  if (loadingMachine) {
+    return <p style={{ textAlign: 'center' }}>{t.common.loading}</p>;
+  }
+  if (loadError !== null) {
+    return (
+      <Typography color="error" textAlign="center">
+        {loadError || t.machineDetail.loadFailed}
+      </Typography>
+    );
+  }
 
   return (
     <div className="projectFormLayout">
@@ -141,15 +198,17 @@ const UploadMachineForm: React.FC = () => {
         />
         <PicturePicker
           label={t.machineForm.picture}
-          image={pictureUrl}
+          image={shownPicture}
           pickedSize={picture?.size}
           onPicked={(picked) => {
             setPicture(picked);
             setPictureUrl(URL.createObjectURL(picked));
+            setRemovePicture(false);
           }}
           onRemove={() => {
             setPicture(null);
             setPictureUrl(undefined);
+            setRemovePicture(!!savedPicture);
           }}
         />
         <FormControl fullWidth margin="dense">
@@ -224,7 +283,7 @@ const UploadMachineForm: React.FC = () => {
           </Typography>
         )}
         <Button type="submit" variant="contained" fullWidth disabled={saving} className="projectFormSubmit">
-          {t.machineForm.submit}
+          {isEdit ? t.projectForm.submitEdit : t.machineForm.submit}
         </Button>
       </Box>
 
@@ -238,7 +297,7 @@ const UploadMachineForm: React.FC = () => {
               <div className="machineCardTitle">{machineName.trim() || t.machineForm.name}</div>
               <img
                 className="machineCardImage"
-                src={pictureUrl ?? getMachineImage(machineName) ?? imageMachineCard}
+                src={shownPicture ?? getMachineImage(machineName) ?? imageMachineCard}
                 alt=""
               />
               <div className="plasticCardTags">

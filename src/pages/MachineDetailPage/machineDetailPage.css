@@ -58,9 +58,6 @@ hr {
 .machineFacts {
   grid-template-columns: 1fr;
 }
-.machinePagePicture {
-  margin: -12px 0 20px;
-}
 
 /* Keep the icon next to the project name on small screens. */
 .machineProjectList .projectDocumentRow {

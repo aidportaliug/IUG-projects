@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { deleteMachineImage, getMachine, MachineResponse, uploadMachineImage } from '../../services/machineService';
+import { getMachine, MachineResponse } from '../../services/machineService';
 import './machineDetailPage.css';
 // Same page layout as the project page.
 import '../PlasticProjectDetailPage/plasticProjectDetailPage.css';
 import { defaultProjectImage } from '../../components/PlasticProjectCards/PlasticProjectCard';
 import Footer from '../../components/Footer/Footer';
 import { machinePicture } from '../../models/machineImages';
-import PicturePicker from '../../components/PicturePicker/PicturePicker';
 import { useAuth } from '../../services/AuthContext';
 import { Button, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -25,25 +24,8 @@ const MachineDetailsPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useI18n();
   const { user } = useAuth();
-  const [savingPicture, setSavingPicture] = useState(false);
-  const [pictureError, setPictureError] = useState('');
   // Set by the upload form when the new machine's picture could not be uploaded.
   const uploadWarning = (useLocation().state as { uploadWarning?: string } | null)?.uploadWarning;
-
-  // Admin only: the picture is saved right away.
-  const savePicture = async (change: () => Promise<string | null>) => {
-    if (!machine) return;
-    setPictureError('');
-    setSavingPicture(true);
-    try {
-      const imageUrl = await change();
-      setMachine({ ...machine, imageUrl });
-    } catch (err: any) {
-      setPictureError(err.message || t.machineDetail.pictureFailed);
-    } finally {
-      setSavingPicture(false);
-    }
-  };
 
   async function getMachineData(machineId: string) {
     setLoading(true);
@@ -129,6 +111,17 @@ const MachineDetailsPage: React.FC = () => {
                 <p className="projectPageSubtitle">{t.machineDetail.usedIn(projectsInUse.length)}</p>
               )}
             </div>
+            {user?.isAdmin && (
+              <div className="projectPageActions">
+                <Button
+                  variant="contained"
+                  onClick={() => navigate(`/machine/${machine.id}/edit`)}
+                  sx={{ backgroundColor: '#3D7844', textTransform: 'none', '&:hover': { backgroundColor: '#2f5f35' } }}
+                >
+                  {t.machineDetail.edit}
+                </Button>
+              </div>
+            )}
           </header>
 
           {uploadWarning && (
@@ -143,23 +136,6 @@ const MachineDetailsPage: React.FC = () => {
             src={machinePicture(machine) ?? defaultProjectImage}
             alt={t.machineDetail.imageAlt}
           />
-          {user?.isAdmin && (
-            <div className="machinePagePicture">
-              <PicturePicker
-                image={machine.imageUrl ? machinePicture(machine) : undefined}
-                showThumbnail={false}
-                busy={savingPicture}
-                error={pictureError}
-                onPicked={(picked) => savePicture(() => uploadMachineImage(machine.id, picked))}
-                onRemove={() =>
-                  savePicture(async () => {
-                    await deleteMachineImage(machine.id);
-                    return null;
-                  })
-                }
-              />
-            </div>
-          )}
 
           <section className="projectPageCard">
             <h2>{t.machineDetail.about}</h2>
