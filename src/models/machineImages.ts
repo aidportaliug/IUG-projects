@@ -1,3 +1,4 @@
+import BackendConfig from '../services/BackendConfig';
 import polyfloss from '../images/polyfloss.png';
 import shredder from '../images/machines/shredder.jpg';
 import extruder from '../images/machines/extruder.jpg';
@@ -24,4 +25,9 @@ const machineImageByName: Record<string, string> = {
 
 export function getMachineImage(name: string): string | undefined {
   return machineImageByName[name.trim().toLowerCase()];
+}
+
+// The picture to show for a machine: one uploaded by the admin, else the built-in one above, else undefined.
+export function machinePicture(machine: { name: string; imageUrl?: string | null }): string | undefined {
+  return machine.imageUrl ? `${BackendConfig.baseURL}${machine.imageUrl}` : getMachineImage(machine.name);
 }

@@ -19,6 +19,8 @@ export interface MachineResponse {
   operationComplicationsAndLessons: string;
   plastics: MachinePlasticResponse[];
   plasticProjectsInUse: MachinePlasticProjectRef[];
+  // API path of the machine's uploaded picture; null when it has none (see machinePicture in models/machineImages).
+  imageUrl?: string | null;
 }
 
 export interface MachineListResponse {
@@ -70,6 +72,20 @@ export async function createMachine(data: MachineCreateRequest): Promise<Machine
 
 export async function updateMachine(id: number, data: MachineUpdateRequest): Promise<MachineResponse> {
   return apiClient.put<MachineResponse>(`${BackendConfig.endpoint.updateMachine}${id}`, data);
+}
+
+const machineImagePath = (id: number) => `${BackendConfig.endpoint.getMachineById}${id}/image`;
+
+// Sets or replaces the machine's picture (admin; shrink it first with prepareImage). Returns the new imageUrl.
+export async function uploadMachineImage(id: number, image: Blob): Promise<string | null> {
+  const formData = new FormData();
+  formData.append('file', image, 'picture.jpg');
+  const response = await apiClient.putForm<{ imageUrl: string | null }>(machineImagePath(id), formData);
+  return response.imageUrl;
+}
+
+export async function deleteMachineImage(id: number): Promise<void> {
+  await apiClient.delete(machineImagePath(id));
 }
 
 export async function deleteMachine(id: number): Promise<void> {
