@@ -7,10 +7,7 @@ import PlasticFilterDropdown from '../../components/PlasticFilterDropdown/Plasti
 import { TextField, InputAdornment, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import imageProjectCard from '../../images/plasticProject.png';
-import polyfloss from '../../images/polyfloss.png';
-import melter from '../../images/melter.png';
-import shredder from '../../images/shredder.png';
-import ventilation from '../../images/ventilation.jpg';
+import { getMachineImage } from '../../models/machineImages';
 import { getMachines, MachineResponse } from '../../services/machineService';
 import { getPlasticProjects, PlasticProjectResponse, projectImageHref } from '../../services/plasticService';
 import { useNavigate } from 'react-router-dom';
@@ -50,24 +47,9 @@ interface MachineData {
   inUseEWB: string;
 }
 
-const machineImageByName: Record<string, string> = {
-  polyfloss,
-  'oven/melter': melter,
-  'grinder/shredder': shredder,
-  shredder,
-  'twig grinder': shredder,
-  ventilation,
-  'ventilation system': ventilation,
-};
-
 // Sorted, de-duplicated filter values taken from the loaded data.
 const uniqueSorted = (values: string[]): string[] =>
   Array.from(new Set(values.filter((value) => value.trim() !== ''))).sort((a, b) => a.localeCompare(b));
-
-const getMachineImage = (name: string): string | undefined => {
-  const key = name.trim().toLowerCase();
-  return machineImageByName[key];
-};
 
 const PlasticProjects: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'projects' | 'machines'>('projects');

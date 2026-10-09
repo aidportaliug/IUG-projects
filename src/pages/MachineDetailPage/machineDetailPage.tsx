@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getMachine, MachineResponse } from '../../services/machineService';
 import './machineDetailPage.css';
 import Trax_Ghana from '../../images/Trax_Ghana.png';
+import { getMachineImage } from '../../models/machineImages';
 import ProjectImageBox from '../../components/ProjectImageBox/ProjectImageBox';
 import Meta from '../../components/Meta';
 import Layout from '../../components/Navbar/Layout';
@@ -78,7 +79,7 @@ const MachineDetailsPage: React.FC = () => {
       <Layout>
         <div className="machineDetailoutline">
           <div className="Title">{machine.name}</div>
-          <ProjectImageBox source={imageIcon} altText={t.machineDetail.imageAlt} />
+          <ProjectImageBox source={getMachineImage(machine.name) ?? imageIcon} altText={t.machineDetail.imageAlt} />
           <hr />
           <div className="machineInformation">
             <div className="infoRow">
