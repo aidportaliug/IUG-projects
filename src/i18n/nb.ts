@@ -50,7 +50,7 @@ export const nb: Messages = {
     legalHeading: 'Juridisk',
     privacyPolicy: 'Personvernerklæring',
     cookies:
-      'Informasjonskapsler: bare et innloggingstoken og språkvalget ditt lagres i nettleseren. Ingen sporing eller reklame.',
+      'Informasjonskapsler: bare et innloggingstoken og språkvalget ditt lagres i nettleseren. Besøk telles anonymt (Umami), uten informasjonskapsler eller personopplysninger. Ingen reklame.',
     orgNumber: 'Org.nr.',
     organisation: 'Ingeniører Uten Grenser',
     createdBy: 'Laget av',
