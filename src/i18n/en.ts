@@ -50,7 +50,7 @@ export const en = {
     legalHeading: 'Legal',
     privacyPolicy: 'Privacy policy',
     cookies:
-      'Cookies: only a login token and your language choice are stored in your browser. No tracking or advertising cookies.',
+      'Cookies: only a login token and your language choice are stored in your browser. Visits are counted anonymously (Umami), without cookies or personal data. No advertising.',
     orgNumber: 'Org. no.',
     organisation: 'Ingeniører Uten Grenser (Engineers Without Borders Norway)',
     createdBy: 'Created by',
