@@ -27,6 +27,7 @@
   margin: 0 0 16px;
   color: var(--UiGray);
   font-size: 0.95rem;
+  white-space: pre-line;
 }
 
 /* The flowchart: whole, centred, never enlarged beyond its own size; a click zooms it on the page */
@@ -41,6 +42,7 @@
 }
 .plasticsGuideImage {
   display: block;
+  width: 820px;
   max-width: 100%;
   height: auto;
   margin: 0 auto;

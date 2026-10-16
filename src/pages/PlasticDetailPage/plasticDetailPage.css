@@ -11,3 +11,18 @@
   gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 }
+
+/* Row of all plastics at the top, and previous/next at the bottom */
+.plasticSwitcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -8px 0 24px;
+}
+.plasticPrevNext {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}

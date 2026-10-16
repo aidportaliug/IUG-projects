@@ -8,13 +8,17 @@ import {
   deleteSiteImage,
   getPlastics,
   getSiteImageHref,
+  getSiteTexts,
+  SiteTexts,
   PlasticResponse,
   plasticImageHref,
   uploadSiteImage,
 } from '../../services/plasticService';
 import { useAuth } from '../../services/AuthContext';
 import { useI18n } from '../../i18n/I18nContext';
-import builtInGuide from '../../images/plastic-identification.png';
+import guideEn from '../../images/plastic-identification-en.svg';
+import guideNb from '../../images/plastic-identification-nb.svg';
+import GuideTextsDialog from './GuideTextsDialog';
 import PlasticEditDialog from './PlasticEditDialog';
 import ImageZoom from './ImageZoom';
 import PicturePicker from '../PicturePicker/PicturePicker';
@@ -22,7 +26,7 @@ import './plasticsGuide.css';
 
 // Plastics tab: every plastic in the database (by resin code), then how to identify plastics.
 const PlasticsGuide: React.FC = () => {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const { user } = useAuth();
   const isAdmin = !!user?.isAdmin;
   const [plastics, setPlastics] = useState<PlasticResponse[]>([]);
@@ -37,6 +41,9 @@ const PlasticsGuide: React.FC = () => {
   const [zoomOpen, setZoomOpen] = useState(false);
   const [savingGuide, setSavingGuide] = useState(false);
   const [guideError, setGuideError] = useState('');
+  // Title and text of the guide as changed by the admin (per language); missing ones use the translations.
+  const [guideTexts, setGuideTexts] = useState<SiteTexts>({});
+  const [editingTexts, setEditingTexts] = useState(false);
 
   const loadPlastics = useCallback(async (selectId?: number) => {
     try {
@@ -57,10 +64,16 @@ const PlasticsGuide: React.FC = () => {
     getSiteImageHref('plastic-identification')
       .then(setGuideUrl)
       .catch(() => setGuideUrl(undefined));
+    getSiteTexts()
+      .then(setGuideTexts)
+      .catch(() => setGuideTexts({}));
   }, [loadPlastics]);
 
   const selected = plastics.find((plastic) => plastic.id === selectedId);
-  const guideSrc = guideUrl ?? builtInGuide;
+  // An uploaded chart replaces the built-in one (a sharp vector drawing in the page's language).
+  const guideSrc = guideUrl ?? (lang === 'nb' ? guideNb : guideEn);
+  const guideTitle = guideTexts[`plastic-identification.title.${lang}`] || t.plasticsGuide.identifyTitle;
+  const guideText = guideTexts[`plastic-identification.text.${lang}`] || t.plasticsGuide.identifyHint;
   const selectedPicture = selected ? plasticImageHref(selected) : undefined;
 
   const changeGuide = async (change: () => Promise<string | undefined>) => {
@@ -150,8 +163,8 @@ const PlasticsGuide: React.FC = () => {
 
       {/* 2. How to identify plastics */}
       <section className="plasticsGuideCard">
-        <h2>{t.plasticsGuide.identifyTitle}</h2>
-        <p className="plasticsGuideHint">{t.plasticsGuide.identifyHint}</p>
+        <h2>{guideTitle}</h2>
+        <p className="plasticsGuideHint">{guideText}</p>
         <button
           type="button"
           className="plasticsGuideImageButton"
@@ -165,6 +178,14 @@ const PlasticsGuide: React.FC = () => {
         </button>
         {isAdmin && (
           <div className="plasticsGuideAdmin">
+            <Button
+              variant="outlined"
+              startIcon={<EditIcon />}
+              onClick={() => setEditingTexts(true)}
+              sx={{ color: '#3D7844', borderColor: '#3D7844', textTransform: 'none', borderRadius: '8px', mb: '22px' }}
+            >
+              {t.plasticsGuide.editTexts}
+            </Button>
             <PicturePicker
               label={t.plasticsGuide.replaceGuide}
               image={guideUrl}
@@ -190,6 +211,16 @@ const PlasticsGuide: React.FC = () => {
           </div>
         )}
       </section>
+
+      <GuideTextsDialog
+        open={editingTexts}
+        texts={guideTexts}
+        onClose={() => setEditingTexts(false)}
+        onSaved={(texts) => {
+          setGuideTexts(texts);
+          setEditingTexts(false);
+        }}
+      />
 
       <ImageZoom src={guideSrc} alt={t.plasticsGuide.identifyAlt} open={zoomOpen} onClose={() => setZoomOpen(false)} />
 
