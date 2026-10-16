@@ -4,8 +4,12 @@ import BackendConfig from './BackendConfig';
 export interface PlasticResponse {
   id: number;
   name: string;
-  // Filled by getPlastics/getPlastic; null inside projects and machines
+  // The fields below are filled by getPlastics/getPlastic; null inside projects and machines
   description?: string | null;
+  // Resin identification code (1 PET … 7 Other); getPlastics is sorted by it
+  resinCode?: number | null;
+  // API path of the plastic's picture (see plasticImageHref)
+  imageUrl?: string | null;
 }
 
 export interface PlasticListResponse {
@@ -64,12 +68,15 @@ export interface PlasticProjectListResponse {
 export interface PlasticCreateRequest {
   name: string;
   description?: string;
+  resinCode?: number;
 }
 
 export interface PlasticUpdateRequest {
   name?: string;
   // An empty string clears the description.
   description?: string;
+  // 0 clears the resin code.
+  resinCode?: number;
 }
 
 export interface PlasticProjectCreateRequest {
@@ -126,6 +133,46 @@ export async function updatePlastic(id: number, data: PlasticUpdateRequest): Pro
 
 export async function deletePlastic(id: number): Promise<void> {
   await apiClient.delete(`${BackendConfig.endpoint.deletePlastic}${id}`);
+}
+
+const plasticImagePath = (id: number) => `${BackendConfig.endpoint.getPlasticById}${id}/image`;
+
+// Sets or replaces a plastic's picture (admin; shrink it first with prepareImage). Returns the new imageUrl.
+export async function uploadPlasticImage(id: number, image: Blob): Promise<string | null> {
+  const formData = new FormData();
+  formData.append('file', image, 'picture.jpg');
+  const response = await apiClient.putForm<{ imageUrl: string | null }>(plasticImagePath(id), formData);
+  return response.imageUrl;
+}
+
+export async function deletePlasticImage(id: number): Promise<void> {
+  await apiClient.delete(plasticImagePath(id));
+}
+
+// Full URL of a plastic's picture, or undefined when it has none.
+export function plasticImageHref(plastic: { imageUrl?: string | null }): string | undefined {
+  return plastic.imageUrl ? `${BackendConfig.baseURL}${plastic.imageUrl}` : undefined;
+}
+
+// Site pictures the admin can replace (only "plastic-identification" so far).
+export type SiteImageKey = 'plastic-identification';
+
+// Full URL of the uploaded picture for the key, or undefined when the built-in one should be shown.
+export async function getSiteImageHref(key: SiteImageKey): Promise<string | undefined> {
+  const images = await apiClient.get<{ key: string; imageUrl: string }[]>('/site-images', false);
+  const image = images.find((candidate) => candidate.key === key);
+  return image ? `${BackendConfig.baseURL}${image.imageUrl}` : undefined;
+}
+
+export async function uploadSiteImage(key: SiteImageKey, image: Blob): Promise<string> {
+  const formData = new FormData();
+  formData.append('file', image, 'picture.jpg');
+  const response = await apiClient.putForm<{ key: string; imageUrl: string }>(`/site-images/${key}`, formData);
+  return `${BackendConfig.baseURL}${response.imageUrl}`;
+}
+
+export async function deleteSiteImage(key: SiteImageKey): Promise<void> {
+  await apiClient.delete(`/site-images/${key}`);
 }
 
 export async function getPlasticProjects(): Promise<PlasticProjectListResponse> {

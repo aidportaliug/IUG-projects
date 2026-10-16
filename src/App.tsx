@@ -19,6 +19,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AuthProvider } from './services/AuthContext';
 import MachineDetailsPage from './pages/MachineDetailPage/machineDetailPage';
 import AdminSignupsPage from './pages/adminPage/AdminSignupsPage';
+import PlasticDetailPage from './pages/PlasticDetailPage/plasticDetailPage';
 import { I18nProvider, useI18n } from './i18n/I18nContext';
 import 'dayjs/locale/nb';
 import 'dayjs/locale/en-gb';
@@ -61,6 +62,7 @@ const App: React.FC = () => {
                 <Route path="/plastic-project/:id/edit" element={<UploadPlasticProject />} />
                 <Route path="/machine/:id" element={<MachineDetailsPage />} />
                 <Route path="/machine/:id/edit" element={<UploadMachine />} />
+                <Route path="/plastic/:id" element={<PlasticDetailPage />} />
                 <Route path="/uploadProject" element={<UploadProject />} />
                 <Route path="/uploadexperienceReport" element={<UploadExperienceReport />} />
                 <Route path="/experienceReports" element={<ExperienceReports />} />

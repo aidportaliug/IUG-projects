@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import {
   deletePlasticProject,
   documentHref,
@@ -182,9 +182,9 @@ const PlasticProjectDetailsPage: React.FC = () => {
                     <dt>{t.projectDetail.plasticsUsed}</dt>
                     <dd className="projectPlastics">
                       {project.plastics.map((plastic) => (
-                        <span key={plastic.id} className="plasticTag">
+                        <Link key={plastic.id} to={`/plastic/${plastic.id}`} className="plasticTag plasticTagLink">
                           {plastic.name}
-                        </span>
+                        </Link>
                       ))}
                     </dd>
                   </div>
