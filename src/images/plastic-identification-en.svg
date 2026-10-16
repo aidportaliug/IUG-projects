@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 720" width="1640" height="720" font-family="Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif" role="img" aria-label="How to identify plastics: float tests">
+  <title>How to identify plastics: float tests</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3d7844"/>
+    </marker>
+  </defs>
+  <rect width="1640" height="720" fill="#ffffff"/>
+  <rect x="40" y="24" width="360" height="140" rx="22" fill="#f6f8f6" stroke="#3d7844" stroke-width="3"/>
+  <text x="220.0" y="76" font-size="25" fill="#5f6b60" text-anchor="middle">Place the plastic in</text>
+  <text x="220.0" y="116" font-size="34" font-weight="700" fill="#1f2a20" text-anchor="middle">fresh water</text>
+  <rect x="860" y="24" width="360" height="140" rx="22" fill="#f6f8f6" stroke="#3d7844" stroke-width="3"/>
+  <text x="1040.0" y="64" font-size="25" fill="#5f6b60" text-anchor="middle">Place the plastic in</text>
+  <text x="1040.0" y="104" font-size="34" font-weight="700" fill="#1f2a20" text-anchor="middle">vegetable oil</text>
+  <text x="1040.0" y="140" font-size="19" font-style="italic" fill="#5f6b60" text-anchor="middle">works best with small pieces of plastic</text>
+  <rect x="40" y="314" width="360" height="140" rx="22" fill="#f6f8f6" stroke="#3d7844" stroke-width="3"/>
+  <text x="220.0" y="354" font-size="25" fill="#5f6b60" text-anchor="middle">Place the plastic in</text>
+  <text x="220.0" y="394" font-size="34" font-weight="700" fill="#1f2a20" text-anchor="middle">salt water</text>
+  <text x="220.0" y="430" font-size="19" font-style="italic" fill="#5f6b60" text-anchor="middle">4 tablespoons of salt per litre of water</text>
+  <rect x="860" y="314" width="360" height="140" rx="22" fill="#f6f8f6" stroke="#3d7844" stroke-width="3"/>
+  <text x="1040.0" y="366" font-size="25" fill="#5f6b60" text-anchor="middle">Place the plastic in</text>
+  <text x="1040.0" y="406" font-size="34" font-weight="700" fill="#1f2a20" text-anchor="middle">40–42 % ethanol</text>
+  <line x1="400" y1="94" x2="854" y2="94" stroke="#3d7844" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="630.0" y="80" font-size="26" font-style="italic" fill="#3d7844" text-anchor="middle">floats</text>
+  <line x1="220" y1="164" x2="220" y2="308" stroke="#3d7844" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="236" y="246" font-size="26" font-style="italic" fill="#3d7844" text-anchor="start">sinks</text>
+  <line x1="1220" y1="94" x2="1374" y2="94" stroke="#3d7844" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="1300.0" y="80" font-size="26" font-style="italic" fill="#3d7844" text-anchor="middle">floats</text>
+  <rect x="1380" y="48" width="220" height="92" rx="16" fill="#e0eadf" stroke="#3d7844" stroke-width="3"/>
+  <text x="1490.0" y="107.0" font-size="36" font-weight="800" fill="#3d7844" text-anchor="middle">5 PP</text>
+  <line x1="1040" y1="164" x2="1040" y2="308" stroke="#3d7844" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="1056" y="246" font-size="26" font-style="italic" fill="#3d7844" text-anchor="start">sinks</text>
+  <line x1="400" y1="384" x2="574" y2="384" stroke="#3d7844" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="490.0" y="370" font-size="26" font-style="italic" fill="#3d7844" text-anchor="middle">floats</text>
+  <rect x="580" y="338" width="220" height="92" rx="16" fill="#e0eadf" stroke="#3d7844" stroke-width="3"/>
+  <text x="690.0" y="397.0" font-size="36" font-weight="800" fill="#3d7844" text-anchor="middle">6 PS</text>
+  <line x1="220" y1="454" x2="220" y2="598" stroke="#3d7844" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="236" y="536" font-size="26" font-style="italic" fill="#3d7844" text-anchor="start">sinks</text>
+  <rect x="50" y="604" width="340" height="92" rx="16" fill="#e0eadf" stroke="#3d7844" stroke-width="3"/>
+  <text x="220.0" y="663.0" font-size="36" font-weight="800" fill="#3d7844" text-anchor="middle">3 PVC or 1 PET</text>
+  <line x1="1220" y1="384" x2="1374" y2="384" stroke="#3d7844" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="1300.0" y="370" font-size="26" font-style="italic" fill="#3d7844" text-anchor="middle">floats</text>
+  <rect x="1380" y="338" width="220" height="92" rx="16" fill="#e0eadf" stroke="#3d7844" stroke-width="3"/>
+  <text x="1490.0" y="397.0" font-size="36" font-weight="800" fill="#3d7844" text-anchor="middle">4 LDPE</text>
+  <line x1="1040" y1="454" x2="1040" y2="598" stroke="#3d7844" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="1056" y="536" font-size="26" font-style="italic" fill="#3d7844" text-anchor="start">sinks</text>
+  <rect x="930" y="604" width="220" height="92" rx="16" fill="#e0eadf" stroke="#3d7844" stroke-width="3"/>
+  <text x="1040.0" y="663.0" font-size="36" font-weight="800" fill="#3d7844" text-anchor="middle">2 HDPE</text>
+</svg>

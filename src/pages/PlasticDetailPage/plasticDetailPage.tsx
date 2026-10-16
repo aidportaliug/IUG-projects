@@ -2,9 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, CircularProgress } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   getPlastic,
+  getPlastics,
   getPlasticProjects,
   PlasticProjectResponse,
   PlasticResponse,
@@ -21,6 +23,7 @@ import PlasticEditDialog from '../../components/PlasticsGuide/PlasticEditDialog'
 // Same page layout as the project and machine pages.
 import '../PlasticProjectDetailPage/plasticProjectDetailPage.css';
 import '../plasticPage/plasticPage.css';
+import '../../components/PlasticsGuide/plasticsGuide.css';
 import './plasticDetailPage.css';
 
 // One plastic: what it is, its picture, and every project that uses it.
@@ -34,6 +37,8 @@ const PlasticDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<'notFound' | 'loadFailed' | null>(null);
   const [editing, setEditing] = useState(false);
+  // All plastics in resin-code order, for moving between them.
+  const [allPlastics, setAllPlastics] = useState<PlasticResponse[]>([]);
 
   const load = useCallback(async () => {
     const plasticId = Number(id);
@@ -43,8 +48,13 @@ const PlasticDetailPage: React.FC = () => {
       return;
     }
     try {
-      const [loadedPlastic, projectList] = await Promise.all([getPlastic(plasticId), getPlasticProjects()]);
+      const [loadedPlastic, projectList, plasticList] = await Promise.all([
+        getPlastic(plasticId),
+        getPlasticProjects(),
+        getPlastics(undefined, 1, 100),
+      ]);
       setPlastic(loadedPlastic);
+      setAllPlastics(plasticList.plastics);
       setProjects(projectList.projects.filter((project) => project.plastics.some((p) => p.id === plasticId)));
       setError(null);
     } catch (err: any) {
@@ -56,9 +66,11 @@ const PlasticDetailPage: React.FC = () => {
 
   useEffect(() => {
     load();
+    window.scrollTo(0, 0);
   }, [load]);
 
-  if (loading) {
+  // Keep showing the current plastic while the next one loads.
+  if (loading && !plastic) {
     return (
       <Layout>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
@@ -79,6 +91,13 @@ const PlasticDetailPage: React.FC = () => {
   }
 
   const picture = plasticImageHref(plastic);
+  // Neighbours in resin-code order, wrapping around at the ends.
+  const position = allPlastics.findIndex((other) => other.id === plastic.id);
+  const previous =
+    position >= 0 && allPlastics.length > 1
+      ? allPlastics[(position - 1 + allPlastics.length) % allPlastics.length]
+      : undefined;
+  const next = position >= 0 && allPlastics.length > 1 ? allPlastics[(position + 1) % allPlastics.length] : undefined;
   const subtitle = [
     plastic.resinCode ? t.plasticsGuide.resinCodeValue(plastic.resinCode) : null,
     t.plasticPage.usedIn(projects.length),
@@ -100,6 +119,22 @@ const PlasticDetailPage: React.FC = () => {
           >
             {t.plasticPage.backToList}
           </Button>
+
+          {/* Move between plastics */}
+          <nav className="plasticSwitcher" aria-label={t.plasticPage.switcher}>
+            {allPlastics.map((other) => (
+              <Button
+                key={other.id}
+                size="small"
+                variant={other.id === plastic.id ? 'contained' : 'outlined'}
+                onClick={() => navigate(`/plastic/${other.id}`)}
+                sx={{ textTransform: 'none', borderRadius: '999px', minWidth: 64, fontWeight: 600 }}
+              >
+                {other.resinCode ? <span className="plasticsGuideCode">{other.resinCode}</span> : null}
+                {other.name}
+              </Button>
+            ))}
+          </nav>
 
           <header className="projectPageHeader">
             <div>
@@ -156,6 +191,29 @@ const PlasticDetailPage: React.FC = () => {
               </div>
             )}
           </section>
+
+          {previous && next && (
+            <nav className="plasticPrevNext" aria-label={t.plasticPage.switcher}>
+              <Button
+                variant="outlined"
+                startIcon={<ArrowBackIcon />}
+                onClick={() => navigate(`/plastic/${previous.id}`)}
+                sx={{ color: '#3D7844', borderColor: '#3D7844', textTransform: 'none', borderRadius: '8px' }}
+              >
+                {t.plasticPage.previous}: {previous.resinCode ? `${previous.resinCode} ` : ''}
+                {previous.name}
+              </Button>
+              <Button
+                variant="outlined"
+                endIcon={<ArrowForwardIcon />}
+                onClick={() => navigate(`/plastic/${next.id}`)}
+                sx={{ color: '#3D7844', borderColor: '#3D7844', textTransform: 'none', borderRadius: '8px' }}
+              >
+                {t.plasticPage.next}: {next.resinCode ? `${next.resinCode} ` : ''}
+                {next.name}
+              </Button>
+            </nav>
+          )}
         </div>
         <Footer />
       </Layout>

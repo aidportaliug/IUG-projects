@@ -175,6 +175,18 @@ export async function deleteSiteImage(key: SiteImageKey): Promise<void> {
   await apiClient.delete(`/site-images/${key}`);
 }
 
+// Texts the admin has changed, e.g. {"plastic-identification.title.nb": "..."}; missing keys use the built-in text.
+export type SiteTexts = Record<string, string>;
+
+export async function getSiteTexts(): Promise<SiteTexts> {
+  return apiClient.get<SiteTexts>('/site-texts', false);
+}
+
+// Saves the given texts (an empty one goes back to the built-in text) and returns all texts.
+export async function saveSiteTexts(texts: SiteTexts): Promise<SiteTexts> {
+  return apiClient.put<SiteTexts>('/site-texts', texts);
+}
+
 export async function getPlasticProjects(): Promise<PlasticProjectListResponse> {
   return apiClient.get<PlasticProjectListResponse>(BackendConfig.endpoint.getAllPlasticProjects, false);
 }
