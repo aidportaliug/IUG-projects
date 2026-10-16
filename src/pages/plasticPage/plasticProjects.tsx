@@ -7,7 +7,6 @@ import PlasticFilterDropdown from '../../components/PlasticFilterDropdown/Plasti
 import Meta from '../../components/Meta';
 import { TextField, InputAdornment, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import imageProjectCard from '../../images/plasticProject.png';
 import { machinePicture } from '../../models/machineImages';
 import { getMachines, MachineResponse } from '../../services/machineService';
 import { getPlasticProjects, PlasticProjectResponse, projectImageHref } from '../../services/plasticService';
@@ -16,7 +15,10 @@ import { useAuth } from '../../services/AuthContext';
 import { canUploadProjects } from '../../services/auth';
 import { useI18n } from '../../i18n/I18nContext';
 import PlasticsGuide from '../../components/PlasticsGuide/PlasticsGuide';
-import PlasticProjectCard, { uploadButtonSx } from '../../components/PlasticProjectCards/PlasticProjectCard';
+import PlasticProjectCard, {
+  defaultProjectImage,
+  uploadButtonSx,
+} from '../../components/PlasticProjectCards/PlasticProjectCard';
 
 interface PlasticProjectData {
   project_id: string;
@@ -391,7 +393,7 @@ const PlasticProjects: React.FC = () => {
                                   <div className="machineCardTitle">{machine.title}</div>
                                   <img
                                     className="machineCardImage"
-                                    src={machine.image || imageProjectCard}
+                                    src={machine.image || defaultProjectImage}
                                     alt={machine.title}
                                   />
                                   <div className="plasticCardTags">
@@ -416,7 +418,7 @@ const PlasticProjects: React.FC = () => {
                                   <div className="machineCardTitle">{machine.title}</div>
                                   <img
                                     className="machineCardImage"
-                                    src={machine.image || imageProjectCard}
+                                    src={machine.image || defaultProjectImage}
                                     alt={machine.title}
                                   />
                                   <div className="plasticCardTags">

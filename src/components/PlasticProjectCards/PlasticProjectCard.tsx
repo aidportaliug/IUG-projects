@@ -1,5 +1,5 @@
 import React from 'react';
-import imageProjectCard from '../../images/plasticProject.png';
+import defaultPicture from '../../images/default-picture.jpg';
 import { useI18n } from '../../i18n/I18nContext';
 import '../../pages/plasticPage/plasticPage.css';
 
@@ -21,8 +21,8 @@ export interface PlasticProjectCardProps {
   onClick?: () => void;
 }
 
-// Shown when a project has no picture of its own (cards and the project page).
-export const defaultProjectImage = imageProjectCard;
+// Shown when a project or machine has no picture of its own (the EWB Norway logo). Change it here only.
+export const defaultProjectImage = defaultPicture;
 
 // "2020–2024", "2024" for a single year, or "2022–ongoing" without an end date.
 export const formatYears = (startDate: string, endDate: string | undefined, ongoing: string): string => {
@@ -52,7 +52,12 @@ const PlasticProjectCard: React.FC<PlasticProjectCardProps> = (props) => {
   return (
     <div className="plasticCard" onClick={onClick} style={{ cursor: onClick ? 'pointer' : 'default' }}>
       <div className="plasticCardOutline">
-        <img className="plasticCardImage" src={image || imageProjectCard} alt={name} />
+        {/* The default logo is shown whole on white; uploaded photos fill the frame */}
+        <img
+          className={image ? 'plasticCardImage' : 'plasticCardImage plasticCardImageDefault'}
+          src={image || defaultProjectImage}
+          alt={name}
+        />
         <div className="plasticCardBody">
           <div className="plasticCardTitle">{name}</div>
           <div className="plasticCardDescription plasticCardDescriptionClamped">{summary}</div>

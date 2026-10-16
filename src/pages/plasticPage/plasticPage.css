@@ -75,6 +75,13 @@
   object-fit: cover;
   height: 175px;
 }
+/* The default picture is a wide logo: show all of it, centred on white */
+.plasticCardImageDefault {
+  object-fit: contain;
+  box-sizing: border-box;
+  padding: 24px 18px;
+  background: #fff;
+}
 
 .plasticSearchContainer {
   position: relative;
