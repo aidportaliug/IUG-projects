@@ -3,9 +3,8 @@ import { Button, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { UserResponse } from '../../services/auth';
 import { getPlasticProjects, PlasticProjectResponse, projectImageHref } from '../../services/plasticService';
-import defaultPicture from '../../images/plasticProject.png';
 import { useI18n } from '../../i18n/I18nContext';
-import { uploadButtonSx } from '../PlasticProjectCards/PlasticProjectCard';
+import { defaultProjectImage, uploadButtonSx } from '../PlasticProjectCards/PlasticProjectCard';
 
 // The plastic projects the logged-in user has uploaded, with links to view and edit them.
 const MyUploads: React.FC<{ user: UserResponse }> = ({ user }) => {
@@ -41,7 +40,11 @@ const MyUploads: React.FC<{ user: UserResponse }> = ({ user }) => {
       <ul className="myUploadsList">
         {projects.map((project) => (
           <li key={project.id} className="myUploadsItem">
-            <img className="myUploadsThumb" src={projectImageHref(project) ?? defaultPicture} alt="" />
+            <img
+              className={projectImageHref(project) ? 'myUploadsThumb' : 'myUploadsThumb myUploadsThumbDefault'}
+              src={projectImageHref(project) ?? defaultProjectImage}
+              alt=""
+            />
             <div className="myUploadsInfo">
               <strong>{project.name}</strong>
               <span className="myUploadsMeta">

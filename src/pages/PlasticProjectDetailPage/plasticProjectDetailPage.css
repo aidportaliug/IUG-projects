@@ -126,6 +126,11 @@ hr {
   border-radius: 14px;
   margin: 0 auto 24px;
 }
+/* The default picture is a logo: keep it modest instead of filling the page */
+.projectPageImage.projectPageImageDefault {
+  max-height: 140px;
+  margin: 8px auto 32px;
+}
 
 .projectPageCard {
   background: #fff;

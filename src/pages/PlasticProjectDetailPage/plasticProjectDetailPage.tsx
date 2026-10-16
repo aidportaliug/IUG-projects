@@ -163,7 +163,7 @@ const PlasticProjectDetailsPage: React.FC = () => {
 
             {/* Same picture as on the project card */}
             <img
-              className="projectPageImage"
+              className={projectImageHref(project) ? 'projectPageImage' : 'projectPageImage projectPageImageDefault'}
               src={projectImageHref(project) ?? defaultProjectImage}
               alt={t.projectDetail.imageAlt}
             />

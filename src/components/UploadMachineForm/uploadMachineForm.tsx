@@ -25,7 +25,7 @@ import { getMachineImage, machinePicture } from '../../models/machineImages';
 import PicturePicker from '../PicturePicker/PicturePicker';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../../i18n/I18nContext';
-import imageMachineCard from '../../images/plasticProject.png';
+import { defaultProjectImage } from '../PlasticProjectCards/PlasticProjectCard';
 // Same layout and styles as the project upload form.
 import '../UploadPlasticProjectForm/uploadPlasticProjectForm.css';
 import '../../pages/plasticPage/plasticPage.css';
@@ -297,7 +297,7 @@ const UploadMachineForm: React.FC<UploadMachineFormProps> = ({ machineId }) => {
               <div className="machineCardTitle">{machineName.trim() || t.machineForm.name}</div>
               <img
                 className="machineCardImage"
-                src={shownPicture ?? getMachineImage(machineName) ?? imageMachineCard}
+                src={shownPicture ?? getMachineImage(machineName) ?? defaultProjectImage}
                 alt=""
               />
               <div className="plasticCardTags">

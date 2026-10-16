@@ -124,6 +124,10 @@
   border-radius: 6px;
   flex-shrink: 0;
 }
+.myUploadsThumbDefault {
+  object-fit: contain;
+  background: #fff;
+}
 .myUploadsInfo {
   display: flex;
   flex: 1;
