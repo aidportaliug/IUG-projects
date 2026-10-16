@@ -15,6 +15,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/AuthContext';
 import { canUploadProjects } from '../../services/auth';
 import { useI18n } from '../../i18n/I18nContext';
+import PlasticsGuide from '../../components/PlasticsGuide/PlasticsGuide';
 import PlasticProjectCard, { uploadButtonSx } from '../../components/PlasticProjectCards/PlasticProjectCard';
 
 interface PlasticProjectData {
@@ -54,8 +55,9 @@ const uniqueSorted = (values: string[]): string[] =>
 
 const PlasticProjects: React.FC = () => {
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState<'projects' | 'machines'>(
-    (location.state as { tab?: string } | null)?.tab === 'machines' ? 'machines' : 'projects'
+  const initialTab = (location.state as { tab?: string } | null)?.tab;
+  const [activeTab, setActiveTab] = useState<'projects' | 'machines' | 'plastics'>(
+    initialTab === 'machines' || initialTab === 'plastics' ? initialTab : 'projects'
   );
   const [projectViewMode, setProjectViewMode] = useState<'small' | 'detailed'>('small');
   const [machineViewMode, setMachineViewMode] = useState<'small' | 'detailed'>('small');
@@ -201,237 +203,250 @@ const PlasticProjects: React.FC = () => {
               >
                 {t.plastic.machinesTab}
               </Button>
+
+              <Button
+                variant={activeTab === 'plastics' ? 'contained' : 'outlined'}
+                onClick={() => setActiveTab('plastics')}
+              >
+                {t.plastic.plasticsTab}
+              </Button>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginBottom: 20 }}>
-              {activeTab === 'projects' ? (
-                <>
-                  <Button
-                    variant={projectViewMode === 'small' ? 'contained' : 'outlined'}
-                    onClick={() => setProjectViewMode('small')}
-                    size="small"
-                    style={{
-                      color: projectViewMode === 'small' ? 'white' : '#3d7844',
-                      borderColor: '#3d7844',
-                      backgroundColor: projectViewMode === 'small' ? '#3d7844' : 'transparent',
-                      textTransform: 'none',
-                    }}
-                  >
-                    {t.plastic.small}
-                  </Button>
-
-                  <Button
-                    variant={projectViewMode === 'detailed' ? 'contained' : 'outlined'}
-                    onClick={() => setProjectViewMode('detailed')}
-                    size="small"
-                    style={{
-                      color: projectViewMode === 'detailed' ? 'white' : '#3d7844',
-                      borderColor: '#3d7844',
-                      backgroundColor: projectViewMode === 'detailed' ? '#3d7844' : 'transparent',
-                      textTransform: 'none',
-                    }}
-                  >
-                    {t.plastic.detailed}
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    variant={machineViewMode === 'small' ? 'contained' : 'outlined'}
-                    onClick={() => setMachineViewMode('small')}
-                    size="small"
-                    style={{
-                      color: machineViewMode === 'small' ? 'white' : '#3d7844',
-                      borderColor: '#3d7844',
-                      backgroundColor: machineViewMode === 'small' ? '#3d7844' : 'transparent',
-                      textTransform: 'none',
-                    }}
-                  >
-                    {t.plastic.small}
-                  </Button>
-
-                  <Button
-                    variant={machineViewMode === 'detailed' ? 'contained' : 'outlined'}
-                    onClick={() => setMachineViewMode('detailed')}
-                    size="small"
-                    style={{
-                      color: machineViewMode === 'detailed' ? 'white' : '#3d7844',
-                      borderColor: '#3d7844',
-                      backgroundColor: machineViewMode === 'detailed' ? '#3d7844' : 'transparent',
-                      textTransform: 'none',
-                    }}
-                  >
-                    {t.plastic.detailed}
-                  </Button>
-                </>
-              )}
-            </div>
-
-            <div className="plasticSearchContainer">
-              <div className="plasticSearchRow">
-                <TextField
-                  placeholder={t.plastic.search}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  variant="outlined"
-                  size="small"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  className="plasticSearchField"
-                />
-
-                <Button
-                  variant="outlined"
-                  onClick={() => setShowFilters(!showFilters)}
-                  style={{
-                    color: '#3d7844',
-                    borderColor: '#3d7844',
-                    textTransform: 'none',
-                  }}
-                >
-                  {t.plastic.filters}
-                </Button>
-              </div>
-
-              {showUploadButton && (
-                <div className="plasticUploadRow">
-                  <Button onClick={() => navigate(uploadButtonRoute)} sx={uploadButtonSx}>
-                    {uploadButtonLabel}
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            {showFilters && (
-              <div className="plasticFilterPanel">
-                <PlasticFilterDropdown
-                  value={filterCountry}
-                  setValue={setFilterCountry}
-                  country={true}
-                  label={t.filters.country}
-                  allLabel={t.filters.allCountries}
-                  options={uniqueSorted(projects.map((project) => project.country))}
-                />
-                <PlasticFilterDropdown
-                  value={filterPlastic}
-                  setValue={setFilterPlastic}
-                  plastic={true}
-                  label={t.filters.plastic}
-                  allLabel={t.filters.allPlastics}
-                  options={uniqueSorted(projects.flatMap((project) => project.plastics ?? []))}
-                />
-                <PlasticFilterDropdown
-                  value={filterMachine}
-                  setValue={setFilterMachine}
-                  machine={true}
-                  label={t.filters.machine}
-                  allLabel={t.filters.allMachines}
-                  options={uniqueSorted(machines.map((machine) => machine.title))}
-                />
-              </div>
-            )}
-
-            {loading ? (
-              <div style={{ textAlign: 'center', marginTop: '50px' }}>
-                <CircularProgress />
-              </div>
-            ) : noProject ? (
-              <div className="no-projects-message">
-                <h4>{t.plastic.noProjects}</h4>
-              </div>
+            {activeTab === 'plastics' ? (
+              <PlasticsGuide />
             ) : (
-              <div className="plasticCardGrid">
-                {activeTab === 'projects'
-                  ? filteredProjects.map((project) => (
-                      <PlasticProjectCard
-                        key={project.project_id}
-                        variant={projectViewMode}
-                        name={project.project_name}
-                        summary={project.summary}
-                        startDate={project.start_date}
-                        endDate={project.end_date}
-                        country={project.country}
-                        plastics={project.plastics ?? []}
-                        product={project.product}
-                        financing={project.financing}
-                        businessModel={project.businessModel}
-                        wasteCollected={project.wasteCollected}
-                        image={project.image}
-                        onClick={() => navigate(`/plastic-project/${project.project_id}`)}
-                      />
-                    ))
-                  : machines.map((machine) =>
-                      machineViewMode === 'small' ? (
-                        <div
-                          key={machine.id}
-                          className="plasticCard"
-                          onClick={() => navigate(`/machine/${machine.id}`)}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          <div className="plasticCardOutline">
-                            <div className="plasticCardBody">
-                              <div className="machineCardTitle">{machine.title}</div>
-                              <img
-                                className="machineCardImage"
-                                src={machine.image || imageProjectCard}
-                                alt={machine.title}
-                              />
-                              <div className="plasticCardTags">
-                                <b>{t.plastic.plasticTypes} </b>
-                                {machine.plastics?.map((p) => (
-                                  <span key={p} className="plasticTag">
-                                    {p}
-                                  </span>
-                                ))}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>{t.plastic.whatItDoes} </b>
-                                {machine.whatDoes}
+              <>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 12, marginBottom: 20 }}>
+                  {activeTab === 'projects' ? (
+                    <>
+                      <Button
+                        variant={projectViewMode === 'small' ? 'contained' : 'outlined'}
+                        onClick={() => setProjectViewMode('small')}
+                        size="small"
+                        style={{
+                          color: projectViewMode === 'small' ? 'white' : '#3d7844',
+                          borderColor: '#3d7844',
+                          backgroundColor: projectViewMode === 'small' ? '#3d7844' : 'transparent',
+                          textTransform: 'none',
+                        }}
+                      >
+                        {t.plastic.small}
+                      </Button>
+
+                      <Button
+                        variant={projectViewMode === 'detailed' ? 'contained' : 'outlined'}
+                        onClick={() => setProjectViewMode('detailed')}
+                        size="small"
+                        style={{
+                          color: projectViewMode === 'detailed' ? 'white' : '#3d7844',
+                          borderColor: '#3d7844',
+                          backgroundColor: projectViewMode === 'detailed' ? '#3d7844' : 'transparent',
+                          textTransform: 'none',
+                        }}
+                      >
+                        {t.plastic.detailed}
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        variant={machineViewMode === 'small' ? 'contained' : 'outlined'}
+                        onClick={() => setMachineViewMode('small')}
+                        size="small"
+                        style={{
+                          color: machineViewMode === 'small' ? 'white' : '#3d7844',
+                          borderColor: '#3d7844',
+                          backgroundColor: machineViewMode === 'small' ? '#3d7844' : 'transparent',
+                          textTransform: 'none',
+                        }}
+                      >
+                        {t.plastic.small}
+                      </Button>
+
+                      <Button
+                        variant={machineViewMode === 'detailed' ? 'contained' : 'outlined'}
+                        onClick={() => setMachineViewMode('detailed')}
+                        size="small"
+                        style={{
+                          color: machineViewMode === 'detailed' ? 'white' : '#3d7844',
+                          borderColor: '#3d7844',
+                          backgroundColor: machineViewMode === 'detailed' ? '#3d7844' : 'transparent',
+                          textTransform: 'none',
+                        }}
+                      >
+                        {t.plastic.detailed}
+                      </Button>
+                    </>
+                  )}
+                </div>
+
+                <div className="plasticSearchContainer">
+                  <div className="plasticSearchRow">
+                    <TextField
+                      placeholder={t.plastic.search}
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      variant="outlined"
+                      size="small"
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <SearchIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                      className="plasticSearchField"
+                    />
+
+                    <Button
+                      variant="outlined"
+                      onClick={() => setShowFilters(!showFilters)}
+                      style={{
+                        color: '#3d7844',
+                        borderColor: '#3d7844',
+                        textTransform: 'none',
+                      }}
+                    >
+                      {t.plastic.filters}
+                    </Button>
+                  </div>
+
+                  {showUploadButton && (
+                    <div className="plasticUploadRow">
+                      <Button onClick={() => navigate(uploadButtonRoute)} sx={uploadButtonSx}>
+                        {uploadButtonLabel}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                {showFilters && (
+                  <div className="plasticFilterPanel">
+                    <PlasticFilterDropdown
+                      value={filterCountry}
+                      setValue={setFilterCountry}
+                      country={true}
+                      label={t.filters.country}
+                      allLabel={t.filters.allCountries}
+                      options={uniqueSorted(projects.map((project) => project.country))}
+                    />
+                    <PlasticFilterDropdown
+                      value={filterPlastic}
+                      setValue={setFilterPlastic}
+                      plastic={true}
+                      label={t.filters.plastic}
+                      allLabel={t.filters.allPlastics}
+                      options={uniqueSorted(projects.flatMap((project) => project.plastics ?? []))}
+                    />
+                    <PlasticFilterDropdown
+                      value={filterMachine}
+                      setValue={setFilterMachine}
+                      machine={true}
+                      label={t.filters.machine}
+                      allLabel={t.filters.allMachines}
+                      options={uniqueSorted(machines.map((machine) => machine.title))}
+                    />
+                  </div>
+                )}
+
+                {loading ? (
+                  <div style={{ textAlign: 'center', marginTop: '50px' }}>
+                    <CircularProgress />
+                  </div>
+                ) : noProject ? (
+                  <div className="no-projects-message">
+                    <h4>{t.plastic.noProjects}</h4>
+                  </div>
+                ) : (
+                  <div className="plasticCardGrid">
+                    {activeTab === 'projects'
+                      ? filteredProjects.map((project) => (
+                          <PlasticProjectCard
+                            key={project.project_id}
+                            variant={projectViewMode}
+                            name={project.project_name}
+                            summary={project.summary}
+                            startDate={project.start_date}
+                            endDate={project.end_date}
+                            country={project.country}
+                            plastics={project.plastics ?? []}
+                            product={project.product}
+                            financing={project.financing}
+                            businessModel={project.businessModel}
+                            wasteCollected={project.wasteCollected}
+                            image={project.image}
+                            onClick={() => navigate(`/plastic-project/${project.project_id}`)}
+                          />
+                        ))
+                      : machines.map((machine) =>
+                          machineViewMode === 'small' ? (
+                            <div
+                              key={machine.id}
+                              className="plasticCard"
+                              onClick={() => navigate(`/machine/${machine.id}`)}
+                              style={{ cursor: 'pointer' }}
+                            >
+                              <div className="plasticCardOutline">
+                                <div className="plasticCardBody">
+                                  <div className="machineCardTitle">{machine.title}</div>
+                                  <img
+                                    className="machineCardImage"
+                                    src={machine.image || imageProjectCard}
+                                    alt={machine.title}
+                                  />
+                                  <div className="plasticCardTags">
+                                    <b>{t.plastic.plasticTypes} </b>
+                                    {machine.plastics?.map((p) => (
+                                      <span key={p} className="plasticTag">
+                                        {p}
+                                      </span>
+                                    ))}
+                                  </div>
+                                  <div className="plasticCardTags">
+                                    <b>{t.plastic.whatItDoes} </b>
+                                    {machine.whatDoes}
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div key={machine.id} className="plasticCard">
-                          <div className="plasticCardOutline">
-                            <div className="plasticCardBody">
-                              <div className="machineCardTitle">{machine.title}</div>
-                              <img
-                                className="machineCardImage"
-                                src={machine.image || imageProjectCard}
-                                alt={machine.title}
-                              />
-                              <div className="plasticCardTags">
-                                <b>{t.plastic.plasticTypes} </b>
-                                {machine.plastics?.map((p) => (
-                                  <span key={p} className="plasticTag">
-                                    {p}
-                                  </span>
-                                ))}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>{t.plastic.howItWorks} </b>
-                                {machine.howDoes}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>{t.plastic.lessons} </b>
-                                {machine.complicLesson}
-                              </div>
-                              <div className="plasticCardTags">
-                                <b>{t.plastic.inUse} </b>
-                                {machine.inUseEWB}
+                          ) : (
+                            <div key={machine.id} className="plasticCard">
+                              <div className="plasticCardOutline">
+                                <div className="plasticCardBody">
+                                  <div className="machineCardTitle">{machine.title}</div>
+                                  <img
+                                    className="machineCardImage"
+                                    src={machine.image || imageProjectCard}
+                                    alt={machine.title}
+                                  />
+                                  <div className="plasticCardTags">
+                                    <b>{t.plastic.plasticTypes} </b>
+                                    {machine.plastics?.map((p) => (
+                                      <span key={p} className="plasticTag">
+                                        {p}
+                                      </span>
+                                    ))}
+                                  </div>
+                                  <div className="plasticCardTags">
+                                    <b>{t.plastic.howItWorks} </b>
+                                    {machine.howDoes}
+                                  </div>
+                                  <div className="plasticCardTags">
+                                    <b>{t.plastic.lessons} </b>
+                                    {machine.complicLesson}
+                                  </div>
+                                  <div className="plasticCardTags">
+                                    <b>{t.plastic.inUse} </b>
+                                    {machine.inUseEWB}
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
-                      )
-                    )}
-              </div>
+                          )
+                        )}
+                  </div>
+                )}
+              </>
             )}
           </div>
           <Footer />

@@ -4,6 +4,8 @@ import BackendConfig from './BackendConfig';
 export interface PlasticResponse {
   id: number;
   name: string;
+  // Filled by getPlastics/getPlastic; null inside projects and machines
+  description?: string | null;
 }
 
 export interface PlasticListResponse {
@@ -61,10 +63,13 @@ export interface PlasticProjectListResponse {
 
 export interface PlasticCreateRequest {
   name: string;
+  description?: string;
 }
 
 export interface PlasticUpdateRequest {
   name?: string;
+  // An empty string clears the description.
+  description?: string;
 }
 
 export interface PlasticProjectCreateRequest {
