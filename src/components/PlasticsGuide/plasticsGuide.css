@@ -56,6 +56,12 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+/* Resin code in front of the plastic name, like "5 PP" in the identification chart */
+.plasticsGuideCode {
+  margin-right: 6px;
+  opacity: 0.75;
+  font-weight: 700;
+}
 
 .plasticsGuideDetail {
   margin-top: 20px;
