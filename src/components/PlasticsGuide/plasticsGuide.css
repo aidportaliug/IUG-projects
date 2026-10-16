@@ -1,0 +1,91 @@
+@import '../../mainStyles/mainStyles.css';
+
+/* Plastics tab on the plastic database page */
+.plasticsGuide {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+  font-family: var(--mainFontFamily), serif;
+  color: #1f2a20;
+  text-align: left;
+}
+
+.plasticsGuideCard {
+  background: #fff;
+  border: 1px solid #e3e8e3;
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.plasticsGuideCard h2 {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+  color: var(--mainGreen);
+}
+.plasticsGuideHint {
+  margin: 0 0 16px;
+  color: var(--UiGray);
+  font-size: 0.95rem;
+}
+
+/* The flowchart: whole, centred, never enlarged beyond its own size */
+.plasticsGuideImage {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 8px;
+  cursor: zoom-in;
+}
+
+.plasticsGuideHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.plasticsGuideHeader h2 {
+  margin: 0;
+}
+
+.plasticsGuideButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.plasticsGuideDetail {
+  margin-top: 20px;
+  padding: 18px 20px;
+  border-radius: 10px;
+  background: var(--tertiaryGreen);
+}
+.plasticsGuideDetailHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.plasticsGuideDetail h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: var(--mainGreen);
+}
+.plasticsGuideDetail p {
+  margin: 10px 0 0;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+.plasticsGuideEmpty {
+  color: var(--UiGray);
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .plasticsGuideCard {
+    padding: 18px 16px;
+  }
+}
