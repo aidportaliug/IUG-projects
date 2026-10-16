@@ -1,0 +1,13 @@
+/* Plastic page: reuses the project page layout (projectPage, projectPageCard, …). */
+.plasticPageEmpty {
+  margin: 0;
+  color: var(--UiGray);
+  font-style: italic;
+}
+
+/* Project cards inside the "Projects using …" card */
+.plasticCardGrid.plasticPageProjects {
+  margin: 4px 0 0;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}

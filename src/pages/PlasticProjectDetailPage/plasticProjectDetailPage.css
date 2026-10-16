@@ -215,3 +215,11 @@ hr {
     gap: 16px;
   }
 }
+
+/* Plastic chips on the project page open the plastic's page */
+.plasticTagLink {
+  text-decoration: none;
+}
+.plasticTagLink:hover {
+  background: var(--mainGreen);
+}

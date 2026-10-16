@@ -29,14 +29,51 @@
   font-size: 0.95rem;
 }
 
-/* The flowchart: whole, centred, never enlarged beyond its own size */
+/* The flowchart: whole, centred, never enlarged beyond its own size; a click zooms it on the page */
+.plasticsGuideImageButton {
+  display: block;
+  position: relative;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: zoom-in;
+}
 .plasticsGuideImage {
   display: block;
   max-width: 100%;
   height: auto;
   margin: 0 auto;
   border-radius: 8px;
-  cursor: zoom-in;
+}
+.plasticsGuideZoomHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  color: var(--mainGreen);
+  font-size: 0.9rem;
+}
+.plasticsGuideAdmin {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 16px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e3e8e3;
+}
+
+/* Zoom view: the chart enlarged to almost the full screen width, scrollable */
+.imageZoomBody {
+  overflow: auto;
+  cursor: zoom-out;
+  background: #fff;
+}
+.imageZoomImage {
+  display: block;
+  width: min(1600px, 94vw);
+  height: auto;
 }
 
 .plasticsGuideHeader {
@@ -56,12 +93,45 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+/* Resin code in front of the plastic name, like "5 PP" in the identification chart */
+.plasticsGuideCode {
+  margin-right: 6px;
+  opacity: 0.75;
+  font-weight: 700;
+}
 
 .plasticsGuideDetail {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
   margin-top: 20px;
   padding: 18px 20px;
   border-radius: 10px;
   background: var(--tertiaryGreen);
+}
+.plasticsGuideDetailImage {
+  width: 200px;
+  max-width: 40%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #fff;
+  flex-shrink: 0;
+}
+.plasticsGuideDetailText {
+  flex: 1;
+  min-width: 0;
+}
+.plasticsGuideMeta {
+  margin: 4px 0 0 !important;
+  color: var(--UiGray);
+  font-size: 0.9rem;
+}
+.plasticsGuideLink {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--mainGreen);
+  font-weight: 700;
 }
 .plasticsGuideDetailHeader {
   display: flex;
@@ -87,5 +157,15 @@
 @media (max-width: 600px) {
   .plasticsGuideCard {
     padding: 18px 16px;
+  }
+  .plasticsGuideDetail {
+    flex-direction: column;
+  }
+  .plasticsGuideDetailImage {
+    max-width: 100%;
+  }
+  /* On phones the zoomed chart is twice the screen width; scroll to read it */
+  .imageZoomImage {
+    width: 200vw;
   }
 }
